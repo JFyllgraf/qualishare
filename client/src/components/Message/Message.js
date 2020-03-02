@@ -32,6 +32,6 @@ const Message = ({ message: { user, text }, name }) => {
         </div>
       )
   )
-}
+};
 
 export default Message;
