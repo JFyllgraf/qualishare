@@ -21,7 +21,7 @@ const Join = () => {
   //   }
   //   console.log(text);
   // }
-
+    
   return(
     <div className="joinOuterContainer">
       <div className="joinInnerContainer">
