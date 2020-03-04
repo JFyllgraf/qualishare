@@ -12,15 +12,13 @@ const App = () => {
 
   return(
 
-      <div>
         <div className="container">
             <div className="header">HEADER</div>
-            <div className="leftMenu">MENU1</div>
+            <div className="menu">MENU</div>
             <div className="content">CONTENT</div>
-            <div className="rightMenu">MENU2</div>
+            <div className="extra">EXTRA</div>
             <div className="footer">FOOTER</div>
         </div>
-      </div>
 
     // <Router>
     //   <Route path="/" exact component={Join} />
