@@ -25,7 +25,7 @@ class App extends Component {
         return (
             <Router>
                 <Route exact path="/" render={() => <Join addNameAndRoom={this.addNameAndRoom}/>} />
-                <Route path="/chat" render={() => <Chat name={this.state.name} room={this.state.room}/>} />
+                <Route path="/chat" component={() => Chat(this.state.name, this.state.room)}/>} />
             </Router>
         )
     }
