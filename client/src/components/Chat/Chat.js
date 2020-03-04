@@ -8,7 +8,7 @@ import Input from '../Input/Input';
 import Messages from '../Messages/Messages';
 let socket;
 
-function Chat(Name, Room) {
+function Chat(Name, Room, fn) {
   const [name] = useState(Name);
   const [room] = useState(Room);
   const [message, setMessage] = useState('');
@@ -18,9 +18,6 @@ function Chat(Name, Room) {
 
 
   useEffect(() => {
-    //const { name, room } = queryString.parse(location.search);
-    //setRoom(room);
-    //setName(name);
     socket = io(ENDPOINT);
 
     socket.emit('join', { name, room }, (error) => {
@@ -33,6 +30,7 @@ function Chat(Name, Room) {
       socket.emit('disconnect');
       socket.off();
     }
+
 
   }, [ENDPOINT, name, room]); //'[var]' - if 'var' is changed, then useEffect() is called
 
@@ -50,7 +48,7 @@ function Chat(Name, Room) {
     }
   }
 
-  console.log(message, messages);
+  //console.log(message, messages); //behøver ikke skrive til consolln her
 
   return(
       <div className="outerContainer">
