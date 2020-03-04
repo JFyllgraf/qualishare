@@ -1,0 +1,23 @@
+
+.header-container {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  margin: 0 10px;
+}
+
+.toolbox-container {
+  display: flex;
+  align-items: center;
+}
+
+.toolbox-container > * {
+  margin: 0 5px;
+}
+
+.form-group {
+  margin: 0;
+}

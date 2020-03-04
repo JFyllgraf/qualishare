@@ -1,9 +1,9 @@
-.container {
+.grid-container {
   height: 100vh;
   display: grid;
   grid-gap: 3px;
-  grid-template-columns: repeat(auto-fill, 1fr);
-  grid-template-rows: 40px auto 40px;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: fit-content(100%) auto 40px;
   grid-template-areas:
   ". h h h h h h h h h h h"
   "m c c c c c c c c c e e"
@@ -12,6 +12,7 @@
 
 .header {
   grid-area: h;
+  display: flex;
 }
 
 .menu {
@@ -32,11 +33,8 @@
 
 
 /* BASIC COLORS COLORS  */
-.container > div {
+.grid-container > div {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2em;
     color: #ffeead;
 }
 
@@ -45,22 +43,22 @@ html, body {
   margin: 10px;
 }
 
-.container > div:nth-child(1n) {
+.grid-container > div:nth-child(1n) {
   background-color: #96ceb4;
 }
 
-.container > div:nth-child(2n) {
+.grid-container > div:nth-child(2n) {
       background-color: #ff6f69;
 }
 
-.container > div:nth-child(3n) {
+.grid-container > div:nth-child(3n) {
   background-color: #88d8b0;
 }
 
-.container > div:nth-child(4n) {
+.grid-container > div:nth-child(4n) {
   background-color: #ff6f69
 }
 
-.container > div:nth-child(5n) {
+.grid-container > div:nth-child(5n) {
       background-color: #ffcc5c;
 }
