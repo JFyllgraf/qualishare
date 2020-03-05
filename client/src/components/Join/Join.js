@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
 
 import './Join.css';
 
@@ -18,9 +17,8 @@ class Join extends Component {
 
   handleOnClick = (e) => {
     e.preventDefault();
-    //console.log("Clicked:" + " "+this.state.name+" "+this.state.room); This works as it should
     this.props.addNameAndRoom(this.state.name, this.state.room);
-    this.props.history.push("/chat");
+    //this.props.history.push("/chat");
 
   };
   render() {
@@ -34,9 +32,7 @@ class Join extends Component {
             <div>
               <input type="text" id="room" className="joinInput mt-20" onChange={this.handleChange} />
             </div>
-            <Link to="/chat" onClick={this.handleOnClick}>
-              <button className="button mt-20" type="submit">Sign In</button>
-            </Link>
+            <button className="button mt-20" onClick={this.handleOnClick} type="submit">Sign In</button>
           </div>
         </div>
     )
@@ -84,4 +80,4 @@ const Join = () => {
   //   console.log(text);
   // }
 
-export default withRouter(Join);
+export default Join;
