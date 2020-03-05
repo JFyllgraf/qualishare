@@ -8,7 +8,7 @@ import Input from '../Input/Input';
 import Messages from '../Messages/Messages';
 let socket;
 
-function Chat(Name, Room, fn) {
+function Chat({Name, Room}) { //remember to destructure
   const [name] = useState(Name);
   const [room] = useState(Room);
   const [message, setMessage] = useState('');
@@ -18,6 +18,7 @@ function Chat(Name, Room, fn) {
 
 
   useEffect(() => {
+    console.log("Printing: ", name, room);
     socket = io(ENDPOINT);
 
     socket.emit('join', { name, room }, (error) => {
@@ -53,7 +54,6 @@ function Chat(Name, Room, fn) {
   return(
       <div className="outerContainer">
         <div className="innerContainer">
-
           <InfoBar room={room}/>
           <Messages messages={messages} name={name}/>
           <Input message={message} setMessage={setMessage} sendMessage={sendMessage}/>
