@@ -1,9 +1,47 @@
-import React, {useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import React, {Component} from 'react';
 
 import './Join.css';
 
+class Join extends Component {
+  state = {
+    name: "",
+    room: ""
+  };
+
+
+  handleChange = (e) => {
+    this.setState({
+      [e.target.id]: e.target.value
+    })
+  };
+
+  handleOnClick = (e) => {
+    e.preventDefault();
+    this.props.addNameAndRoom(this.state.name, this.state.room);
+    //this.props.history.push("/chat");
+
+  };
+  render() {
+    return (
+        <div className="joinOuterContainer">
+          <div className="joinInnerContainer">
+            <h1 className="heading">Join</h1>
+            <div>
+              <input type="text" id="name" className="joinInput" onChange={this.handleChange}/>
+            </div>
+            <div>
+              <input type="text" id="room" className="joinInput mt-20" onChange={this.handleChange} />
+            </div>
+            <button className="button mt-20" onClick={this.handleOnClick} type="submit">Sign In</button>
+          </div>
+        </div>
+    )
+  }
+}
+
+
+
+/*
 const Join = () => {
   const [name, setName] = useState('');
   const [room, setRoom] = useState('');
@@ -12,15 +50,6 @@ const Join = () => {
     color: 'white'
   };
 
-  // function getSelectionText() {
-  //   var text = "";
-  //   if (window.getSelection) {
-  //       text = window.getSelection().toString();
-  //   } else if (document.selection && document.selection.type != "Control") {
-  //       text = document.selection.createRange().text;
-  //   }
-  //   console.log(text);
-  // }
 
   return(
     <div className="joinOuterContainer">
@@ -34,6 +63,21 @@ const Join = () => {
       </div>
     </div>
   )
-}
+};
 
-export default Join
+ */
+
+
+
+
+// function getSelectionText() {
+  //   var text = "";
+  //   if (window.getSelection) {
+  //       text = window.getSelection().toString();
+  //   } else if (document.selection && document.selection.type != "Control") {
+  //       text = document.selection.createRange().text;
+  //   }
+  //   console.log(text);
+  // }
+
+export default Join;

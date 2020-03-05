@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {Component} from 'react';
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+
 
 import Join from './components/Join/Join';
 import Chat from './components/Chat/Chat';
@@ -11,31 +11,64 @@ import CodeFeed from './components/CodeFeed/CodeFeed';
 
 import './App.css';
 
-const App = () => {
-
-
-  return(
-
-        <div className="grid-container">
-            <div className="header">
-              <Header/>
-            </div>
-            <div className="menu">
-              <CodeToggle/>
-              <CodeFeed/>
-            </div>
-            <div className="content">
-              <Content/>
-            </div>
-            <div className="extra">EXTRA</div>
-            <div className="footer">FOOTER</div>
-        </div>
-
     // <Router>
     //   <Route path="/" exact component={Join} />
     //   <Route path="/chat" component={Chat} />
     // </Router>
-  )
+
+class App extends Component {
+    state = {
+        name: "",
+        room: "",
+        isLoggedIn: false
 };
 
-export default App;
+    //this function updates parent (app.js) state as expected
+    addNameAndRoom = (name, room) => {
+        this.setState({
+            name: name,
+            room: room,
+            isLoggedIn: true
+        }
+        );
+    };
+
+    join = () => {
+        return (
+            <Join addNameAndRoom={this.addNameAndRoom}/>
+        )
+    };
+    chat = () => {
+        console.log("In chat: ", this.state);
+        return (
+        <Chat Name={this.state.name} Room={this.state.room} />
+        )
+    };
+
+    render() {
+        console.log(this.state);
+        return (
+          <div className="grid-container">
+              <div className="header">
+                <Header/>
+              </div>
+              <div className="menu">
+                <CodeToggle/>
+                <CodeFeed/>
+              </div>
+              <div className="content">
+                <Content/>
+              </div>
+              <div className="extra">
+                <div>
+                    {this.state.isLoggedIn ? this.chat() : this.join()}
+                </div>
+              </div>
+              <div className="footer">FOOTER</div>
+          </div>
+
+        )
+    }
+}
+
+export default App

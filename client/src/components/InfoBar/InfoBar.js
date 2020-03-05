@@ -15,6 +15,6 @@ const InfoBar = ({ room }) => (
       <a href="/"><img src={closeIcon} alt="close"/></a>
     </div>
   </div>
-)
+);
 
 export default InfoBar;
