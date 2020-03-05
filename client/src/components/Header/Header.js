@@ -20,8 +20,8 @@ const Header = () => {
             </Input>
           </FormGroup>
         </Form>
-        <Button className="btn-dark">delete</Button>
-        <Button className="btn-dark">add</Button>
+        <Button className="btn-dark">Remove</Button>
+        <Button className="btn-dark">Apply</Button>
       </div>
 
     </div>

@@ -6,6 +6,8 @@ import Join from './components/Join/Join';
 import Chat from './components/Chat/Chat';
 import Header from './components/Header/Header';
 import Content from './components/Content/Content';
+import CodeToggle from './components/CodeToggle/CodeToggle';
+import CodeFeed from './components/CodeFeed/CodeFeed';
 
 import './App.css';
 
@@ -18,7 +20,10 @@ const App = () => {
             <div className="header">
               <Header/>
             </div>
-            <div className="menu">MENU</div>
+            <div className="menu">
+              <CodeToggle/>
+              <CodeFeed/>
+            </div>
             <div className="content">
               <Content/>
             </div>

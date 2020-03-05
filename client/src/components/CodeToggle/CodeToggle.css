@@ -1,0 +1,27 @@
+.codeToggle-container {
+  border-style: solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.codeToggle-container Label {
+  margin: 0;
+}
+
+.codeToggle-container Button {
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.code-list-container {
+  display: flex;
+  align-self: flex-start;
+}
+
+.custom-control-label:before{
+  background-color:white;
+}
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before{
+  background-color:#343a40;
+}
