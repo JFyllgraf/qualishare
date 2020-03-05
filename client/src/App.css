@@ -6,7 +6,7 @@
   grid-template-rows: fit-content(40%) auto 40px;
   grid-template-areas:
   ". h h h h h h h h h h h"
-  "m c c c c c c c c c e e"
+  "m c c c c c c c c e e e"
   "f f f f f f f f f f f f";
 }
 
@@ -27,6 +27,8 @@
 }
 
 .extra {
+  display: flex;
+  justify-content: center;
   grid-area: e;
 }
 
