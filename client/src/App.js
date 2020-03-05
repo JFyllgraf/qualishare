@@ -17,7 +17,7 @@ class App extends Component {
         this.setState({
             name: name,
             room: room
-        }//, () => console.log("Clicked in addname: " + this.state.name + " " + this.state.room)
+        }
         );
     };
 
