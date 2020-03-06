@@ -14,6 +14,8 @@ const io = socketio(server);
 
 app.use(router);
 
+
+// CHAT SOCKETS
 io.on('connection', (socket) => {
   socket.on('join', ({ name, room }, callback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
@@ -47,5 +49,7 @@ io.on('connection', (socket) => {
     }
   })
 });
+
+
 
 server.listen(PORT, () => console.log(`Server has started on port ${PORT}`));
