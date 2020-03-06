@@ -11,17 +11,9 @@ const Content = () => {
   return (
     <div className="content-container">
 
-      <Form>
-        <FormGroup >
-          <Label for="exampleText">Text Area</Label>
-          <Input
-              value={text}
-              className="content-input"
-              onChange={(event) => setText(event.target.value)}
-              type="textarea"
-              name="text"/>
-        </FormGroup>
-      </Form>
+      <div className="content-input editor" contenteditable="true">
+        {text}
+      </div>
 
     </div>
   );

@@ -1,9 +1,12 @@
 .content-container {
   height: 100%;
   width: 100%;
-  padding: 0 20px;
+  padding: 10px;
 }
 
-.content-input.form-control {
+.content-input{
+  padding: 10px;
   height: 80vh;
+  background-color: white;
+  color: black;
 }

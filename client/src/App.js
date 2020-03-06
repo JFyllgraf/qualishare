@@ -60,9 +60,7 @@ class App extends Component {
                 <Content/>
               </div>
               <div className="extra">
-                <div>
-                    {this.state.isLoggedIn ? this.chat() : this.join()}
-                </div>
+                {this.state.isLoggedIn ? this.chat() : this.join()}
               </div>
               <div className="footer">FOOTER</div>
           </div>
