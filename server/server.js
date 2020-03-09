@@ -15,8 +15,16 @@ const io = socketio(server);
 app.use(router);
 
 
-// CHAT SOCKETS
+
 io.on('connection', (socket) => {
+
+  // CONTENT SOCKETS
+  socket.on('editingText', (data) => {
+    console.log('server: receiving and sending ' + data);
+    socket.broadcast.emit('editingText', data);
+  });
+
+  // CHAT SOCKETS
   socket.on('join', ({ name, room }, callback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
 
@@ -49,6 +57,8 @@ io.on('connection', (socket) => {
     }
   })
 });
+
+
 
 
 
