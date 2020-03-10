@@ -20,8 +20,17 @@ class App extends Component {
     state = {
         name: "",
         room: "",
-        isLoggedIn: false
-};
+        isLoggedIn: false,
+        codes: ['green', 'blue', 'red'],
+        selected: 'green'
+    };
+
+    updateStateHandler = (property) => {
+      this.setState({selected: property}, () => {
+        console.log(this.state.selected);
+      });
+
+    }
 
     //this function updates parent (app.js) state as expected
     addNameAndRoom = (name, room) => {
@@ -46,18 +55,17 @@ class App extends Component {
     };
 
     render() {
-        console.log(this.state);
         return (
           <div className="grid-container">
               <div className="header">
-                <Header/>
+                <Header handler={this.updateStateHandler} codes={this.state.codes} selected={this.state.selected}/>
               </div>
               <div className="menu">
                 <CodeToggle/>
                 <CodeFeed/>
               </div>
               <div className="content">
-                <Content/>
+                <Content selected={this.state.selected}/>
               </div>
               <div className="extra">
                 {this.state.isLoggedIn ? this.chat() : this.join()}
