@@ -16,34 +16,61 @@ function Content({selected}) {
   socket = io(ENDPOINT);
 
   useEffect(() => {
+    setSelectedCode(selected);
     console.log(selectedCode);
-  }, [selectedCode]);
+  }, [selected]);
 
   socket.on('editingText', function(data){
     console.log('Client: receiving data: '+ data);
     setText(data);
   });
 
+  function surroundSelection() {
+    const result = window.confirm("Want to delete the code?");
+    if (result){
+      var span = document.createElement("span");
+      span.style.fontWeight = "bold";
+      span.style.color = "black";
+
+      if (window.getSelection) {
+          var sel = window.getSelection();
+          if (sel.rangeCount) {
+              var range = sel.getRangeAt(0).cloneRange();
+              range.surroundContents(span);
+              sel.removeAllRanges();
+              sel.addRange(range);
+          }
+      }
+    }
+  }
+
   function handleChange(event) {
     setText(event.target.value);
   }
 
-  function setToBold () {
-    console.log(selectedCode);
-    document.execCommand ('backColor', false, selectedCode);
+  function setToBold() {
+    const color = selectedCode;
+    console.log(color);
+    document.execCommand('createLink', false, '#');
+    document.execCommand('backColor', false, color);
   }
 
   function applyChange(){
     socket.emit('editingText', text);
   }
 
+  function removeSelection(){
+    document.execCommand('removeFormat', false, null);
+  }
+
   return (
     <div className="content-container">
+      <button onClick={surroundSelection}>Apply Code</button>
+      <button onClick={removeSelection}>Remove Code</button>
       <button onClick={applyChange}>Send</button>
       <ContentEditable
         html={text}
         onChange={handleChange}
-        onMouseUp={setToBold}
         className="content-input">
       </ContentEditable>
     </div>
