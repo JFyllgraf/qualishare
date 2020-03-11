@@ -58,14 +58,17 @@ class App extends Component {
         return (
           <div className="grid-container">
               <div className="header">
-                <Header handler={this.updateStateHandler} codes={this.state.codes} selected={this.state.selected}/>
               </div>
               <div className="menu">
                 <CodeToggle/>
                 <CodeFeed/>
               </div>
               <div className="content">
-                <Content selected={this.state.selected}/>
+                <Content
+                 selected={this.state.selected}
+                 codes={this.state.codes}
+                 handler={this.updateStateHandler}
+                 />
               </div>
               <div className="extra">
                 {this.state.isLoggedIn ? this.chat() : this.join()}

@@ -1,0 +1,27 @@
+.toolbar-container {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.label {
+  display: block;
+  white-space: nowrap;
+  margin: 0 10px;
+}
+
+.select {
+  width: auto;
+  white-space: nowrap;
+}
+
+.toolbar-innerContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.toolbar-innerContainer > * {
+  margin: 0 5px;
+}

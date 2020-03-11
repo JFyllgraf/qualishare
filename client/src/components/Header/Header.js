@@ -4,9 +4,11 @@ import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import './Header.css';
 
 
-function Header ({codes, selected, handler}) {
+function Header ({codes, selected, handler, test}) {
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
+  const myTest = test;
+  console.log(myTest);
 
   useEffect(() => {
     handler(selectedCode);
@@ -15,6 +17,25 @@ function Header ({codes, selected, handler}) {
 
   function handleChange(event){
     setSelectedCode(event.target.value);
+  }
+
+  function surroundSelection() {
+    const result = window.confirm("Want to delete the code?");
+    if (result){
+      var span = document.createElement("span");
+      span.style.fontWeight = "bold";
+      span.style.color = "black";
+
+      if (window.getSelection) {
+          var sel = window.getSelection();
+          if (sel.rangeCount) {
+              var range = sel.getRangeAt(0).cloneRange();
+              range.surroundContents(span);
+              sel.removeAllRanges();
+              sel.addRange(range);
+          }
+      }
+    }
   }
 
   return (
@@ -33,7 +54,7 @@ function Header ({codes, selected, handler}) {
           </FormGroup>
         </Form>
         <Button className="btn-dark">Remove</Button>
-        <Button className="btn-dark">Apply</Button>
+        <Button className="btn-dark" onClick={surroundSelection}>Apply</Button>
       </div>
 
     </div>

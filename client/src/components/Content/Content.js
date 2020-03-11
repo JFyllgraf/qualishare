@@ -4,13 +4,16 @@ import ContentEditable from 'react-contenteditable';
 import io from "socket.io-client";
 
 import './Content.css';
+
+import Toolbar from '../Toolbar/Toolbar';
 let socket;
 
 
-function Content({selected}) {
+function Content({selected, codes, handler}) {
   const initialText = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur assumenda suscipit quos doloribus minus, provident corrupti repudiandae totam ipsam cum numquam! Repellat voluptas magnam amet, labore tempore laborum, dignissimos laudantium?Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem error, nulla delectus id, nemo aliquam commodi, non distinctio pariatur nisi rem! Provident sapiente, natus assumenda cumque error, esse distinctio porro.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora optio debitis deleniti explicabo repellat quos ipsum itaque doloremque molestiae delectus a voluptates saepe vero iusto veritatis laudantium accusantium, assumenda sunt. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque, quia enim, et assumenda odit rerum vero pariatur minus commodi iusto soluta architecto porro, cum ducimus id molestias odio vitae voluptates? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, libero numquam dolores temporibus exercitationem a voluptates sit minus perferendis iste consectetur accusamus pariatur tempore cupiditate adipisci labore corporis dolore eaque.";
   const [text, setText] = useState(initialText);
   const [selectedCode, setSelectedCode] = useState(selected);
+  const codeList = codes;
 
   const ENDPOINT = 'localhost:5000';
   socket = io(ENDPOINT);
@@ -25,25 +28,6 @@ function Content({selected}) {
     setText(data);
   });
 
-  function surroundSelection() {
-    const result = window.confirm("Want to delete the code?");
-    if (result){
-      var span = document.createElement("span");
-      span.style.fontWeight = "bold";
-      span.style.color = "black";
-
-      if (window.getSelection) {
-          var sel = window.getSelection();
-          if (sel.rangeCount) {
-              var range = sel.getRangeAt(0).cloneRange();
-              range.surroundContents(span);
-              sel.removeAllRanges();
-              sel.addRange(range);
-          }
-      }
-    }
-  }
-
   function handleChange(event) {
     setText(event.target.value);
   }
@@ -55,19 +39,18 @@ function Content({selected}) {
     document.execCommand('backColor', false, color);
   }
 
-  function applyChange(){
+  function emmitChange(){
     socket.emit('editingText', text);
-  }
-
-  function removeSelection(){
-    document.execCommand('removeFormat', false, null);
   }
 
   return (
     <div className="content-container">
-      <button onClick={surroundSelection}>Apply Code</button>
-      <button onClick={removeSelection}>Remove Code</button>
-      <button onClick={applyChange}>Send</button>
+      <Toolbar
+        codes={codeList}
+        selected={selectedCode}
+        handler={handler}
+        emmitChange={emmitChange}
+      />
       <ContentEditable
         html={text}
         onChange={handleChange}
