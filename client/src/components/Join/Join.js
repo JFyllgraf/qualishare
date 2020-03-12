@@ -18,7 +18,6 @@ class Join extends Component {
   handleOnClick = (e) => {
     e.preventDefault();
     this.props.addNameAndRoom(this.state.name, this.state.room);
-    //this.props.history.push("/chat");
 
   };
   render() {

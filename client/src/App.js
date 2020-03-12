@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 
-
-
 import Join from './components/Join/Join';
 import Chat from './components/Chat/Chat';
 import Header from './components/Header/Header';
@@ -22,7 +20,8 @@ class App extends Component {
         room: "",
         isLoggedIn: false,
         codes: ['green', 'blue', 'red'],
-        selected: 'green'
+        selected: 'green',
+        codeObjects: []
     };
 
     updateStateHandler = (property) => {
@@ -30,7 +29,7 @@ class App extends Component {
         console.log(this.state.selected);
       });
 
-    }
+    };
 
     //this function updates parent (app.js) state as expected
     addNameAndRoom = (name, room) => {
@@ -40,6 +39,13 @@ class App extends Component {
             isLoggedIn: true
         }
         );
+    };
+    addCodeToList = (code) => {
+        let codes = [...this.state.codeObjects, code];
+        this.setState({
+            codeObjects: codes
+            }
+        )
     };
 
     join = () => {
@@ -60,7 +66,7 @@ class App extends Component {
               <div className="header">
               </div>
               <div className="menu">
-                <CodeToggle/>
+                <CodeToggle addCodeToList={this.addCodeToList}/>
                 <CodeFeed/>
               </div>
               <div className="content">
