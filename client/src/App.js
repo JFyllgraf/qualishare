@@ -45,7 +45,11 @@ class App extends Component {
         this.setState({
             codeObjects: codes
             }
-        )
+        );
+        console.log(this.state); //should be removed at some point
+    };
+    getCodes = () => {
+        return this.state.codeObjects;
     };
 
     join = () => {
@@ -66,7 +70,7 @@ class App extends Component {
               <div className="header">
               </div>
               <div className="menu">
-                <CodeToggle addCodeToList={this.addCodeToList}/>
+                <CodeToggle addCodeToList={this.addCodeToList} getCodes={this.getCodes}/>
                 <CodeFeed/>
               </div>
               <div className="content">
