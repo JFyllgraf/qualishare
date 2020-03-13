@@ -20,14 +20,23 @@ const CodeToggle = ({addCodeToList, getCodes}) => {
 
         //we should also do check for duplicate codes
     };
-    function DisplayCode(){
+    function DisplayCode() {
         let codes = getCodes();
-        let jsx = [];
-        for (let i = 0; i < codes.length; i++){
-            jsx.push(<CustomInput type="checkbox" id={codes[i].getId().toString()} label={codes[i].getName()} />)
-        }
-        return jsx;
+        return (
+            <div className="code-list">
+                {
+                    codes.map(code => {
+                        return (
+                            <div className="code" key={code.getId().toString()}>
+                                <CustomInput type="checkbox" id={code.getId().toString()} label={code.getName()}/>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+        )
     }
+
 
   return (
     <div className="codeToggle-container">

@@ -5,7 +5,8 @@ class Code {
 
     constructor(name) {
         const Name = name; //'const' is private variable
-        const Id = () => Code.ID++;
+        const Id = Code.ID;
+        Code.ID = Code.ID + 1;
         this.memo = []; //'this' is publicly accessible variable
         this.link = undefined;
         const color = Helpers.rainbow(2,10);
