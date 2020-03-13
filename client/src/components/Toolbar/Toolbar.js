@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
 import './Toolbar.css';
-import { surroundSelection } from '../../Utility/Helpers';
+import { surroundSelection, colorChange, highlight } from '../../Utility/Helpers';
 
 
 function Toolbar ({codes, selected, handler, emmitChange}) {
@@ -21,6 +21,10 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     document.execCommand('removeFormat', false, null);
   }
 
+  function addCode(){
+    highlight(selectedCode);
+  }
+
   return (
     <div className="toolbar-container">
       <Label className="label">Select Code: </Label>
@@ -32,7 +36,7 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
             })
           }
         </Input>
-        <Button className="btn-dark" onClick={surroundSelection}>Apply</Button>
+        <Button className="btn-dark" onClick={addCode}>Apply</Button>
         <Button className="btn-dark" onClick={removeCode}>Remove</Button>
       </div>
     </div>
