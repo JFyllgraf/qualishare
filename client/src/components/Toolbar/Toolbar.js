@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Button, Label, Input } from 'reactstrap';
 
 import './Toolbar.css';
-import { surroundSelection, colorChange, highlight } from '../../Utility/Helpers';
+import { highlight } from '../../Utility/Helpers';
 
 
 function Toolbar ({codes, selected, handler, emmitChange}) {

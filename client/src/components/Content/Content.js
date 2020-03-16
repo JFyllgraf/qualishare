@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Form, FormGroup, Label, Input } from 'reactstrap';
 import ContentEditable from 'react-contenteditable';
 import io from "socket.io-client";
 
@@ -21,7 +20,7 @@ function Content({selected, codes, handler}) {
   useEffect(() => {
     setSelectedCode(selected);
     console.log(selectedCode);
-  }, [selected]);
+  }, [selected, selectedCode]);
 
   socket.on('editingText', function(data){
     console.log('Client: receiving data: '+ data);
@@ -30,13 +29,6 @@ function Content({selected, codes, handler}) {
 
   function handleChange(event) {
     setText(event.target.value);
-  }
-
-  function setToBold() {
-    const color = selectedCode;
-    console.log(color);
-    document.execCommand('createLink', false, '#');
-    document.execCommand('backColor', false, color);
   }
 
   function emmitChange(){
