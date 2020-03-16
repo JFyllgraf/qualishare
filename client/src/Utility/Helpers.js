@@ -1,8 +1,5 @@
 
 export function highlight(color){
-  const doSomething = () => {
-    console.log('test');
-  }
   //remove any format to avoid overlap issues
   document.execCommand('removeFormat', false, null);
   //save selected text
@@ -16,9 +13,13 @@ export function highlight(color){
   var span = document.createElement("span");
   span.style.backgroundColor = color;
   span.innerText = text;
-  span.setAttribute('onclick', doSomething);
+  span.setAttribute('onclick', 'doSomething()');
   document.execCommand('insertHTML', false, span.outerHTML);
   console.log(span);
+}
+
+function doSomething() {
+  console.log('test');
 }
 
 
