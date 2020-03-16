@@ -4,7 +4,7 @@ import './CodeToggle.css';
 import Code from '../../data_model/Code'
 
 
-const CodeToggle = ({addCodeToList, getCodes}) => {
+const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes}) => {
     const [codename, setcodeName] = useState('');
     const [onChangeEvent, setonChangeEvent] = useState();
 /*
@@ -34,8 +34,21 @@ const CodeToggle = ({addCodeToList, getCodes}) => {
         onChangeEvent.target.value = ''; //reset
         setonChangeEvent(undefined); //reset
     };
+    const handleOnClickDeleteCode = () => {
+        let codes = getCodes();
+        let codeToDelete = onChangeEvent.target.value;
 
-    function CheckValidInput(){
+        for (let i = 0; i < codes.length; i++){
+            if (codes[i].getName() === codeToDelete){
+                deleteCodeFromList(i);
+            }
+        }
+        onChangeEvent.target.value = '';//reset
+        setonChangeEvent(undefined)//reset
+    };
+
+
+    function CheckValidInput(e){
         if(onChangeEvent === undefined){
             return false;
         }
@@ -53,11 +66,11 @@ const CodeToggle = ({addCodeToList, getCodes}) => {
             }
         });
 
+        if(e.target.id === "deletebtn"){
+            bool = !bool;
+        }
         return bool;
     }
-
-
-
 
     function DisplayCode() {
         let codes = getCodes();
@@ -82,10 +95,10 @@ const CodeToggle = ({addCodeToList, getCodes}) => {
 
       <Label>Active codes</Label>
       <div className="btn-group">
-        <Button  onClick={(e) => CheckValidInput() ? handleOnClick(e) : null} color="dark" size="sm">+</Button>
-        <Button color="dark" size="sm">-</Button>
+        <Button  id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null} color="dark" size="sm">+</Button>
+        <Button id="deletebtn" onClick={(e) => CheckValidInput(e) ? handleOnClickDeleteCode(e) : null} color="dark" size="sm">-</Button>
       </div>
-        <div><input type="text" onChange={handleOnChange} onKeyUpCapture={(e) => e.keyCode===13 && CheckValidInput() ? handleOnKeyUp(e) : null}/></div>
+        <div><input type="text" onChange={handleOnChange} onKeyUpCapture={(e) => e.keyCode===13 && CheckValidInput(e) ? handleOnKeyUp(e) : null}/></div>
       <div className="code-list-container">
         <FormGroup check>
             {DisplayCode()}

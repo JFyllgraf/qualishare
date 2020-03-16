@@ -28,7 +28,6 @@ class App extends Component {
       this.setState({selected: property}, () => {
         console.log(this.state.selected);
       });
-
     };
 
     //this function updates parent (app.js) state as expected
@@ -44,10 +43,17 @@ class App extends Component {
         let codes = [...this.state.codeObjects, code];
         this.setState({
             codeObjects: codes
-            }
+            }, console.log(this.state.codeObjects) //should be removed at some point
         );
-        console.log(this.state); //should be removed at some point
     };
+    deleteCodeFromList = (index) => {
+        let temp = [...this.state.codeObjects];
+        temp.splice(index, 1);
+        this.setState({
+            codeObjects: temp
+        })
+    };
+
     getCodes = () => {
         return this.state.codeObjects;
     };
@@ -70,7 +76,7 @@ class App extends Component {
               <div className="header">
               </div>
               <div className="menu">
-                <CodeToggle addCodeToList={this.addCodeToList} getCodes={this.getCodes}/>
+                <CodeToggle addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes}/>
                 <CodeFeed/>
               </div>
               <div className="content">
