@@ -5,21 +5,60 @@ import Code from '../../data_model/Code'
 
 
 const CodeToggle = ({addCodeToList, getCodes}) => {
-    const [temp, setTemp] = useState('');
-
-
+    const [codename, setcodeName] = useState('');
+    const [onChangeEvent, setonChangeEvent] = useState();
+/*
     useEffect(() => {
-        setTemp('');
-    }, [temp]);
-
+        setcodeName('');
+    }, []);
+*/
+    //is also onclick
     const handleOnKeyUp = (e) => {
+        console.log(e.target.value);
         e.preventDefault();
         let code = new Code(e.target.value);
         addCodeToList(code);
         e.target.value = ''; //at first this seemed like it was bad idea, but it works.
-
-        //we should also do check for duplicate codes
     };
+    const handleOnChange = (e) => {
+        e.preventDefault();
+        e.persist();
+        setonChangeEvent(e);
+        setcodeName(e.target.value);
+    };
+
+    const handleOnClick = (e) => {
+        e.preventDefault();
+        let code = new Code(codename);
+        addCodeToList(code);
+        onChangeEvent.target.value = ''; //reset
+        setonChangeEvent(undefined); //reset
+    };
+
+    function CheckValidInput(){
+        if(onChangeEvent === undefined){
+            return false;
+        }
+
+        let inputString = onChangeEvent.target.value;
+        if (inputString ===''){
+            return false;
+        }
+
+        let bool = true;
+        let codes = getCodes();
+        codes.map((code) => {
+            if (code.getName() === inputString){
+                bool = false;
+            }
+        });
+
+        return bool;
+    }
+
+
+
+
     function DisplayCode() {
         let codes = getCodes();
         return (
@@ -43,10 +82,10 @@ const CodeToggle = ({addCodeToList, getCodes}) => {
 
       <Label>Active codes</Label>
       <div className="btn-group">
-        <Button color="dark" size="sm">+</Button>
+        <Button  onClick={(e) => CheckValidInput() ? handleOnClick(e) : null} color="dark" size="sm">+</Button>
         <Button color="dark" size="sm">-</Button>
       </div>
-        <div><input type="text" onKeyUpCapture={(e) => e.keyCode===13 ? handleOnKeyUp(e) : null}/></div>
+        <div><input type="text" onChange={handleOnChange} onKeyUpCapture={(e) => e.keyCode===13 && CheckValidInput() ? handleOnKeyUp(e) : null}/></div>
       <div className="code-list-container">
         <FormGroup check>
             {DisplayCode()}
