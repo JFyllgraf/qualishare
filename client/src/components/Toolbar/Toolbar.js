@@ -11,10 +11,19 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
 
   useEffect(() => {
     handler(selectedCode);
-  }, [selectedCode]);
+    setCodeList(codes);
+  }, [selectedCode, codes]);
 
   function newSelection(event){
-    setSelectedCode(event.target.value);
+    var i;
+    for (i = 0; i < codeList.length; i++) {
+      if (codeList[i].getName() === event.target.value){
+        setSelectedCode(codeList[i]);
+      }
+    }
+    console.log(selectedCode);
+    //const morten = codeList[event.target.value];
+    //setSelectedCode(event.target.value);
   }
 
   function removeCode(){
@@ -22,7 +31,8 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
   }
 
   function addCode(){
-    highlight(selectedCode);
+    console.log(selectedCode.getName() + ": " + selectedCode.getColor());
+    highlight(selectedCode.getColor());
   }
 
   return (
@@ -31,9 +41,11 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
       <div className="toolbar-innerContainer">
         <Input value={selectedCode} onChange={newSelection} className="select btn-dark" type="select" name="select" id="exampleSelect">
           {
+            (codeList) ?
             codeList.map(code => {
-              return <option key={code}>{code}</option>
-            })
+              return <option code={code} key={code.getId()}>{code.getName()}</option>
+            }) :
+            null
           }
         </Input>
         <Button className="btn-dark" onClick={addCode}>Apply</Button>

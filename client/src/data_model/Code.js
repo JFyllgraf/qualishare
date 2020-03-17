@@ -1,4 +1,5 @@
 import * as Helpers from '../Utility/Helpers';
+var randomColor = require('randomcolor');
 
 class Code {
     static ID = 0;
@@ -9,7 +10,7 @@ class Code {
         Code.ID = Code.ID + 1;
         this.memo = []; //'this' is publicly accessible variable
         this.link = undefined;
-        const color = Helpers.rainbow(2,10);
+        const color = randomColor();
 
         //getters
         this.getName = function() { return Name };
@@ -19,5 +20,3 @@ class Code {
 }
 
 export default Code
-
-
