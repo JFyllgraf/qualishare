@@ -34,16 +34,19 @@ function Content({selected, codeObjects, handler}) {
     socket.emit('editingText', text);
   }
 
+  /*
   const handleOnSelect = () => {
     let selectedText = window.getSelection().toString();
     if(selectedText === null || selectedText === undefined) {
       return null
     }
     else {
-      var quote1 = new Quote(selectedText, window.getSelection().anchorOffset, [selectedCode]);
+      var quote = new Quote(selectedText, window.getSelection().anchorOffset, [selectedCode]); //looks dangerous, but should be fine
+      selectedCode.addQuote(quote)
     }
-    console.log(quote1);
+    console.log(quote);
   };
+*/
 
   return (
     <div className="content-container">
@@ -56,11 +59,10 @@ function Content({selected, codeObjects, handler}) {
       <ContentEditable
         html={text}
         onChange={handleChange}
-        onSelect={window.getSelection().toString() ? handleOnSelect() : null}
         className="content-input">
       </ContentEditable>
     </div>
   );
 }
-
+//onSelect={window.getSelection().toString() ? handleOnSelect() : null}
 export default Content;

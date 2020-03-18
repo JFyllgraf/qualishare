@@ -29,6 +29,7 @@ class App extends Component {
 
   updateStateHandler = (property) => {
     this.setState({selected: property}, () => {
+      console.log("In updateStatehandler: ");
       console.log(this.state.selected);
     });
   };
