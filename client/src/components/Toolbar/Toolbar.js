@@ -21,9 +21,6 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
         setSelectedCode(codeList[i]);
       }
     }
-    console.log(selectedCode);
-    //const morten = codeList[event.target.value];
-    //setSelectedCode(event.target.value);
   }
 
   function removeCode(){
@@ -43,7 +40,7 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
           {
             (codeList) ?
             codeList.map(code => {
-              return <option code={code} key={code.getId()}>{code.getName()}</option>
+              return <option key={code.getId()}>{code.getName()}</option>
             }) :
             null
           }
