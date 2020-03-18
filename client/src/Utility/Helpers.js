@@ -13,7 +13,7 @@ export function highlight(color){
   var span = document.createElement("span");
   span.style.backgroundColor = color;
   span.innerText = text;
-  span.setAttribute('onclick', "doSomething(this)");
+  span.setAttribute('onclick', "removeSPan(this)");
   document.execCommand('insertHTML', false, span.outerHTML);
   console.log(span);
 }
