@@ -23,13 +23,6 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
         setSelectedCode(codeList[i]);
       }
     }
-<<<<<<< HEAD
-=======
-    //console.log(selectedCode);
-
-    //const morten = codeList[event.target.value];
-    //setSelectedCode(event.target.value);
->>>>>>> origin/highlight_experiment
   }
 
   const addQuote = () => {
