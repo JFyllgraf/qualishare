@@ -3,6 +3,8 @@ import { Button, Label, Input } from 'reactstrap';
 
 import './Toolbar.css';
 import { highlight } from '../../Utility/Helpers';
+import Quote from "../../data_model/Quote";
+
 
 
 function Toolbar ({codes, selected, handler, emmitChange}) {
@@ -15,22 +17,49 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
   }, [selectedCode, codes]);
 
   function newSelection(event){
-    var i;
+    let i;
     for (i = 0; i < codeList.length; i++) {
       if (codeList[i].getName() === event.target.value){
         setSelectedCode(codeList[i]);
       }
     }
+<<<<<<< HEAD
+=======
+    //console.log(selectedCode);
+
+    //const morten = codeList[event.target.value];
+    //setSelectedCode(event.target.value);
+>>>>>>> origin/highlight_experiment
   }
 
-  function removeCode(){
-    document.execCommand('removeFormat', false, null);
-  }
-
-  function addCode(){
-    console.log(selectedCode.getName() + ": " + selectedCode.getColor());
+  const addQuote = () => {
+    let selectedText = window.getSelection().toString();
+    if(selectedText === null || selectedText === undefined || selectedText ==='') {
+      return null
+    }
+    else {
+      var quote = new Quote(selectedText, window.getSelection().anchorOffset, [selectedCode]); //looks dangerous, but should be fine
+      selectedCode.addQuote(quote);
+    }
     highlight(selectedCode.getColor());
-  }
+
+
+    console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
+    //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
+  };
+
+  const removeQuote = () => {
+    let text = window.getSelection().toString();
+    let quotes = selectedCode.getQuotes();
+
+    for (let i = 0; i < quotes.length; i++){
+      if (quotes[i].getQuoteText() === text){
+        selectedCode.removeQuote(quotes[i]);
+        document.execCommand('removeFormat', false, null);
+        break;
+      }
+    }
+  };
 
   return (
     <div className="toolbar-container">
@@ -45,8 +74,8 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
             null
           }
         </Input>
-        <Button className="btn-dark" onClick={addCode}>Apply</Button>
-        <Button className="btn-dark" onClick={removeCode}>Remove</Button>
+        <Button className="btn-dark" onClick={addQuote}>Apply</Button>
+        <Button className="btn-dark" onClick={removeQuote}>Remove</Button>
       </div>
     </div>
   );
