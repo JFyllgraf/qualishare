@@ -41,7 +41,10 @@
     -->
     <script type="text/javascript">
       function doSomething(span){
-        span.parentNode.replaceChild(document.createTextNode(span.innerHTML), span);
+        var result = confirm("Want to delete?");
+        if (result) {
+          span.parentNode.replaceChild(document.createTextNode(span.innerHTML), span);
+        }
       }
     </script>
   </body>
