@@ -56,9 +56,10 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
 
   return (
     <div className="toolbar-container">
-      <Label className="label">Select Code: </Label>
+
       <div className="toolbar-innerContainer">
-        <Input value={selectedCode.getName()} onChange={newSelection} className="select btn-dark" type="select" name="select" id="exampleSelect">
+        <span>Select Code: </span>
+        <Input value={selectedCode.getName()} onChange={newSelection} className="select btn-dark" type="select" name="select">
           {
             (codeList) ?
             codeList.map(code => {

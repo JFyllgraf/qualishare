@@ -1,27 +1,37 @@
 .toolbar-container {
   padding: 10px;
-  display: flex;
-  align-items: center;
   width: 100%;
 }
 
 .label {
-  display: block;
   white-space: nowrap;
   margin: 0 10px;
 }
 
 .select {
   width: auto;
-  white-space: nowrap;
+  display: inline;
 }
 
+
 .toolbar-innerContainer {
-  display: flex;
-  align-items: center;
-  width: 100%;
+  display: contents;
 }
 
 .toolbar-innerContainer > * {
-  margin: 0 5px;
+  margin: 5px;
+}
+
+@media (max-width: 640px) {
+
+  .toolbar-innerContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .toolbar-innerContainer > * {
+    margin: 5px;
+  }
 }

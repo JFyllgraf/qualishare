@@ -4,19 +4,11 @@ html, body {
   margin: 0;
 }
 
-#root {
-  height: 100vh;
-}
-
-* {
-  box-sizing: border-box;
-}
-
 .joinOuterContainer {
   display: flex;
   justify-content: center;
   text-align: center;
-  height: 100vh;
+  height: 100%;
   align-items: center;
 }
 
