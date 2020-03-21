@@ -25,7 +25,8 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     }
   }
 
-  const addQuote = () => {
+  const addQuote = (event) => {
+    event.preventDefault();
     let selectedText = window.getSelection().toString();
     if(selectedText === null || selectedText === undefined || selectedText ==='') {
       return null
@@ -41,7 +42,8 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
   };
 
-  const removeQuote = () => {
+  const removeQuote = (event) => {
+    event.preventDefault();
     let text = window.getSelection().toString();
     let quotes = selectedCode.getQuotes();
 
@@ -56,22 +58,22 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
 
   return (
     <div className="toolbar-container">
-
       <div className="toolbar-innerContainer">
-        <span>Select Code: </span>
-        <Input value={selectedCode.getName()} onChange={newSelection} className="select btn-dark" type="select" name="select">
+        <span className="label">Select Code: </span>
+        <select value={selectedCode.getName()} onChange={newSelection} className="toolbarSelect" type="select" name="select">
           {
             (codeList) ?
             codeList.map(code => {
-              return <option key={code.getId()}>{code.getName()}</option>
+              return <option className="toolbarOption" key={code.getId()}>{code.getName()}</option>
             }) :
             null
           }
-        </Input>
-        <Button className="btn-dark" onClick={addQuote}>Apply</Button>
-        <Button className="btn-dark" onClick={removeQuote}>Remove</Button>
+        </select>
+        <a href="something" className="toolbarButton" onClick={addQuote}>Apply</a>
+        <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
       </div>
     </div>
+
   );
 }
 
