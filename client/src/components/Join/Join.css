@@ -1,15 +1,11 @@
-html, body {
-  font-family: 'Roboto', sans-serif;
-  padding: 0;
-  margin: 0;
-}
-
 .joinOuterContainer {
   display: flex;
   justify-content: center;
   text-align: center;
   height: 100%;
   align-items: center;
+  padding: 0;
+  margin: 0;
 }
 
 .joinInnerContainer {
@@ -33,7 +29,7 @@ html, body {
     color: #fff !important;
     text-transform: uppercase;
     text-decoration: none;
-    background: #2979FF;
+    background: #7395AE;
     padding: 20px;
     border-radius: 5px;
     display: inline-block;

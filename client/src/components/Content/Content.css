@@ -1,6 +1,6 @@
 .content-container {
   height: 100%;
-  max-height: 90vh;
+  max-height: 90%;
   width: 100%;
   min-width: 250px;
   padding: 10px;
@@ -25,4 +25,5 @@
   .content-input {
     max-height: 80%;
   }
+
 }

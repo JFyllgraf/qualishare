@@ -93,10 +93,10 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes}) => {
   return (
     <div className="codeToggle-container">
 
-      <Label>Active codes</Label>
+      <h4>Active Codes</h4>
       <div className="btn-group">
-        <Button  id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null} color="dark" size="sm">+</Button>
-        <Button id="deletebtn" onClick={(e) => CheckValidInput(e) ? handleOnClickDeleteCode(e) : null} color="dark" size="sm">-</Button>
+        <a className="toggleButton"  id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null} color="dark" size="sm">+</a>
+        <a className="toggleButton" id="deletebtn" onClick={(e) => CheckValidInput(e) ? handleOnClickDeleteCode(e) : null} color="dark" size="sm">-</a>
       </div>
         <div><input type="text" onChange={handleOnChange} onKeyUpCapture={(e) => e.keyCode===13 && CheckValidInput(e) ? handleOnKeyUp(e) : null}/></div>
       <div className="code-list-container">

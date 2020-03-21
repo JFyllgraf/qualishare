@@ -8,7 +8,7 @@ const CodeFeed = () => {
   return (
     <div className="codeFeed-container">
 
-      <h1>Code Feed</h1>
+      <h1></h1>
 
     </div>
   );

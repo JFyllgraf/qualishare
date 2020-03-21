@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import Join from './components/Join/Join';
 import Chat from './components/Chat/Chat';
-//import Header from './components/Header/Header';
+import Header from './components/Header/Header';
 import Content from './components/Content/Content';
 import CodeToggle from './components/CodeToggle/CodeToggle';
 import CodeFeed from './components/CodeFeed/CodeFeed';
@@ -79,6 +79,7 @@ class App extends Component {
       return (
         <div className="grid-container">
             <div className="header">
+            <Header/>
             </div>
             <div className="menu">
               <CodeToggle addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes}/>
@@ -97,7 +98,7 @@ class App extends Component {
             <div className="extra">
               {this.state.isLoggedIn ? this.chat() : this.join()}
             </div>
-            <div className="footer">FOOTER</div>
+            <div className="footer"></div>
         </div>
       )
   }
