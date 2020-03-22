@@ -1,3 +1,13 @@
+:root {
+  --base: #5D5C61;
+  --base-dark: #3d3c40;
+  --primary: #557A95;  /* Main Color */
+  --secondary: #7395AE; /* Main Color shade */
+  --white: #FFFFFF;
+  --feature1: white;
+  --feature2: white;
+}
+
 .grid-container {
   height: 100vh;
   display: grid;
@@ -11,7 +21,7 @@
 }
 
 .header {
-  background-color: #5D5C61;
+  background-color: var(--base-dark);
   grid-area: h;
   display: flex;
 }

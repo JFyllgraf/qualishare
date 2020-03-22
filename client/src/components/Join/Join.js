@@ -26,10 +26,10 @@ class Join extends Component {
           <div className="joinInnerContainer">
             <h1 className="heading">Join</h1>
             <div>
-              <input type="text" id="name" className="joinInput" onChange={this.handleChange}/>
+              <input placeholder="Name" type="text" id="name" className="joinInput" onChange={this.handleChange}/>
             </div>
             <div>
-              <input type="text" id="room" className="joinInput mt-20" onChange={this.handleChange} />
+              <input placeholder="Room" type="text" id="room" className="joinInput mt-20" onChange={this.handleChange} />
             </div>
             <button className="button mt-20" onClick={this.handleOnClick} type="submit">Sign In</button>
           </div>

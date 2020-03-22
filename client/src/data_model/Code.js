@@ -1,4 +1,4 @@
-import * as Helpers from '../Utility/Helpers';
+//import * as Helpers from '../Utility/Helpers';
 var randomColor = require('randomcolor');
 
 class Code {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import './Header.css';
 
@@ -9,7 +9,7 @@ function Header () {
     <nav className="navigation">
       <ul className="header-menu">
         <li className="menu__item">
-          <a href="#" className="menu__link">
+          <a className="menu__link">
             <span className="menu__title">
               <span className="menu__first-word" data-hover="New">
                 New

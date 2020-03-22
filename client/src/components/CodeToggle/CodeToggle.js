@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import { Button, Label, FormGroup, Input, CustomInput } from 'reactstrap';
+import React, {useState} from 'react';
+import { FormGroup, CustomInput } from 'reactstrap';
 import './CodeToggle.css';
 import Code from '../../data_model/Code'
 
@@ -7,11 +7,7 @@ import Code from '../../data_model/Code'
 const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes}) => {
     const [codename, setcodeName] = useState('');
     const [onChangeEvent, setonChangeEvent] = useState();
-/*
-    useEffect(() => {
-        setcodeName('');
-    }, []);
-*/
+
     //is also onclick
     const handleOnKeyUp = (e) => {
         console.log(e.target.value);
