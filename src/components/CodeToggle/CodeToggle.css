@@ -1,0 +1,58 @@
+.codeToggle-container {
+  margin: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #FFFFFF;
+}
+
+.codeToggle-container h4 {
+  text-align: center;
+  padding: 5px;
+  width: 100%;
+}
+
+.codeToggle-container Label {
+  margin: 0;
+}
+
+.codeToggle-container Button {
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.code-list-container {
+  margin-top: 10px;
+  display: flex;
+  align-self: flex-start;
+}
+
+.custom-control-label:before{
+  background-color:white;
+}
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before{
+  background-color: #557A95;
+}
+
+/* BUTTON STYLE */
+.toggleButton {
+  font-size: 14px;
+  display:inline-block;
+  padding:0.35em 1.2em;
+  border:0.1em solid #FFFFFF;
+  margin: 5px 5px 10px 5px;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: 300;
+  color: #FFFFFF;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.toggleButton:hover {
+  color: #000000;
+  background-color: #7395AE;
+}
