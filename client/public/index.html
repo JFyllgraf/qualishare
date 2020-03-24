@@ -43,7 +43,13 @@
       function removeSPan(span){
         var result = confirm("Want to delete?");
         if (result) {
-          span.parentNode.replaceChild(document.createTextNode(span.innerHTML), span);
+          // pull text from the span, and format if it starts or ends in a space
+          const oldSpanText = span.innerHTML.toString();
+          const cleanText = oldSpanText.replace(/&nbsp;/g, ' ');
+
+          // create a pure textnode and replace the span
+          var newNode = document.createTextNode(cleanText);
+          span.parentNode.replaceChild(newNode, span);
         }
       }
     </script>

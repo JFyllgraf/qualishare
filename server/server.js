@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
 
   // CONTENT SOCKETS
   socket.on('editingText', (data) => {
-    console.log('server: receiving and sending ' + data);
+    //console.log('server: receiving and sending ' + data);
     socket.broadcast.emit('editingText', data);
   });
 

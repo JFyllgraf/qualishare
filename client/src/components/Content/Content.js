@@ -21,8 +21,12 @@ function Content({selected, codeObjects, handler}) {
     setCodeList(codeObjects);
   }, [selected, selectedCode, codeObjects]);
 
+  useEffect(() => {
+    emmitChange();
+  }, [text])
+
   socket.on('editingText', function(data){
-    console.log('Client: receiving data: '+ data);
+    //console.log('Client: receiving data: '+ data);
     setText(data);
   });
 
