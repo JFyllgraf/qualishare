@@ -13,7 +13,7 @@ function Chat({Name, Room}) { //remember to destructure
   const [room] = useState(Room);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const ENDPOINT = 'localhost:5000';
+  const ENDPOINT = 'https://qualishare-server.herokuapp.com/';
   //const [users, setUsers] = useState('');
 
 

@@ -25,7 +25,7 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     }
   }
 
-  const addQuote = (event) => {
+  const addQuote = (event) => { 
     event.preventDefault();
     let selectedText = window.getSelection().toString();
     if(selectedText === null || selectedText === undefined || selectedText ==='') {
