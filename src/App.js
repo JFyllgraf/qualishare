@@ -29,7 +29,7 @@ class App extends Component {
         codeObjects: [new Code('Code 1'), new Code('Code 2')],
         selected: ''
     };
-      const ENDPOINT = 'localhost:5000';
+      const ENDPOINT = 'https://qualishare-server.herokuapp.com/';
       socket = io(ENDPOINT);
   }
 

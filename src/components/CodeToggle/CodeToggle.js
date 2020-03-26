@@ -8,7 +8,7 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
     const [codename, setcodeName] = useState('');
     const [onChangeEvent, setonChangeEvent] = useState();
     
-    const ENDPOINT = 'localhost:5000';
+    const ENDPOINT = 'https://qualishare-server.herokuapp.com/';
     socket = io(ENDPOINT);
     
     //is also onclick
