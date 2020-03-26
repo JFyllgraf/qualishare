@@ -5,17 +5,17 @@ class Code {
     static ID = 0; //at some point, have database do this automatically, otherwise multiple clients will ruin this
 
     constructor(name) {
-        const _name = name; //'const' is private variable
-        const _id = Code.ID;
+        this._name = name; //'const' is private variable
+        this._id = Code.ID;
         Code.ID = Code.ID + 1;
         this.memo = []; //'this' is publicly accessible variable
         this.link = undefined;
-        const _color = randomColor();
+        this._color = randomColor();
         let _quoteRefs = [];
         //getters
-        this.getName = function() { return _name };
-        this.getId = function() { return _id };
-        this.getColor = function() { return _color};
+        this.getName = function() { return this._name };
+        this.getId = function() { return this._id };
+        this.getColor = function() { return this._color};
         this.getQuotes = function () { return _quoteRefs; };
 
         //setter
