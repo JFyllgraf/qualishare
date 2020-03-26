@@ -55,13 +55,13 @@ function Content({selected, codeObjects, handler}) {
   return (
     <div className="content-container">
       <Toolbar
-        onKeyPress={(event) => event.preventDefault()}
         codes={codeList}
         selected={selectedCode}
         handler={handler}
         emmitChange={emmitChange}
       />
       <ContentEditable
+        onKeyPress={(event) => event.preventDefault()}
         html={text}
         onChange={handleChange}
         className="content-input">
