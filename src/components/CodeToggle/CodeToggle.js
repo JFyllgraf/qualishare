@@ -2,12 +2,15 @@ import React, {useState} from 'react';
 import { FormGroup, CustomInput } from 'reactstrap';
 import './CodeToggle.css';
 import Code from '../../data_model/Code'
-
-
+import io from "socket.io-client";
+let socket;
 const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes}) => {
     const [codename, setcodeName] = useState('');
     const [onChangeEvent, setonChangeEvent] = useState();
-
+    
+    const ENDPOINT = 'localhost:5000';
+    socket = io(ENDPOINT);
+    
     //is also onclick
     const handleOnKeyUp = (e) => {
         console.log(e.target.value);
@@ -15,7 +18,41 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes}) => {
         let code = new Code(e.target.value);
         addCodeToList(code);
         e.target.value = ''; //at first this seemed like it was bad idea, but it works.
+        setonChangeEvent(undefined); //reset
     };
+    socket.on("newCode", function (data) {
+        let receivedCode = JSON.parse(data);
+        console.log("Received Code", receivedCode);
+        if (!isCodeInList(receivedCode._id)){
+            let newCode = new Code(receivedCode._name);
+            newCode._id = receivedCode._id;
+            newCode._color = receivedCode._color;
+            //addReceivedCodeToList(newCode);
+            addreceivedCode(newCode);
+        }
+        //do nothing
+    });
+    socket.on("deleteCode", function(data){
+        let codes = getCodes();
+
+        for (let i = 0; i < codes.length; i++){
+            if (codes[i].getName() === data){
+                deleteCodeFromList(i);
+            }
+        }
+    });
+    function isCodeInList(id){
+        let codes = getCodes();
+        let bool = false;
+
+        for (let i = 0; i < codes.length; i++){
+            if (codes[i].getId() === id){
+                bool = true;
+                break;
+            }
+        }
+        return bool;
+    }
     const handleOnChange = (e) => {
         e.preventDefault();
         e.persist();
@@ -41,6 +78,7 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes}) => {
         }
         onChangeEvent.target.value = '';//reset
         setonChangeEvent(undefined)//reset
+        socket.emit("deleteCode", codeToDelete);
     };
 
 
