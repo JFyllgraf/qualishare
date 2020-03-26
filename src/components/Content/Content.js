@@ -52,6 +52,9 @@ function Content({selected, codeObjects, handler}) {
   };
 */
 
+  function preventDragging(event){
+    event.preventDefault();
+  }
 
   return (
     <div className="content-container">
@@ -62,6 +65,8 @@ function Content({selected, codeObjects, handler}) {
         emmitChange={emmitChange}
       />
       <ContentEditable
+        onDragover={preventDragging}
+        onDrop={preventDragging}
         onKeyDown={(event) => event.preventDefault()}
         html={text}
         onChange={handleChange}
