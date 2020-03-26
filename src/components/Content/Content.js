@@ -55,6 +55,7 @@ function Content({selected, codeObjects, handler}) {
   return (
     <div className="content-container">
       <Toolbar
+        onKeyPress={(event) => event.preventDefault()}
         codes={codeList}
         selected={selectedCode}
         handler={handler}
