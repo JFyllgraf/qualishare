@@ -59,7 +59,7 @@ class App extends Component {
       );
   };
 
-  addreceivedCode = (code) => {
+  addReceivedCode = (code) => {
       let codes = [...this.state.codeObjects, code];
       this.setState({
               codeObjects: codes
@@ -98,7 +98,7 @@ class App extends Component {
             <Header/>
             </div>
             <div className="menu">
-              <CodeToggle addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} addreceivedCode={this.addreceivedCode} />
+              <CodeToggle addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} addReceivedCode={this.addReceivedCode} />
               <CodeFeed/>
             </div>
             <div className="content">

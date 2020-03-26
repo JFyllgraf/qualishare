@@ -4,7 +4,7 @@ import './CodeToggle.css';
 import Code from '../../data_model/Code'
 import io from "socket.io-client";
 let socket;
-const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes}) => {
+const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode}) => {
     const [codename, setcodeName] = useState('');
     const [onChangeEvent, setonChangeEvent] = useState();
     
@@ -28,7 +28,7 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes}) => {
             newCode._id = receivedCode._id;
             newCode._color = receivedCode._color;
             //addReceivedCodeToList(newCode);
-            addreceivedCode(newCode);
+            addReceivedCode(newCode);
         }
         //do nothing
     });
