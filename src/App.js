@@ -9,13 +9,17 @@ import CodeFeed from './components/CodeFeed/CodeFeed';
 import Code from './data_model/Code';
 
 import './App.css';
-
+import io from "socket.io-client";
     // <Router>
     //   <Route path="/" exact component={Join} />
     //   <Route path="/chat" component={Chat} />
     // </Router>
 
+let socket;
+
+
 class App extends Component {
+
   constructor(props){
     super(props);
     this.state = {
@@ -25,13 +29,16 @@ class App extends Component {
         codeObjects: [new Code('Code 1'), new Code('Code 2')],
         selected: ''
     };
+      const ENDPOINT = 'localhost:5000';
+      socket = io(ENDPOINT);
   }
 
-  updateStateHandler = (property) => {
+    updateStateHandler = (property) => {
     this.setState({selected: property}, () => {
-      console.log("In updateStatehandler: ");
-      console.log(this.state.selected);
-    });
+      //console.log("In updateStatehandler: ");
+      //console.log(this.state.selected);
+      //console.log("Stringify: ", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]));
+    }, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]))); //always emit last
   };
 
   //this function updates parent (app.js) state as expected
@@ -51,6 +58,15 @@ class App extends Component {
         }, console.log(this.state.codeObjects) //should be removed at some point
       );
   };
+
+  addreceivedCode = (code) => {
+      let codes = [...this.state.codeObjects, code];
+      this.setState({
+              codeObjects: codes
+          }, console.log(this.state.codeObjects) //should be removed at some point
+      );
+  };
+
   deleteCodeFromList = (index) => {
       let temp = [...this.state.codeObjects];
       temp.splice(index, 1);
@@ -82,7 +98,7 @@ class App extends Component {
             <Header/>
             </div>
             <div className="menu">
-              <CodeToggle addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes}/>
+              <CodeToggle addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} addreceivedCode={this.addreceivedCode} />
               <CodeFeed/>
             </div>
             <div className="content">
