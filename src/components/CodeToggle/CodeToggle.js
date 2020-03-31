@@ -7,10 +7,10 @@ let socket;
 const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode}) => {
     const [codename, setcodeName] = useState('');
     const [onChangeEvent, setonChangeEvent] = useState();
-    
-    const ENDPOINT = 'https://qualishare-server.herokuapp.com/';
+
+    const ENDPOINT = 'localhost:5000';
     socket = io(ENDPOINT);
-    
+
     //is also onclick
     const handleOnKeyUp = (e) => {
         console.log(e.target.value);

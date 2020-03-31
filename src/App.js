@@ -26,7 +26,7 @@ class App extends Component {
         name: "",
         room: "",
         isLoggedIn: false,
-        codeObjects: [new Code('Code 1'), new Code('Code 2')],
+        codeObjects: [new Code('Political spin'), new Code('Chinese critique'), new Code('Racist remarks')],
         selected: ''
     };
       const ENDPOINT = 'https://qualishare-server.herokuapp.com/';

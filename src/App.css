@@ -36,6 +36,7 @@
 }
 
 .content {
+  max-height: 100%;
   background-color: #557A95;
   grid-area: c;
 }
