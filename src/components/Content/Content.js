@@ -14,7 +14,7 @@ function Content({selected, codeObjects, handler}) {
   const [selectedCode, setSelectedCode] = useState(selected);
   const [codeList, setCodeList] = useState(codeObjects);
 
-  const ENDPOINT = 'localhost:5000';
+  const ENDPOINT = 'https://qualishare-server.herokuapp.com/';
   socket = io(ENDPOINT);
 
   useEffect(() => {

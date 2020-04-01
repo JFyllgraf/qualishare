@@ -8,6 +8,8 @@ import CodeToggle from './components/CodeToggle/CodeToggle';
 import CodeFeed from './components/CodeFeed/CodeFeed';
 import Code from './data_model/Code';
 
+import {CSSTransition} from 'react-transition-group';
+
 import './App.css';
 import io from "socket.io-client";
     // <Router>
@@ -26,6 +28,7 @@ class App extends Component {
         name: "",
         room: "",
         isLoggedIn: false,
+        displayChat: false,
         codeObjects: [new Code('Political spin'), new Code('Chinese critique'), new Code('Racist remarks')],
         selected: ''
     };
@@ -33,7 +36,7 @@ class App extends Component {
       socket = io(ENDPOINT);
   }
 
-    updateStateHandler = (property) => {
+  updateStateHandler = (property) => {
     this.setState({selected: property}, () => {
       //console.log("In updateStatehandler: ");
       //console.log(this.state.selected);
@@ -91,6 +94,13 @@ class App extends Component {
       )
   };
 
+  toggle(event){
+    event.preventDefault();
+    this.setState(prevState => ({
+      displayChat: !prevState.displayChat,
+    }));
+  }
+
   render() {
       return (
         <div className="grid-container">
@@ -112,9 +122,24 @@ class App extends Component {
                />
             </div>
             <div className="extra">
-              
+              <CSSTransition
+                in={this.state.displayChat}
+                appear={true}
+                timeout={350}
+                classNames="fade"
+                unmountOnExit={true}
+              >
+                {(this.state.isLoggedIn) ? this.chat() : this.join()}
+              </CSSTransition>
+
+              <a
+                className="chatToggle"
+                onClick={(event) => this.toggle(event)}>{this.state.displayChat ? "Hide Chat" : "Show Chat"}
+              </a>
             </div>
-            <div className="footer"></div>
+
+            <div className="footer">
+            </div>
         </div>
       )
   }
