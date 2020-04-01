@@ -53,6 +53,7 @@
 }
 
 .toolbarSelect {
+  height: 34px;
   font-size: 14px;
   background-color: transparent;
   display:inline-block;
