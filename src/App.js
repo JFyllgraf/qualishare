@@ -112,7 +112,7 @@ class App extends Component {
                />
             </div>
             <div className="extra">
-              {this.state.isLoggedIn ? this.chat() : this.join()}
+              
             </div>
             <div className="footer"></div>
         </div>

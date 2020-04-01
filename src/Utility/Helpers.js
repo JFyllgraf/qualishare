@@ -19,7 +19,7 @@ export function highlight(color){
 
 export function getDefaultText(){
   const htmlString = `
-    WASHINGTON — The Trump administration is pushing the U.N. Security Council to call attention to the Chinese origins of the coronavirus, four diplomats posted to the United Nations told NBC News, triggering a stalemate as the global body seeks to cobble together a response to the pandemic.
+    WASHINGTON — The Trump administration is pushing the U.N. Security Council to call attention to the Chinese origins of the coronavirus, four diplomats posted to the United Nations told NBC News, triggering a stalemate as the global body seeks to cobble together a response to the pandemic. <br><br>
 
     Talks among U.N. Security Council nations over a joint declaration or resolution on the coronavirus have stalled over U.S. insistence that it explicitly state that the virus originated in Wuhan, China, as well as exactly when it started there. China's diplomats are enraged according to the diplomats, even as they seek to put their own language into the statement praising China's efforts to contain the virus.<br><br>
 
@@ -44,6 +44,28 @@ export function getDefaultText(){
     Those demands have hit a wall with China, a veto-wielding member of the Security Council, whose diplomats accused the U.S. of "irresponsible practices" in a blistering email to other nations' diplomats this week obtained by NBC News. <br><br>
 
     "We are astonished by the choice of the United States to use this opportunity for politicizing the outbreak and blaming China, which we strongly oppose," China's mission to the U.N. wrote. "The groundless accusations and malicious fabrication from the U.S. aim at shirking its own responsibilities, which severely poisoned the atmosphere of global cooperation in containing the outbreak." <br><br>
+
+    A U.S. diplomat with knowledge of the discussion said the National Security Council had directed the U.S. mission to the United Nations to advocate for the language, with support from Pompeo. <br><br>
+
+    The U.S. mission didn't respond to a request for comment. But a senior Trump administration official said a key element of Trump's effort to address coronavirus is to convene global experts "to better understand the coronavirus." <br><br>
+
+    "Our goal is to gather the data, information and samples needed to understand the evolutionary origins of the virus so we can effectively combat the pandemic and prepare for future outbreaks," the official said. <br><br>
+
+    Complicating efforts has been Russia's insistence that ambassadors show up in person at the Security Council to vote, contradicting public health guidance urging people to stay home and not to congregate in groups, diplomats from three Security Council nations said. <br><br>
+
+    For more than a week, as other countries on the council directed nearly all their staff to work from home, Russia's diplomats were still showing up at their mission in New York, the diplomats said. Meanwhile, they argued that virtual meetings were untenable, citing technical issues with the videoconferencing equipment. <br><br>
+
+    Russia's mission to the U.N. didn't respond to a request for comment. But on Tuesday, the Russians dropped their insistence on in-person meetings, several diplomats said. The shift came the same day that Russian President Vladimir Putin, wearing a full protective suit and a respirator as he visited a hospital, was told by Moscow's mayor that Russia has significantly more coronavirus patients than its official tally shows. <br><br>
+
+    In Washington, the Trump administration has bristled at an unsubstantiated suggestion by China's Foreign Ministry that it might have been the U.S. Army that brought the coronavirus to Wuhan. <br><br>
+
+    "You see it. You see it on social media," Pompeo said Wednesday, accusing Beijing of an "intentional disinformation campaign" even as he insisted that now wasn't the time to point fingers. "You see it in remarks from senior people inside the Chinese Communist Party talking about whether this was a — U.S. brought to China. This is crazy talk." <br><br>
+
+    In discussions about a Security Council declaration or resolution, Chinese diplomats have had their own wish list, two diplomats familiar with the talks said: references to the success of China's extensive efforts to control the crisis once the virus was identified. After enforcing a strict lockdown in Hubei province, the center of the crisis in China, authorities have started easing restrictions as the number of new cases has fallen to nearly zero. <br><br>
+
+    A diplomat involved in the Security Council talks said other nations were encouraging a compromise in which China and the United States would drop their insistence on language that would be inevitably problematic for the other. <br><br>
+
+    China's mission to the U.N. didn't respond to a request for comment. <br><br>
   `;
   return htmlString;
 }

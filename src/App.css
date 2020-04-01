@@ -16,7 +16,7 @@
   grid-template-rows: fit-content(40%) auto fit-content(40%);
   grid-template-areas:
   "h h h h h h h h h h h h"
-  "m c c c c c c c c e e e"
+  "m m c c c c c c c e e e"
   "f f f f f f f f f f f f";
 }
 
