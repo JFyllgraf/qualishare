@@ -28,7 +28,7 @@ class App extends Component {
         name: "",
         room: "",
         isLoggedIn: false,
-        displayChat: false,
+        displayChat: true,
         codeObjects: [new Code('Political spin'), new Code('Chinese critique'), new Code('Racist remarks')],
         selected: ''
     };
