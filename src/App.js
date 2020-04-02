@@ -28,11 +28,11 @@ class App extends Component {
         name: "",
         room: "",
         isLoggedIn: false,
-        displayChat: false,
+        displayChat: true,
         codeObjects: [new Code('Political spin'), new Code('Chinese critique'), new Code('Racist remarks')],
         selected: ''
     };
-      const ENDPOINT = 'https://qualishare-server.herokuapp.com/';
+      const ENDPOINT = 'http://localhost:5000';
       socket = io(ENDPOINT);
   }
 
@@ -124,10 +124,9 @@ class App extends Component {
             <div className="extra">
               <CSSTransition
                 in={this.state.displayChat}
-                appear={true}
                 timeout={350}
                 classNames="fade"
-                unmountOnExit={true}
+                unmountOnExit={false}
               >
                 {(this.state.isLoggedIn) ? this.chat() : this.join()}
               </CSSTransition>

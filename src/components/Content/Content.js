@@ -3,7 +3,9 @@ import ContentEditable from 'react-contenteditable';
 import io from "socket.io-client";
 import Quote from '../../data_model/Quote'
 import './Content.css';
+
 import { getDefaultText } from '../../Utility/Helpers';
+import { server_url } from '../../Utility/GlobalVariables';
 
 import Toolbar from '../Toolbar/Toolbar';
 let socket;
@@ -14,7 +16,7 @@ function Content({selected, codeObjects, handler}) {
   const [selectedCode, setSelectedCode] = useState(selected);
   const [codeList, setCodeList] = useState(codeObjects);
 
-  const ENDPOINT = 'https://qualishare-server.herokuapp.com/';
+  const ENDPOINT = server_url;
   socket = io(ENDPOINT);
 
   useEffect(() => {
