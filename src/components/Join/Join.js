@@ -5,7 +5,7 @@ import './Join.css';
 class Join extends Component {
   state = {
     name: "",
-    room: ""
+    room: 1
   };
 
 
@@ -24,14 +24,17 @@ class Join extends Component {
     return (
         <div className="joinOuterContainer">
           <div className="joinInnerContainer">
-            <h1 className="heading">Join Chat</h1>
+            <h1 className="heading">Chat</h1>
             <div>
               <input placeholder="Name" type="text" id="name" className="joinInput" onChange={this.handleChange}/>
             </div>
-            <div>
-              <input placeholder="Room" type="text" id="room" className="joinInput mt-20" onChange={this.handleChange} />
-            </div>
-            <button className="button mt-20" onClick={this.handleOnClick} type="submit">Sign In</button>
+            {/*
+              <div>
+                <input placeholder="Room" type="text" id="room" className="joinInput mt-20"
+                       onChange={this.handleChange}/>
+              </div>
+            */}
+            <button className="button mt-20" onClick={this.handleOnClick} type="submit">Join</button>
           </div>
         </div>
     )
