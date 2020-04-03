@@ -28,7 +28,8 @@ class App extends Component {
         room: "",
         isLoggedIn: false,
         codeObjects: [new Code('Code 1'), new Code('Code 2')],
-        selected: ''
+        selected: '',
+        randomVar: ''
     };
       const ENDPOINT = 'https://qualishare-server.herokuapp.com/';
       socket = io(ENDPOINT);
@@ -40,6 +41,10 @@ class App extends Component {
       //console.log(this.state.selected);
       //console.log("Stringify: ", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]));
     }, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]))); //always emit last
+  };
+  doNothing = (var1, var2) => {
+      let a1 = [var1, var2];
+      return [...a1, var1];
   };
 
   //this function updates parent (app.js) state as expected
