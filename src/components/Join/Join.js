@@ -5,7 +5,7 @@ import './Join.css';
 class Join extends Component {
   state = {
     name: "",
-    room: 1
+    room: "1"
   };
 
 
@@ -17,7 +17,7 @@ class Join extends Component {
 
   handleOnClick = (e) => {
     e.preventDefault();
-    this.props.addNameAndRoom(this.state.name, this.state.room);
+    this.props.addNameAndRoom(this.state.name, "1");
 
   };
   render() {
