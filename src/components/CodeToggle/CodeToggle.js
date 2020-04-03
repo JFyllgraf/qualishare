@@ -127,7 +127,7 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
   return (
     <div className="codeToggle-container">
 
-      <h4>Active Codes</h4>
+      <h4>ACTIVE CODES</h4>
       <div className="btn-group">
         <a className="toggleButton"  id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null} color="dark" size="sm">+</a>
         <a className="toggleButton" id="deletebtn" onClick={(e) => CheckValidInput(e) ? handleOnClickDeleteCode(e) : null} color="dark" size="sm">-</a>
