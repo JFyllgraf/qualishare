@@ -7,6 +7,7 @@ import Content from './components/Content/Content';
 import CodeToggle from './components/CodeToggle/CodeToggle';
 import CodeFeed from './components/CodeFeed/CodeFeed';
 import Code from './data_model/Code';
+import { server_url } from './Utility/GlobalVariables';
 
 import {CSSTransition} from 'react-transition-group';
 
@@ -32,7 +33,7 @@ class App extends Component {
         codeObjects: [new Code('Political spin'), new Code('Chinese critique'), new Code('Racist remarks')],
         selected: ''
     };
-      const ENDPOINT = 'http://localhost:5000';
+      const ENDPOINT = server_url;
       socket = io(ENDPOINT);
   }
 
