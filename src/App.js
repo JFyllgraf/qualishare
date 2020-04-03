@@ -17,6 +17,7 @@ import io from "socket.io-client";
 
 let socket;
 
+//added comment to reset server
 
 class App extends Component {
 
