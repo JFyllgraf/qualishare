@@ -7,6 +7,8 @@ import Content from './components/Content/Content';
 import CodeToggle from './components/CodeToggle/CodeToggle';
 import CodeFeed from './components/CodeFeed/CodeFeed';
 import Code from './data_model/Code';
+import { server_url } from './Utility/GlobalVariables';
+
 
 import './App.css';
 import io from "socket.io-client";
@@ -31,7 +33,7 @@ class App extends Component {
         selected: '',
         randomVar: ''
     };
-      const ENDPOINT = 'https://qualishare-server.herokuapp.com/';
+      const ENDPOINT = server_url;
       socket = io(ENDPOINT);
   }
 
@@ -42,10 +44,7 @@ class App extends Component {
       //console.log("Stringify: ", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]));
     }, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]))); //always emit last
   };
-  doNothing = (var1, var2) => {
-      let a1 = [var1, var2];
-      return [...a1, var1];
-  };
+
 
   //this function updates parent (app.js) state as expected
   addNameAndRoom = (name, room) => {

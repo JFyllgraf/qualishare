@@ -6,6 +6,7 @@ import './Chat.css';
 import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
 import Messages from '../Messages/Messages';
+import { server_url } from '../../Utility/GlobalVariables';
 let socket;
 
 function Chat({Name, Room}) { //remember to destructure
@@ -13,7 +14,7 @@ function Chat({Name, Room}) { //remember to destructure
   const [room] = useState(Room);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const ENDPOINT = 'https://qualishare-server.herokuapp.com/';
+  const ENDPOINT = server_url;
   //const [users, setUsers] = useState('');
 
 

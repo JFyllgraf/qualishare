@@ -3,12 +3,13 @@ import { FormGroup, CustomInput } from 'reactstrap';
 import './CodeToggle.css';
 import Code from '../../data_model/Code'
 import io from "socket.io-client";
+import {server_url} from "../../Utility/GlobalVariables";
 let socket;
 const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode}) => {
     const [codename, setcodeName] = useState('');
     const [onChangeEvent, setonChangeEvent] = useState();
     
-    const ENDPOINT = 'https://qualishare-server.herokuapp.com/';
+    const ENDPOINT = server_url;
     socket = io(ENDPOINT);
     
     //is also onclick
