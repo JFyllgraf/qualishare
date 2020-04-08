@@ -4,13 +4,15 @@ import { Button, Label, Input } from 'reactstrap';
 import './Toolbar.css';
 import { highlight } from '../../Utility/Helpers';
 import Quote from "../../data_model/Quote";
-
+import axios from 'axios';
 
 
 function Toolbar ({codes, selected, handler, emmitChange}) {
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
-
+  const [file, setFile] = useState(undefined);
+  const [fileName, setFileName] = useState(undefined);
+  const [uploadedFile, setUploadedFile] = useState(undefined);
   useEffect(() => {
     handler(selectedCode);
     setCodeList(codes);
@@ -56,6 +58,35 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     }
   };
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setFileName(e.target.files[0].name);
+
+  };
+  const uploadFile = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    console.log("Client try");
+
+    try{
+      const res = await axios.post('http://localhost:5000/upload', formData, {
+        headers: {
+          'content-Type':'multipart/form-data'
+        }
+      });
+      const {fileName, filePath} = res.data;
+    } catch (err){
+      if (err.response.status === 500){
+        alert("pwoblem mit server: ");
+      }
+      else{
+        console.log(err.response.data.msg);
+      }
+    }
+  };
+
   return (
     <div className="toolbar-container">
       <div className="toolbar-innerContainer">
@@ -71,6 +102,8 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
         </select>
         <a href="something" className="toolbarButton" onClick={addQuote}>Apply</a>
         <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
+        <Input type="file" onChange={handleFileChange} className="toolbarButton"> Put in text from file</Input>
+        <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
       </div>
     </div>
 
