@@ -5,7 +5,16 @@ import './Toolbar.css';
 import { highlight } from '../../Utility/Helpers';
 import Quote from "../../data_model/Quote";
 import axios from 'axios';
+import {server_url} from "../../Utility/GlobalVariables";
 
+
+
+//'Content-Type': 'application/json',
+const config = {
+  headers:{
+        "Access-Control-Allow-Origin": "*"}
+}
+//axios.defaults.headers.common = config;
 
 function Toolbar ({codes, selected, handler, emmitChange}) {
   const [codeList, setCodeList] = useState(codes);
@@ -30,19 +39,55 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
   const addQuote = (event) => { 
     event.preventDefault();
     let selectedText = window.getSelection().toString();
+    let offset = window.getSelection().anchorOffset;
+
     if(selectedText === null || selectedText === undefined || selectedText ==='') {
       return null
     }
     else {
+      /*
+      axios.post(server_url+"newQuote", {
+        quoteText: selectedText,
+        quoteOffset: offset,
+        codeRefs: selectedCode._id,
+        documentNum: 0 //default for now
+      }).then(res => {
+        console.log("Succes!");
+      }).catch(err => {
+        console.log(err);
+      })
+       */
       var quote = new Quote(selectedText, window.getSelection().anchorOffset, [selectedCode]); //looks dangerous, but should be fine
       selectedCode.addQuote(quote);
+      highlight(selectedCode.getColor());
     }
-    highlight(selectedCode.getColor());
 
 
-    console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
+    //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
     //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
   };
+  const testPost = (event) => {
+    event.preventDefault();
+    let selectedText = window.getSelection().toString();
+    let offset = window.getSelection().anchorOffset;
+
+    if(selectedText === null || selectedText === undefined || selectedText ==='') {
+      return null
+    }
+    else {
+      axios.post(server_url + "/newQuote", {
+        quoteText: selectedText,
+        quoteOffset: offset,
+        codeRefs: selectedCode._id,
+        documentNum: 0 //default for now
+      }).then(res => {
+        console.log("Succes! and: ", res);
+        highlight(selectedCode.color);
+      }).catch(err => {
+        console.log("Error: ", err);
+      })
+    }
+  }
 
   const removeQuote = (event) => {
     event.preventDefault();
@@ -71,14 +116,14 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     console.log("Client try");
 
     try{
-      const res = await axios.post('http://localhost:5000/upload', formData, {
+      const res = await axios.post(server_url+'/upload', formData, {
         headers: {
           'content-Type':'multipart/form-data'
         }
       });
       const {fileName, filePath} = res.data;
     } catch (err){
-      if (err.response.status === 500){
+      if (err.status === 500){
         alert("pwoblem mit server: ");
       }
       else{
@@ -100,7 +145,7 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
             null
           }
         </select>
-        <a href="something" className="toolbarButton" onClick={addQuote}>Apply</a>
+        <a href="something" className="toolbarButton" onClick={testPost}>Apply</a>
         <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
         <Input type="file" onChange={handleFileChange} className="toolbarButton"> Put in text from file</Input>
         <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>

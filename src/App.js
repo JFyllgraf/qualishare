@@ -33,8 +33,7 @@ class App extends Component {
         selected: '',
         randomVar: ''
     };
-      const ENDPOINT = server_url;
-      socket = io(ENDPOINT);
+      socket = io(server_url);
   }
 
     updateStateHandler = (property) => {
