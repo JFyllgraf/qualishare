@@ -8,10 +8,10 @@ let socket;
 const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode}) => {
     const [codename, setcodeName] = useState('');
     const [onChangeEvent, setonChangeEvent] = useState();
-    
+
     const ENDPOINT = server_url;
     socket = io(ENDPOINT);
-    
+
     //is also onclick
     const handleOnKeyUp = (e) => {
         console.log(e.target.value);
@@ -115,7 +115,7 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
                     codes.map(code => {
                         return (
                             <div className="code" key={code.getId().toString()}>
-                                <CustomInput type="checkbox" id={code.getId().toString()} label={code.getName()}/>
+                                <li id={code.getId().toString()}>{code.getName()}</li>
                             </div>
                         )
                     })
@@ -130,8 +130,8 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
 
       <h4>ACTIVE CODES</h4>
       <div className="btn-group">
-        <a className="toggleButton"  id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null} color="dark" size="sm">+</a>
-        <a className="toggleButton" id="deletebtn" onClick={(e) => CheckValidInput(e) ? handleOnClickDeleteCode(e) : null} color="dark" size="sm">-</a>
+        <a className="toggleButton"  id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null}>+</a>
+        <a className="toggleButton" id="deletebtn" onClick={(e) => CheckValidInput(e) ? handleOnClickDeleteCode(e) : null}>-</a>
       </div>
         <div><input type="text" onChange={handleOnChange} onKeyUpCapture={(e) => e.keyCode===13 && CheckValidInput(e) ? handleOnKeyUp(e) : null}/></div>
       <div className="code-list-container">

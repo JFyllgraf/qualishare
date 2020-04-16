@@ -7,6 +7,7 @@ import InfoBar from '../InfoBar/InfoBar';
 import Input from '../Input/Input';
 import Messages from '../Messages/Messages';
 import { server_url } from '../../Utility/GlobalVariables';
+
 let socket;
 
 function Chat({Name, Room}) { //remember to destructure

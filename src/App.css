@@ -13,10 +13,10 @@
   display: grid;
   grid-gap: 0;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: fit-content(40%) auto fit-content(40%);
+  grid-template-rows: 35px auto fit-content(40%);
   grid-template-areas:
   "h h h h h h h h h h h h"
-  "m c c c c c c c c e e e"
+  "m m c c c c c c c e e e"
   "f f f f f f f f f f f f";
 }
 
@@ -36,6 +36,7 @@
 }
 
 .content {
+  max-height: 100%;
   background-color: #557A95;
   grid-area: c;
 }
@@ -64,6 +65,54 @@ html, body {
 
 html, body, #root, #root>div {
   height: 100vh !important;
+}
+
+/* FADE ANIMATION */
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms linear;
+}
+
+.fade-exit-done {
+  opacity: 0;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms linear;
+}
+
+.chatToggle {
+  cursor: pointer;
+  font-size: 14px;
+  display:inline-block;
+  padding:0.35em 1.2em;
+  border:0.1em solid #FFFFFF;
+  margin: 5px 5px 10px 5px;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: 300;
+  color: #FFFFFF !important;
+  text-align: center;
+  transition: all 0.2s;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.chatToggle:hover {
+  color: #000000;
+  background-color: #7395AE;
 }
 
 /* .grid-container > div:nth-child(1n) {

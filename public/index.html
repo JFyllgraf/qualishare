@@ -24,8 +24,8 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
     <script src="https://sak.userreport.com/c7509a80221445d68036/launcher.js" async id="userreport-launcher-script"></script>
+    <title>React App</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -44,13 +44,14 @@
       function removeSPan(span){
         var result = confirm("Want to delete?");
         if (result) {
-          // pull text from the span, and format if it starts or ends in a space
-          const oldSpanText = span.innerHTML.toString();
-          const cleanText = oldSpanText.replace(/&nbsp;/g, ' ');
-
-          // create a pure textnode and replace the span
-          var newNode = document.createTextNode(cleanText);
-          span.parentNode.replaceChild(newNode, span);
+          // place childNodes in document fragment
+        	var docFrag = document.createDocumentFragment();
+        	while (span.firstChild) {
+        		var child = span.removeChild(span.firstChild);
+        		docFrag.appendChild(child);
+        	}
+        	// replace wrapper with document fragment
+        	span.parentNode.replaceChild(docFrag, span);
         }
       }
     </script>

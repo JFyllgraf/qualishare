@@ -25,7 +25,7 @@
 .code-list-container {
   margin-top: 10px;
   display: flex;
-  align-self: flex-start;
+  /* align-self: flex-start; */
 }
 
 .custom-control-label:before{
@@ -37,6 +37,7 @@
 
 /* BUTTON STYLE */
 .toggleButton {
+  cursor: pointer;
   font-size: 14px;
   display:inline-block;
   padding:0.35em 1.2em;
@@ -55,4 +56,8 @@
 .toggleButton:hover {
   color: #000000;
   background-color: #7395AE;
+}
+
+.code {
+  font-size: 18px;
 }
