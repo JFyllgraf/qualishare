@@ -35,7 +35,7 @@ class App extends Component {
         codeObjects: [new Code('Political spin'), new Code('Chinese critique'), new Code('Racist remarks')],
         selected: ''
     };
-      const ENDPOINT = 'http://localhost:5000';
+      const ENDPOINT = server_url;
       socket = io(ENDPOINT);
   }
 
