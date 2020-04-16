@@ -45,18 +45,23 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
       return null
     }
     else {
-      /*
-      axios.post(server_url+"newQuote", {
+      let data = {
         quoteText: selectedText,
         quoteOffset: offset,
         codeRefs: selectedCode._id,
         documentNum: 0 //default for now
-      }).then(res => {
-        console.log("Succes!");
+      }
+      console.log(data);
+
+      axios.post(server_url+"/newQuote", data, {
+        headers: {
+          'content-Type':'application/json;charset=utf-8'
+        }}).then(res => {
+        console.log("Succes!", res);
       }).catch(err => {
         console.log(err);
       })
-       */
+
       var quote = new Quote(selectedText, window.getSelection().anchorOffset, [selectedCode]); //looks dangerous, but should be fine
       selectedCode.addQuote(quote);
       highlight(selectedCode.getColor());
@@ -66,6 +71,7 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
     //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
   };
+  /*
   const testPost = (event) => {
     event.preventDefault();
     let selectedText = window.getSelection().toString();
@@ -75,19 +81,25 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
       return null
     }
     else {
-      axios.post(server_url + "/newQuote", {
-        quoteText: selectedText,
-        quoteOffset: offset,
-        codeRefs: selectedCode._id,
-        documentNum: 0 //default for now
-      }).then(res => {
-        console.log("Succes! and: ", res);
-        highlight(selectedCode.color);
+      let data = {
+          quoteText: "selectedText",
+          quoteOffset: 7,
+          codeRefs: 6,
+          documentNum: 0 //default for now
+        }
+        console.log("data: ", data);
+        axios.post(server_url + "/newQuote", data).then(res => {
+          console.log("data: ", data);
+          console.log(data);
+          console.log("Succes! and: ", res);
+          highlight(selectedCode.color);
       }).catch(err => {
         console.log("Error: ", err);
       })
     }
   }
+
+   */
 
   const removeQuote = (event) => {
     event.preventDefault();
@@ -145,7 +157,7 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
             null
           }
         </select>
-        <a href="something" className="toolbarButton" onClick={testPost}>Apply</a>
+        <a href="something" className="toolbarButton" onClick={addQuote}>Apply</a>
         <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
         <Input type="file" onChange={handleFileChange} className="toolbarButton"> Put in text from file</Input>
         <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
