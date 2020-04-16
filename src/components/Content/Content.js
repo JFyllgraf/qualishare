@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ContentEditable from 'react-contenteditable';
 import io from "socket.io-client";
-import Quote from '../../data_model/Quote'
+//import Quote from '../../data_model/Quote';
 import './Content.css';
 
 import { getDefaultText } from '../../Utility/Helpers';
@@ -26,7 +26,7 @@ function Content({selected, codeObjects, handler}) {
   }, [selected, selectedCode, codeObjects]);
 
   useEffect(() => {
-    emmitChange();
+    socket.emit('editingText', text);
   }, [text])
 
   socket.on('editingText', function(data){

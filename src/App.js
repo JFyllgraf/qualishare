@@ -39,6 +39,12 @@ class App extends Component {
       socket = io(ENDPOINT);
   }
 
+  componentDidMount() {
+    const { name } = this.props.location.state;
+    console.log(name);
+  }
+
+
   updateStateHandler = (property) => {
     this.setState({selected: property}, () => {
       //console.log("In updateStatehandler: ");
@@ -137,6 +143,7 @@ class App extends Component {
 
               <a
                 className="chatToggle"
+                href="/#"
                 onClick={(event) => this.toggle(event)}>{this.state.displayChat ? "Hide Chat" : "Show Chat"}
               </a>
             </div>

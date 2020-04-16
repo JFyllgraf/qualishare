@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Label, Input } from 'reactstrap';
 
 import './Toolbar.css';
 import { highlight } from '../../Utility/Helpers';
@@ -14,7 +13,7 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
   useEffect(() => {
     handler(selectedCode);
     setCodeList(codes);
-  }, [selectedCode, codes]);
+  }, [selectedCode, codes, handler]);
 
   function newSelection(event){
     let i;
@@ -25,7 +24,7 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     }
   }
 
-  const addQuote = (event) => { 
+  const addQuote = (event) => {
     event.preventDefault();
     let selectedText = window.getSelection().toString();
     if(selectedText === null || selectedText === undefined || selectedText ==='') {

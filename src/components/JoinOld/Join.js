@@ -1,41 +1,41 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, {Component} from 'react';
 
 import './Join.css';
 
-function Join() {
-  const [name, setName] = useState('');
-
-
-  function handleChange(e) {
-    setName(e.target.value);
+class Join extends Component {
+  state = {
+    name: "",
+    room: ""
   };
 
-  function handleOnClick(e) {
+
+  handleChange = (e) => {
+    this.setState({
+      [e.target.id]: e.target.value
+    })
+  };
+
+  handleOnClick = (e) => {
     e.preventDefault();
     this.props.addNameAndRoom(this.state.name, this.state.room);
-  };
 
-  return (
-      <div className="joinOuterContainer">
-        <div className="joinInnerContainer">
-          <h1 className="heading">Join Chat</h1>
-          <div>
-            <input placeholder="Name" type="text" id="name" className="joinInput" onChange={handleChange}/>
+  };
+  render() {
+    return (
+        <div className="joinOuterContainer">
+          <div className="joinInnerContainer">
+            <h1 className="heading">Join Chat</h1>
+            <div>
+              <input placeholder="Name" type="text" id="name" className="joinInput" onChange={this.handleChange}/>
+            </div>
+            <div>
+              <input placeholder="Room" type="text" id="room" className="joinInput mt-20" onChange={this.handleChange} />
+            </div>
+            <button className="button mt-20" onClick={this.handleOnClick} type="submit">Sign In</button>
           </div>
-          <Link
-            onClick={event => (!name) ? event.preventDefault() : null}
-            to={{
-              pathname: '/home',
-              state: {
-                name: name
-              }
-            }}>
-            <button className="button mt-20" type="submit">Sign In</button>
-          </Link>
         </div>
-      </div>
-  )
+    )
+  }
 }
 
 

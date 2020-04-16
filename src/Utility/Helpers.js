@@ -1,5 +1,4 @@
 export function highlight(color){
-  const doSomething = () => { console.log('test'); }
   //remove any format to avoid overlap issues
   document.execCommand('removeFormat', false, null);
   //save selected text
@@ -96,6 +95,7 @@ export function rainbow(numOfSteps, step) {
         case 3: r = 0; g = q; b = 1; break;
         case 4: r = f; g = 0; b = 1; break;
         case 5: r = 1; g = 0; b = q; break;
+        default: r = 1; g = f; b = 0;
     }
     var c = "#" + ("00" + (~ ~(r * 255)).toString(16)).slice(-2) + ("00" + (~ ~(g * 255)).toString(16)).slice(-2) + ("00" + (~ ~(b * 255)).toString(16)).slice(-2);
     return (c);

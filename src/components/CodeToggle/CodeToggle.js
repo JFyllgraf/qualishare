@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { FormGroup, CustomInput } from 'reactstrap';
+import { FormGroup } from 'reactstrap';
 import './CodeToggle.css';
 import Code from '../../data_model/Code'
 import io from "socket.io-client";
@@ -95,11 +95,13 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
 
         let bool = true;
         let codes = getCodes();
-        codes.map((code) => {
-            if (code.getName() === inputString){
-                bool = false;
-            }
-        });
+        for (let i = 0; i < codes.length; i++){
+          if (codes[i].getName() === inputString){
+            bool = false;
+          }
+        }
+
+
 
         if(e.target.id === "deletebtn"){
             bool = !bool;
@@ -130,8 +132,8 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
 
       <h4>ACTIVE CODES</h4>
       <div className="btn-group">
-        <a className="toggleButton"  id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null}>+</a>
-        <a className="toggleButton" id="deletebtn" onClick={(e) => CheckValidInput(e) ? handleOnClickDeleteCode(e) : null}>-</a>
+        <a className="toggleButton" href="/#" id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null}>+</a>
+        <a className="toggleButton" href="/#" id="deletebtn" onClick={(e) => CheckValidInput(e) ? handleOnClickDeleteCode(e) : null}>-</a>
       </div>
         <div><input type="text" onChange={handleOnChange} onKeyUpCapture={(e) => e.keyCode===13 && CheckValidInput(e) ? handleOnKeyUp(e) : null}/></div>
       <div className="code-list-container">
