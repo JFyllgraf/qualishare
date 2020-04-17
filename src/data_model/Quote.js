@@ -1,16 +1,18 @@
 const summary_length = 5;
 class Quote {
 
-    constructor(quoteText, quoteOffset, codeRef) {
-        const _quoteText = quoteText;
-        const _quoteOffset = quoteOffset;
-        const _codeRefs = [...codeRef];
-        const _summary = quoteText.match(/([\w]*\s|[\w]*)/gm).splice(0, summary_length).toString(); //index out of range is not a problem, will always return at most
+    constructor(id, quoteText, quoteOffset, codeRef) {
+        this._quoteText = quoteText;
+        this._id = id;
+
+        this._quoteOffset = quoteOffset;
+        this._codeRefs = [...codeRef];
+        this._summary = quoteText.match(/([\w]*\s|[\w]*)/gm).splice(0, summary_length).toString(); //index out of range is not a problem, will always return at most
                                                                           // summary_length number of words
-        this.getQuoteText = function () { return _quoteText; };
-        this.getQuoteOffset = function () { return _quoteOffset; };
-        this.getCodeRefs = function () { return _codeRefs; };
-        this.getSummary = function () { return _summary; };
+        this.getQuoteText = function () { return this._quoteText; };
+        this.getQuoteOffset = function () { return this._quoteOffset; };
+        this.getCodeRefs = function () { return this._codeRefs; };
+        this.getSummary = function () { return this._summary; };
     }
 }
 

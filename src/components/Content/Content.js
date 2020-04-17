@@ -39,20 +39,6 @@ function Content({selected, codeObjects, handler}) {
     socket.emit('editingText', text);
   }
 
-  /*
-  const handleOnSelect = () => {
-    let selectedText = window.getSelection().toString();
-    if(selectedText === null || selectedText === undefined) {
-      return null
-    }
-    else {
-      var quote = new Quote(selectedText, window.getSelection().anchorOffset, [selectedCode]); //looks dangerous, but should be fine
-      selectedCode.addQuote(quote)
-    }
-    console.log(quote);
-  };
-*/
-
   function preventDragging(event){
     event.preventDefault();
   }

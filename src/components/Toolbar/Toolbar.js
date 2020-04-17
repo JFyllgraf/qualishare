@@ -6,7 +6,7 @@ import { highlight } from '../../Utility/Helpers';
 import Quote from "../../data_model/Quote";
 import axios from 'axios';
 import {server_url} from "../../Utility/GlobalVariables";
-
+import io from "socket.io-client";
 
 
 //'Content-Type': 'application/json',
@@ -15,6 +15,10 @@ const config = {
         "Access-Control-Allow-Origin": "*"}
 }
 //axios.defaults.headers.common = config;
+
+
+let socket;
+socket = io(server_url);
 
 function Toolbar ({codes, selected, handler, emmitChange}) {
   const [codeList, setCodeList] = useState(codes);
@@ -35,6 +39,10 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
       }
     }
   }
+   socket.on("newQuote", function(data) {
+     console.log("Receiving client data: ", JSON.stringify(data));
+     selectedCode.addQuote(constructQuoteFromData(data)); //create and add new client side quote
+  });
 
   const addQuote = (event) => { 
     event.preventDefault();
@@ -51,55 +59,17 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
         codeRefs: selectedCode._id,
         documentNum: 0 //default for now
       }
-      console.log(data);
-
-      axios.post(server_url+"/newQuote", data, {
-        headers: {
-          'content-Type':'application/json;charset=utf-8'
-        }}).then(res => {
+      axios.post(server_url+"/newQuote", data).then(res => {
         console.log("Succes!", res);
+      }).then(() => {
+        socket.emit("newQuote", data);
+        selectedCode.addQuote(constructQuoteFromData(data));
       }).catch(err => {
         console.log(err);
-      })
-
-      var quote = new Quote(selectedText, window.getSelection().anchorOffset, [selectedCode]); //looks dangerous, but should be fine
-      selectedCode.addQuote(quote);
-      highlight(selectedCode.getColor());
+      });
     }
-
-
-    //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
-    //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
+    highlight(selectedCode.getColor());
   };
-  /*
-  const testPost = (event) => {
-    event.preventDefault();
-    let selectedText = window.getSelection().toString();
-    let offset = window.getSelection().anchorOffset;
-
-    if(selectedText === null || selectedText === undefined || selectedText ==='') {
-      return null
-    }
-    else {
-      let data = {
-          quoteText: "selectedText",
-          quoteOffset: 7,
-          codeRefs: 6,
-          documentNum: 0 //default for now
-        }
-        console.log("data: ", data);
-        axios.post(server_url + "/newQuote", data).then(res => {
-          console.log("data: ", data);
-          console.log(data);
-          console.log("Succes! and: ", res);
-          highlight(selectedCode.color);
-      }).catch(err => {
-        console.log("Error: ", err);
-      })
-    }
-  }
-
-   */
 
   const removeQuote = (event) => {
     event.preventDefault();
@@ -136,13 +106,16 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
       const {fileName, filePath} = res.data;
     } catch (err){
       if (err.status === 500){
-        alert("pwoblem mit server: ");
+        alert("Problem with the server: ");
       }
       else{
-        console.log(err.response.data.msg);
+        console.log("Error: ", err);
       }
     }
   };
+  const handleThis = e => {
+    addQuote(e);
+  }
 
   return (
     <div className="toolbar-container">
@@ -163,8 +136,11 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
         <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
       </div>
     </div>
-
   );
+}
+
+function constructQuoteFromData(data){
+  return new Quote(data.id, data.quoteText, data.offset, [data.codeRefs], data.documentNum);
 }
 
 export default Toolbar;
