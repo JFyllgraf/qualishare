@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './Header.css';
 
 
-function Header () {
+function Header({name}) {
+  const [userName, setUserName] = useState(name);
+
+  useEffect(() => {
+    setUserName(name);
+    console.log("Header: " + name);
+  }, [userName]);
 
   return (
     <nav className="navigation">
+
+      <div className="currentUserContainer">
+        Logged in as {userName}
+      </div>
+
       <ul className="header-menu">
 
         <li className="menu__item">

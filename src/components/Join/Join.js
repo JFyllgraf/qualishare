@@ -19,7 +19,7 @@ function Join() {
   return (
       <div className="joinOuterContainer">
         <div className="joinInnerContainer">
-          <h1 className="heading">Join Chat</h1>
+          <h1 className="heading">Join</h1>
           <div>
             <input placeholder="Name" type="text" id="name" className="joinInput" onChange={handleChange}/>
           </div>

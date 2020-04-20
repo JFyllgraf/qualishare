@@ -28,7 +28,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-        name: "",
+        name: props.location.state.name,
         room: "",
         isLoggedIn: false,
         displayChat: true,
@@ -38,12 +38,6 @@ class App extends Component {
       const ENDPOINT = server_url;
       socket = io(ENDPOINT);
   }
-
-  componentDidMount() {
-    const { name } = this.props.location.state;
-    console.log(name);
-  }
-
 
   updateStateHandler = (property) => {
     this.setState({selected: property}, () => {
@@ -115,7 +109,7 @@ class App extends Component {
       return (
         <div className="grid-container">
             <div className="header">
-            <Header/>
+            <Header name={this.state.name}/>
             </div>
             <div className="menu">
               <CodeToggle addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} addReceivedCode={this.addReceivedCode} />
@@ -138,7 +132,7 @@ class App extends Component {
                 classNames="fade"
                 unmountOnExit={false}
               >
-                {(this.state.isLoggedIn) ? this.chat() : this.join()}
+                {(this.state.name) ? this.chat() : null}
               </CSSTransition>
 
               <a
