@@ -4,6 +4,11 @@ import './CodeToggle.css';
 import Code from '../../data_model/Code'
 import io from "socket.io-client";
 import {server_url} from "../../Utility/GlobalVariables";
+import axios from 'axios';
+
+
+
+
 let socket;
 const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode}) => {
     const [codename, setcodeName] = useState('');
@@ -12,23 +17,14 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
     const ENDPOINT = server_url;
     socket = io(ENDPOINT);
     
-    //is also onclick
-    const handleOnKeyUp = (e) => {
-        console.log(e.target.value);
-        e.preventDefault();
-        let code = new Code(e.target.value);
-        addCodeToList(code);
-        e.target.value = ''; //at first this seemed like it was bad idea, but it works.
-        setonChangeEvent(undefined); //reset
-    };
+
     socket.on("newCode", function (data) {
         let receivedCode = JSON.parse(data);
         console.log("Received Code", receivedCode);
         if (!isCodeInList(receivedCode._id)){
-            let newCode = new Code(receivedCode._name);
-            newCode._id = receivedCode._id;
-            newCode._color = receivedCode._color;
-            //addReceivedCodeToList(newCode);
+            let newCode = new Code(receivedCode.codeName);
+            newCode.id = receivedCode.id;
+            newCode.color = receivedCode.color;
             addReceivedCode(newCode);
         }
         //do nothing
@@ -61,25 +57,56 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
         setcodeName(e.target.value);
     };
 
+    //is also onclick, this adds new code through the 'enter' key
+    const handleOnKeyUp = (e) => {
+        e.preventDefault();
+
+        axios.post(server_url+"/newCode", {codeName: codename}).then(res => {
+            let code = constructCodeFromData(res.data)
+            addCodeToList(code);
+            e.target.value = ''; //at first this seemed like it was bad idea, but it works.
+            setonChangeEvent(undefined); //reset
+        }).catch(err => {
+            console.log(err);
+        })
+    };
+
+    //this adds new code through the button
     const handleOnClick = (e) => {
         e.preventDefault();
-        let code = new Code(codename);
-        addCodeToList(code);
-        onChangeEvent.target.value = ''; //reset
-        setonChangeEvent(undefined); //reset
+        axios.post(server_url+"/newCode", {codeName: codename}).then(res => {
+            let code = constructCodeFromData(res.data);
+            addCodeToList(code);
+            onChangeEvent.target.value = ''; //reset
+            setonChangeEvent(undefined); //reset
+        }).catch(err =>{
+            console.log(err);
+        })
+
     };
+    function constructCodeFromData(data){
+        let code = new Code(data.codeName, data.id);
+        code.color = data.color
+        code.quoteRefs = data.quoteRefs;
+        return code;
+    }
     const handleOnClickDeleteCode = () => {
         let codes = getCodes();
         let codeToDelete = onChangeEvent.target.value;
 
         for (let i = 0; i < codes.length; i++){
             if (codes[i].getName() === codeToDelete){
-                deleteCodeFromList(i);
+                axios.delete(server_url+"/deleteCode", {data: codes[i]}).then(res=>{
+                    console.log(res);
+                    deleteCodeFromList(i);
+                    onChangeEvent.target.value = '';//reset
+                    setonChangeEvent(undefined)//reset
+                    socket.emit("deleteCode", codeToDelete);
+                }).catch(err=>{
+                    console.log(err);
+                })
             }
         }
-        onChangeEvent.target.value = '';//reset
-        setonChangeEvent(undefined)//reset
-        socket.emit("deleteCode", codeToDelete);
     };
 
 

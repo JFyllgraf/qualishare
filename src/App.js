@@ -29,7 +29,7 @@ class App extends Component {
         name: "",
         room: "",
         isLoggedIn: false,
-        codeObjects: [new Code('Code 1'), new Code('Code 2')],
+        codeObjects: [new Code('Code 1', 0), new Code('Code 2', 1)],
         selected: '',
         randomVar: ''
     };
@@ -41,7 +41,8 @@ class App extends Component {
       //console.log("In updateStatehandler: ");
       //console.log(this.state.selected);
       //console.log("Stringify: ", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]));
-    }, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]))); //always emit last
+    }//, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]))); //always emit last
+    );
   };
 
 
@@ -59,7 +60,7 @@ class App extends Component {
       let codes = [...this.state.codeObjects, code];
       this.setState({
           codeObjects: codes
-        }, console.log(this.state.codeObjects) //should be removed at some point
+        }, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1])) //should be removed at some point
       );
   };
 
@@ -67,7 +68,7 @@ class App extends Component {
       let codes = [...this.state.codeObjects, code];
       this.setState({
               codeObjects: codes
-          }, console.log(this.state.codeObjects) //should be removed at some point
+          } //should be removed at some point
       );
   };
 
