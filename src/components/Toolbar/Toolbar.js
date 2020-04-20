@@ -40,8 +40,8 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     }
   }
    socket.on("newQuote", function(data) {
-     console.log("Receiving client data: ", JSON.stringify(data));
-     selectedCode.addQuote(constructQuoteFromData(data)); //create and add new client side quote
+     console.log("Receiving client data: ", data); //probably have to do duplicate checking
+     selectedCode.addQuote(constructQuoteFromData(JSON.parse(data))); //create and add new client side quote
   });
 
   const addQuote = (event) => { 
@@ -60,10 +60,8 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
         documentNum: 0 //default for now
       }
       axios.post(server_url+"/newQuote", data).then(res => {
-        console.log("Succes!", res);
-      }).then(() => {
-        socket.emit("newQuote", data);
-        selectedCode.addQuote(constructQuoteFromData(data));
+        socket.emit("newQuote", JSON.stringify(res.data));
+        selectedCode.addQuote(constructQuoteFromData(res.data));
       }).catch(err => {
         console.log(err);
       });
@@ -76,10 +74,20 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     let text = window.getSelection().toString();
     let quotes = selectedCode.getQuotes();
 
+    //because duplicates, we use a boolean, fix dupes later
+    let firstTime = true;
     for (let i = 0; i < quotes.length; i++){
       if (quotes[i].getQuoteText() === text){
         selectedCode.removeQuote(quotes[i]);
-        document.execCommand('removeFormat', false, null);
+        if(firstTime) {
+          axios.delete(server_url+'/deleteQuote', {data: quotes[i]}).then(res =>{
+            firstTime = false;
+            console.log("Deleted quote");
+          }).catch(err =>{
+            console.log(err);
+          })
+          document.execCommand('removeFormat', false, null);
+        }
         break;
       }
     }
@@ -130,7 +138,7 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
             null
           }
         </select>
-        <a href="something" className="toolbarButton" onClick={addQuote}>Apply</a>
+        <a href="something" className="toolbarButton" onKeyDown={(e) => e.keyCode===66 ? addQuote(e) : null} onClick={addQuote}>Apply</a>
         <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
         <Input type="file" onChange={handleFileChange} className="toolbarButton"> Put in text from file</Input>
         <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
