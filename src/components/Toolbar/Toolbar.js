@@ -103,8 +103,6 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     const formData = new FormData();
     formData.append('file', file);
 
-    console.log("Client try");
-
     try{
       const res = await axios.post(server_url+'/upload', formData, {
         headers: {
@@ -121,8 +119,9 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
       }
     }
   };
-  const handleThis = e => {
-    addQuote(e);
+  const info = e => {
+    e.preventDefault();
+    console.log(codeList);
   }
 
   return (
@@ -142,6 +141,7 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
         <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
         <Input type="file" onChange={handleFileChange} className="toolbarButton"> Put in text from file</Input>
         <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
+        <a href="something" className="toolbarButton" onClick={info}> info </a>
       </div>
     </div>
   );

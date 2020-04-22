@@ -60,8 +60,10 @@ class App extends Component {
       let codes = [...this.state.codeObjects, code];
       this.setState({
           codeObjects: codes
-        }, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1])) //should be removed at some point
+        } //should be removed at some point
       );
+      //setTimeout(socket.emit, 100, "newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]));
+      socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]));
   };
 
   addReceivedCode = (code) => {

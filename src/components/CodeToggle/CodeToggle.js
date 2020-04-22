@@ -21,7 +21,7 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
     socket.on("newCode", function (data) {
         let receivedCode = JSON.parse(data);
         console.log("Received Code", receivedCode);
-        if (!isCodeInList(receivedCode._id)){
+        if (!isCodeInList(receivedCode.id)){
             let newCode = new Code(receivedCode.codeName);
             newCode.id = receivedCode.id;
             newCode.color = receivedCode.color;
@@ -57,35 +57,22 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
         setcodeName(e.target.value);
     };
 
-    //is also onclick, this adds new code through the 'enter' key
-    const handleOnKeyUp = (e) => {
-        e.preventDefault();
-
-        axios.post(server_url+"/newCode", {codeName: codename}).then(res => {
-            let code = constructCodeFromData(res.data)
-            addCodeToList(code);
-            e.target.value = ''; //at first this seemed like it was bad idea, but it works.
-            setonChangeEvent(undefined); //reset
-        }).catch(err => {
-            console.log(err);
-        })
-    };
-
     //this adds new code through the button
     const handleOnClick = (e) => {
         e.preventDefault();
         axios.post(server_url+"/newCode", {codeName: codename}).then(res => {
             let code = constructCodeFromData(res.data);
             addCodeToList(code);
-            onChangeEvent.target.value = ''; //reset
-            setonChangeEvent(undefined); //reset
+
         }).catch(err =>{
             console.log(err);
         })
+        onChangeEvent.target.value = ''; //reset
+        setonChangeEvent(undefined); //reset
 
     };
     function constructCodeFromData(data){
-        let code = new Code(data.codeName, data.id);
+        let code = new Code(data.codeName, data._id);
         code.color = data.color
         code.quoteRefs = data.quoteRefs;
         return code;
@@ -141,8 +128,8 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
                 {
                     codes.map(code => {
                         return (
-                            <div className="code" key={code.getId().toString()}>
-                                <CustomInput type="checkbox" id={code.getId().toString()} label={code.getName()}/>
+                            <div className="code" key={code.id}>
+                                <CustomInput type="checkbox" id={"q"+code.id} label={code.getName()}/>
                             </div>
                         )
                     })
@@ -160,7 +147,7 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
         <a className="toggleButton"  id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null} color="dark" size="sm">+</a>
         <a className="toggleButton" id="deletebtn" onClick={(e) => CheckValidInput(e) ? handleOnClickDeleteCode(e) : null} color="dark" size="sm">-</a>
       </div>
-        <div><input type="text" onChange={handleOnChange} onKeyUpCapture={(e) => e.keyCode===13 && CheckValidInput(e) ? handleOnKeyUp(e) : null}/></div>
+        <div><input type="text" onChange={handleOnChange} onKeyUpCapture={(e) => e.keyCode===13 && CheckValidInput(e) ? handleOnClick(e) : null}/></div>
       <div className="code-list-container">
         <FormGroup check>
             {DisplayCode()}
