@@ -62,5 +62,5 @@ function Content({selected, codeObjects, handler}) {
     </div>
   );
 }
-//onSelect={window.getSelection().toString() ? handleOnSelect() : null}
+
 export default Content;

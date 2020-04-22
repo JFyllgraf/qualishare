@@ -29,7 +29,10 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
   useEffect(() => {
     handler(selectedCode);
     setCodeList(codes);
-  }, [selectedCode, codes]);
+  }, [selectedCode, codes, selected]);
+  useEffect(()=>{
+    setSelectedCode(selected);
+  })
 
   function newSelection(event){
     let i;
@@ -119,16 +122,17 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
       }
     }
   };
+  //for getting state information from button click
   const info = e => {
     e.preventDefault();
-    console.log(codeList);
+    console.log(codeList[0].getName());
   }
 
   return (
     <div className="toolbar-container">
       <div className="toolbar-innerContainer">
         <span className="label">Select Code: </span>
-        <select value={selectedCode.getName()} onChange={newSelection} className="toolbarSelect" type="select" name="select">
+        <select value="{selectedCode.codeName}" onChange={newSelection} className="toolbarSelect" type="select" name="select">
           {
             (codeList) ?
             codeList.map(code => {

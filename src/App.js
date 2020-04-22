@@ -12,6 +12,7 @@ import { server_url } from './Utility/GlobalVariables';
 
 import './App.css';
 import io from "socket.io-client";
+import axios from "axios";
     // <Router>
     //   <Route path="/" exact component={Join} />
     //   <Route path="/chat" component={Chat} />
@@ -29,7 +30,7 @@ class App extends Component {
         name: "",
         room: "",
         isLoggedIn: false,
-        codeObjects: [new Code('Code 1', 0), new Code('Code 2', 1)],
+        codeObjects: [],//[new Code('Code 1', 0), new Code('Code 2', 1)],
         selected: '',
         randomVar: ''
     };
@@ -44,9 +45,25 @@ class App extends Component {
     }//, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]))); //always emit last
     );
   };
+  componentDidMount() {
+      try {
+          axios.get(server_url + "/Codes").then(res => {
+              let retrievedCodes = extractCodesFromJson(res.data);
+              this.setState({
+                  codeObjects: retrievedCodes,
+                  selected: retrievedCodes[0]
+              })
+          }).catch(err => {
+              console.log(err);
+          })
+      }
+      catch (err) {
+          console.log(err)
+      }
+  }
 
 
-  //this function updates parent (app.js) state as expected
+    //this function updates parent (app.js) state as expected
   addNameAndRoom = (name, room) => {
       this.setState({
           name: name,
@@ -125,6 +142,18 @@ class App extends Component {
         </div>
       )
   }
+}
+
+function extractCodesFromJson(jsonArray){
+    let codes = []
+    jsonArray.map(jsoncode => {
+        let code = new Code(jsoncode.codeName, jsoncode.id)
+        code.color = jsoncode.color;
+        code.link = jsoncode.link;
+        code.memo = jsoncode.memo;
+        codes = [...codes, code];
+    })
+    return codes;
 }
 
 export default App
