@@ -25,6 +25,7 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <script src="https://sak.userreport.com/c7509a80221445d68036/launcher.js" async id="userreport-launcher-script"></script>
+    <script src="vendor/mark.js/dist/mark.min.js"></script>
     <title>React App</title>
   </head>
   <body>
@@ -42,17 +43,25 @@
     -->
     <script type="text/javascript">
       function removeSPan(span){
-        var result = confirm("Want to delete?");
-        if (result) {
-          // place childNodes in document fragment
-        	var docFrag = document.createDocumentFragment();
-        	while (span.firstChild) {
-        		var child = span.removeChild(span.firstChild);
-        		docFrag.appendChild(child);
-        	}
-        	// replace wrapper with document fragment
-        	span.parentNode.replaceChild(docFrag, span);
-        }
+        // var result = confirm("Want to delete?");
+        // if (result) {
+        //   // place childNodes in document fragment
+        // 	var docFrag = document.createDocumentFragment();
+        // 	while (span.firstChild) {
+        // 		var child = span.removeChild(span.firstChild);
+        // 		docFrag.appendChild(child);
+        // 	}
+        // 	// replace wrapper with document fragment
+        // 	span.parentNode.replaceChild(docFrag, span);
+        // }
+        const name = span.getAttribute('user');
+        var event = new CustomEvent('testEvent', {
+          detail: {
+            username: name
+          }
+        });
+
+        window.dispatchEvent(event);
       }
     </script>
   </body>

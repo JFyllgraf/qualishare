@@ -11,7 +11,8 @@ import Toolbar from '../Toolbar/Toolbar';
 
 let socket;
 
-function Content({selected, codeObjects, handler}) {
+function Content({name, selected, codeObjects, handler, quoteHandler}) {
+  const [userName, setUserName] = useState(name);
   const initialText = getDefaultText;
   const [text, setText] = useState(initialText);
   const [selectedCode, setSelectedCode] = useState(selected);
@@ -23,7 +24,7 @@ function Content({selected, codeObjects, handler}) {
   useEffect(() => {
     setSelectedCode(selected);
     setCodeList(codeObjects);
-  }, [selected, selectedCode, codeObjects]);
+  }, [name, selected, selectedCode, codeObjects]);
 
   useEffect(() => {
     socket.emit('editingText', text);
@@ -38,7 +39,7 @@ function Content({selected, codeObjects, handler}) {
     setText(event.target.value);
   }
 
-  function emmitChange(){
+  function emmitChange(offsets){
     socket.emit('editingText', text);
   }
 
@@ -63,12 +64,16 @@ function Content({selected, codeObjects, handler}) {
   return (
     <div className="content-container">
       <Toolbar
+        name={userName}
         codes={codeList}
         selected={selectedCode}
         handler={handler}
+        quoteHandler={quoteHandler}
         emmitChange={emmitChange}
       />
+
       <ContentEditable
+        id="textDiv"
         onDragOver={preventDragging}
         onDrop={preventDragging}
         onKeyDown={(event) => event.preventDefault()}
@@ -76,8 +81,19 @@ function Content({selected, codeObjects, handler}) {
         onChange={handleChange}
         className="content-input">
       </ContentEditable>
+
     </div>
   );
 }
+
+
+
+// <div
+//   id="textDiv"
+//   className="content-input">
+//   {text}
+// </div>
+
+
 //onSelect={window.getSelection().toString() ? handleOnSelect() : null}
 export default Content;

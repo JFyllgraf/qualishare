@@ -33,7 +33,8 @@ class App extends Component {
         isLoggedIn: false,
         displayChat: true,
         codeObjects: [new Code('Political spin'), new Code('Chinese critique'), new Code('Racist remarks')],
-        selected: ''
+        selected: '',
+        clickedQuote: ''
     };
       const ENDPOINT = server_url;
       socket = io(ENDPOINT);
@@ -41,12 +42,16 @@ class App extends Component {
 
   updateStateHandler = (property) => {
     this.setState({selected: property}, () => {
-      //console.log("In updateStatehandler: ");
-      //console.log(this.state.selected);
-      //console.log("Stringify: ", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]));
     }, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]))); //always emit last
   };
 
+  updateSelectedQuoteHandler = (event) => {
+    console.log('HANDLER WORKS!');
+    console.log(event.target.getAttribute('username'));
+    this.setState({
+      clickedQuote: event.target.getAttribute('username')
+    });
+  }
 
   //this function updates parent (app.js) state as expected
   addNameAndRoom = (name, room) => {
@@ -92,7 +97,7 @@ class App extends Component {
       )
   };
   chat = () => {
-      console.log("In chat: ", this.state);
+      //console.log("In chat: ", this.state);
       return (
       <Chat Name={this.state.name} Room={this.state.room} />
       )
@@ -109,11 +114,11 @@ class App extends Component {
       return (
         <div className="grid-container">
             <div className="header">
-            <Header name={this.state.name}/>
+              <Header name={this.state.name}/>
             </div>
             <div className="menu">
               <CodeToggle addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} addReceivedCode={this.addReceivedCode} />
-              <CodeFeed/>
+              <CodeFeed user={this.state.clickedQuote}/>
             </div>
             <div className="content">
               <Content
@@ -121,8 +126,10 @@ class App extends Component {
                  !this.state.selected ?
                   this.state.codeObjects[0] : this.state.selected
                }
+               name={this.state.name}
                codeObjects={this.state.codeObjects}
                handler={this.updateStateHandler}
+               quoteHandler={this.updateSelectedQuoteHandler}
                />
             </div>
             <div className="extra">

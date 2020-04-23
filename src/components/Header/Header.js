@@ -9,7 +9,7 @@ function Header({name}) {
   useEffect(() => {
     setUserName(name);
     console.log("Header: " + name);
-  }, [userName]);
+  }, [userName, name]);
 
   return (
     <nav className="navigation">

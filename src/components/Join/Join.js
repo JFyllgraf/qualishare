@@ -11,11 +11,6 @@ function Join() {
     setName(e.target.value);
   };
 
-  function handleOnClick(e) {
-    e.preventDefault();
-    this.props.addNameAndRoom(this.state.name, this.state.room);
-  };
-
   return (
       <div className="joinOuterContainer">
         <div className="joinInnerContainer">

@@ -1,4 +1,4 @@
-export function highlight(color){
+export function highlight(color, user){
   //remove any format to avoid overlap issues
   document.execCommand('removeFormat', false, null);
   //save selected text
@@ -12,6 +12,7 @@ export function highlight(color){
   var span = document.createElement("span");
   span.style.backgroundColor = color;
   span.innerText = text;
+  span.setAttribute('user', user);
   span.setAttribute('onclick', "removeSPan(this)");
   document.execCommand('insertHTML', false, span.outerHTML);
 }
