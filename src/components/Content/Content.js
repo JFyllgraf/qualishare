@@ -6,6 +6,7 @@ import './Content.css';
 
 import Toolbar from '../Toolbar/Toolbar';
 import {server_url} from "../../Utility/GlobalVariables";
+import axios from "axios";
 let socket;
 
 function Content({selected, codeObjects, handler}) {
@@ -13,9 +14,10 @@ function Content({selected, codeObjects, handler}) {
   const [text, setText] = useState(initialText);
   const [selectedCode, setSelectedCode] = useState(selected);
   const [codeList, setCodeList] = useState(codeObjects);
+  const [file, setFile] = useState(undefined);
+  const [fileName, setFileName] = useState(undefined);
 
-  const ENDPOINT = server_url;
-  socket = io(ENDPOINT);
+  socket = io(server_url);
 
   useEffect(() => {
     setSelectedCode(selected);
@@ -42,6 +44,34 @@ function Content({selected, codeObjects, handler}) {
   function preventDragging(event){
     event.preventDefault();
   }
+  const uploadFile = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try{
+      const res = await axios.post(server_url+'/upload', formData, {
+        headers: {
+          'content-Type':'multipart/form-data'
+        }
+      });
+      console.log(res.data);
+      setText(res.data);
+      
+    } catch (err){
+      if (err.status === 500){
+        alert("Problem with the server: ");
+      }
+      else{
+        console.log("Error: ", err);
+
+      }
+    }
+  };
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setFileName(e.target.files[0].name);
+  };
 
   return (
     <div className="content-container">
@@ -50,6 +80,8 @@ function Content({selected, codeObjects, handler}) {
         selected={selectedCode}
         handler={handler}
         emmitChange={emmitChange}
+        uploadFile={uploadFile}
+        handleFileChange={handleFileChange}
       />
       <ContentEditable
         onDragover={preventDragging}

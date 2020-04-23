@@ -8,7 +8,6 @@ import axios from 'axios';
 import {server_url} from "../../Utility/GlobalVariables";
 import io from "socket.io-client";
 
-
 //'Content-Type': 'application/json',
 const config = {
   headers:{
@@ -20,11 +19,10 @@ const config = {
 let socket;
 socket = io(server_url);
 
-function Toolbar ({codes, selected, handler, emmitChange}) {
+function Toolbar ({codes, selected, handler, emmitChange, uploadFile, handleFileChange}) {
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
-  const [file, setFile] = useState(undefined);
-  const [fileName, setFileName] = useState(undefined);
+
   const [uploadedFile, setUploadedFile] = useState(undefined);
   useEffect(() => {
     handler(selectedCode);
@@ -96,37 +94,13 @@ function Toolbar ({codes, selected, handler, emmitChange}) {
     }
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-    setFileName(e.target.files[0].name);
 
-  };
-  const uploadFile = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('file', file);
 
-    try{
-      const res = await axios.post(server_url+'/upload', formData, {
-        headers: {
-          'content-Type':'multipart/form-data'
-        }
-      });
-      const {fileName, filePath} = res.data;
-    } catch (err){
-      if (err.status === 500){
-        alert("Problem with the server: ");
-      }
-      else{
-        console.log("Error: ", err);
-      }
-    }
-  };
   //for getting state information from button click
   const info = e => {
-    e.preventDefault();
-    console.log(codeList[0].getName());
+    console.log("stuffz");
   }
+
 
   return (
     <div className="toolbar-container">
