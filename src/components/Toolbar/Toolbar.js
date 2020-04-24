@@ -26,34 +26,8 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange}) {
     }
   }
 
-  function OLDhighlight(color) {
-    var userSelection = window.getSelection().getRangeAt(0);
-    highlightRange(userSelection, color);
-  }
-
-  function highlightRange(range, color) {
-    if (range.startContainer.parentElement.nodeName == "SPAN" || range.endContainer.parentElement.nodeName == "SPAN"){
-      alert('test');
-    } else {
-      var newNode = document.createElement("span");
-      newNode.setAttribute(
-        "username",
-        userName
-      );
-      newNode.setAttribute(
-         "style",
-         "background-color: "+ color +"; display: inline;"
-      );
-      const text = range.toString();
-      newNode.onmousedown = quoteHandler;
-      newNode.innerText = text;
-      document.execCommand('insertHTML', false, newNode.outerHTML);
-      //range.surroundContents(newNode);
-      var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
-      console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end);
-    }
-  }
-
+  // from: https://stackoverflow.com/questions/52019642/get-selected-element-based-on-caret-position-in-contenteditable-div
+  // returns start and end offset from argument; DOM element
   function getSelectionCharacterOffsetWithin(element) {
     var start = 0;
     var end = 0;
@@ -81,10 +55,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange}) {
         end = preCaretTextRange.text.length;
     }
     return { start: start, end: end };
-}
-
-  function log(){
-    console.log('test');
   }
 
   const addQuote = (event) => {
@@ -97,6 +67,9 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange}) {
       var quote = new Quote(selectedText, window.getSelection().anchorOffset, [selectedCode]); //looks dangerous, but should be fine
       selectedCode.addQuote(quote);
     }
+    var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
+    console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end);
+
     highlight(selectedCode.getColor(), userName);
 
     //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());

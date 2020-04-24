@@ -18,12 +18,8 @@ export function highlight(color, user){
 }
 
 export function getDefaultText(){
-  const htmlString = `
-    WASHINGTON — The Trump administration is pushing the U.N. Security Council to call attention to the Chinese origins of the coronavirus, four diplomats posted to the United Nations told NBC News, triggering a stalemate as the global body seeks to cobble together a response to the pandemic. <br><br>
-
-    Talks among U.N. Security Council nations over a joint declaration or resolution on the coronavirus have stalled over U.S. insistence that it explicitly state that the virus originated in Wuhan, China, as well as exactly when it started there. China's diplomats are enraged according to the diplomats, even as they seek to put their own language into the statement praising China's efforts to contain the virus.<br><br>
-
-    The dispute at the United Nations comes amid growing finger-pointing between Washington and Beijing over the coronavirus.<br><br>
+  const htmlString =
+    `WASHINGTON — The Trump administration is pushing the U.N. Security Council to call attention to the Chinese origins of the coronavirus, four diplomats posted to the United Nations told NBC News, triggering a stalemate as the global body seeks to cobble together a response to the pandemic.<br><br> Talks among U.N. Security Council nations over a joint declaration or resolution on the coronavirus have stalled over U.S. insistence that it explicitly state that the virus originated in Wuhan, China, as well as exactly when it started there. China's diplomats are enraged according to the diplomats, even as they seek to put their own language into the statement praising China's efforts to contain the virus.<br><br> The dispute at the United Nations comes amid growing finger-pointing between Washington and Beijing over the coronavirus.<br><br>
 
     President Donald Trump has repeatedly blamed China for its spread, accusing Beijing of concealing early knowledge of the virus. But after reports of a rise in racism and attacks against Asian Americans emerged, Trump tweeted this week that it was "NOT their fault" and said he'd no longer call it the "Chinese virus." <br><br>
 
