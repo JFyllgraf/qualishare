@@ -28,6 +28,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
   useEffect(() => {
     handler(selectedCode);
     setCodeList(codes);
+    setSelectedCode(selected);
   }, [selectedCode, codes, handler, selected]);
 
   function newSelection(event){
@@ -88,6 +89,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
 
   const addQuote = (event) => {
     event.preventDefault();
+    console.log(selectedCode);
     let selectedText = window.getSelection().toString();
     let offset = window.getSelection().anchorOffset;
 
@@ -153,7 +155,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
   //for getting state information from button click
   const info = e => {
     e.preventDefault();
-    console.log(codeList);
+    console.log(selectedCode);
   }
 
 
