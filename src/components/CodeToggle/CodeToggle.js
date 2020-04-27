@@ -5,6 +5,7 @@ import Code from '../../data_model/Code'
 import io from "socket.io-client";
 import {server_url} from "../../Utility/GlobalVariables";
 import axios from 'axios';
+import CustomInput from "reactstrap/es/CustomInput";
 
 let socket;
 const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode}) => {
@@ -71,7 +72,8 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
         code.quoteRefs = data.quoteRefs;
         return code;
     }
-    const handleOnClickDeleteCode = () => {
+    const handleOnClickDeleteCode = (e) => {
+        e.preventDefault();
         let codes = getCodes();
         let codeToDelete = onChangeEvent.target.value;
 
@@ -124,7 +126,7 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
                     codes.map(code => {
                         return (
                             <div className="code" key={code.getId()}>
-                                <li type="checkbox" id={+code.getId()} label={code.getName()}/>
+                                <CustomInput type="checkbox" id={code.getId()} label={code.getName()}/>
                             </div>
                         )
                     })
