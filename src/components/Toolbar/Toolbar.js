@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Mark from 'mark.js';
-import Input from 'react';
 import './Toolbar.css';
 import { highlight } from '../../Utility/Helpers';
 import Quote from "../../data_model/Quote";
@@ -173,7 +172,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
         </select>
         <a href="something" className="toolbarButton" onKeyDown={(e) => e.keyCode===66 ? addQuote(e) : null} onClick={addQuote}>Apply</a>
         <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
-        <Input type="file" onChange={handleFileChange} className="toolbarButton"> Put in text from file</Input>
+        <input type="file" onChange={handleFileChange} className="toolbarButton"/>
         <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
         <a href="something" className="toolbarButton" onClick={info}> info </a>
       </div>
