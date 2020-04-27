@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import ContentEditable from 'react-contenteditable';
 import io from "socket.io-client";
-//import Quote from '../../data_model/Quote';
 import './Content.css';
 
 import { getDefaultText } from '../../Utility/Helpers';
 import { server_url } from '../../Utility/GlobalVariables';
 
 import Toolbar from '../Toolbar/Toolbar';
-
+import {server_url} from "../../Utility/GlobalVariables";
+import axios from "axios";
 let socket;
 
 function Content({name, selected, codeObjects, handler, quoteHandler}) {
@@ -17,9 +17,10 @@ function Content({name, selected, codeObjects, handler, quoteHandler}) {
   const [text, setText] = useState(initialText);
   const [selectedCode, setSelectedCode] = useState(selected);
   const [codeList, setCodeList] = useState(codeObjects);
+  const [file, setFile] = useState(undefined);
+  const [fileName, setFileName] = useState(undefined);
 
-  const ENDPOINT = server_url;
-  socket = io(ENDPOINT);
+  socket = io(server_url);
 
   useEffect(() => {
     setSelectedCode(selected);
@@ -31,7 +32,6 @@ function Content({name, selected, codeObjects, handler, quoteHandler}) {
   }, [text])
 
   socket.on('editingText', function(data){
-    //console.log('Client: receiving data: '+ data);
     setText(data);
   });
 
@@ -43,23 +43,37 @@ function Content({name, selected, codeObjects, handler, quoteHandler}) {
     socket.emit('editingText', text);
   }
 
-  /*
-  const handleOnSelect = () => {
-    let selectedText = window.getSelection().toString();
-    if(selectedText === null || selectedText === undefined) {
-      return null
-    }
-    else {
-      var quote = new Quote(selectedText, window.getSelection().anchorOffset, [selectedCode]); //looks dangerous, but should be fine
-      selectedCode.addQuote(quote)
-    }
-    console.log(quote);
-  };
-*/
-
   function preventDragging(event){
     event.preventDefault();
   }
+  const uploadFile = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try{
+      const res = await axios.post(server_url+'/upload', formData, {
+        headers: {
+          'content-Type':'multipart/form-data'
+        }
+      });
+      let newString = res.data.replace(new RegExp('\r?\n','g'), '<br />');
+      setText(newString);
+
+    } catch (err){
+      if (err.status === 500){
+        console.log("Problem with the server: ", err);
+      }
+      else{
+        console.log("Error: ", err);
+
+      }
+    }
+  };
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setFileName(e.target.files[0].name);
+  };
 
   return (
     <div className="content-container">
@@ -70,6 +84,8 @@ function Content({name, selected, codeObjects, handler, quoteHandler}) {
         handler={handler}
         quoteHandler={quoteHandler}
         emmitChange={emmitChange}
+        uploadFile={uploadFile}
+        handleFileChange={handleFileChange}
       />
 
       <ContentEditable

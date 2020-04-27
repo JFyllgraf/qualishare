@@ -4,6 +4,8 @@ import './CodeToggle.css';
 import Code from '../../data_model/Code'
 import io from "socket.io-client";
 import {server_url} from "../../Utility/GlobalVariables";
+import axios from 'axios';
+
 let socket;
 const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode}) => {
     const [codename, setcodeName] = useState('');
@@ -11,24 +13,12 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
 
     const ENDPOINT = server_url;
     socket = io(ENDPOINT);
-
-    //is also onclick
-    const handleOnKeyUp = (e) => {
-        console.log(e.target.value);
-        e.preventDefault();
-        let code = new Code(e.target.value);
-        addCodeToList(code);
-        e.target.value = ''; //at first this seemed like it was bad idea, but it works.
-        setonChangeEvent(undefined); //reset
-    };
     socket.on("newCode", function (data) {
         let receivedCode = JSON.parse(data);
-        console.log("Received Code", receivedCode);
         if (!isCodeInList(receivedCode._id)){
-            let newCode = new Code(receivedCode._name);
+            let newCode = new Code(receivedCode.codeName);
             newCode._id = receivedCode._id;
-            newCode._color = receivedCode._color;
-            //addReceivedCodeToList(newCode);
+            newCode.color = receivedCode.color;
             addReceivedCode(newCode);
         }
         //do nothing
@@ -61,25 +51,42 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
         setcodeName(e.target.value);
     };
 
+    //this adds new code through the button
     const handleOnClick = (e) => {
         e.preventDefault();
-        let code = new Code(codename);
-        addCodeToList(code);
+        axios.post(server_url+"/newCode", {codeName: codename}).then(res => {
+            let code = constructCodeFromData(res.data);
+            addCodeToList(code);
+
+        }).catch(err =>{
+            console.log(err);
+        })
         onChangeEvent.target.value = ''; //reset
         setonChangeEvent(undefined); //reset
+
     };
+    function constructCodeFromData(data){
+        let code = new Code(data.codeName, data._id);
+        code.color = data.color
+        code.quoteRefs = data.quoteRefs;
+        return code;
+    }
     const handleOnClickDeleteCode = () => {
         let codes = getCodes();
         let codeToDelete = onChangeEvent.target.value;
 
         for (let i = 0; i < codes.length; i++){
             if (codes[i].getName() === codeToDelete){
-                deleteCodeFromList(i);
+                axios.delete(server_url+"/deleteCode", {data: codes[i]}).then(res=>{
+                    deleteCodeFromList(i);
+                    onChangeEvent.target.value = '';//reset
+                    setonChangeEvent(undefined)//reset
+                    socket.emit("deleteCode", codeToDelete);
+                }).catch(err=>{
+                    console.log(err);
+                })
             }
         }
-        onChangeEvent.target.value = '';//reset
-        setonChangeEvent(undefined)//reset
-        socket.emit("deleteCode", codeToDelete);
     };
 
 
@@ -116,8 +123,8 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
                 {
                     codes.map(code => {
                         return (
-                            <div className="code" key={code.getId().toString()}>
-                                <li id={code.getId().toString()}>{code.getName()}</li>
+                            <div className="code" key={code.getId()}>
+                                <CustomInput type="checkbox" id={+code.getId()} label={code.getName()}/>
                             </div>
                         )
                     })
@@ -129,13 +136,12 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
 
   return (
     <div className="codeToggle-container">
-
       <h4>ACTIVE CODES</h4>
       <div className="btn-group">
         <a className="toggleButton" href="/#" id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null}>+</a>
         <a className="toggleButton" href="/#" id="deletebtn" onClick={(e) => CheckValidInput(e) ? handleOnClickDeleteCode(e) : null}>-</a>
       </div>
-        <div><input type="text" onChange={handleOnChange} onKeyUpCapture={(e) => e.keyCode===13 && CheckValidInput(e) ? handleOnKeyUp(e) : null}/></div>
+        <div><input type="text" onChange={handleOnChange} onKeyUpCapture={(e) => e.keyCode===13 && CheckValidInput(e) ? handleOnClick(e) : null}/></div>
       <div className="code-list-container">
         <FormGroup check>
             {DisplayCode()}

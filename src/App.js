@@ -14,6 +14,7 @@ import {CSSTransition} from 'react-transition-group';
 
 import './App.css';
 import io from "socket.io-client";
+import axios from "axios";
     // <Router>
     //   <Route path="/" exact component={Join} />
     //   <Route path="/chat" component={Chat} />
@@ -32,18 +33,33 @@ class App extends Component {
         room: "",
         isLoggedIn: false,
         displayChat: true,
-        codeObjects: [new Code('Political spin'), new Code('Chinese critique'), new Code('Racist remarks')],
+        codeObjects: [],//[new Code('Political spin'), new Code('Chinese critique'), new Code('Racist remarks')],
         selected: '',
         clickedQuote: ''
     };
-      const ENDPOINT = server_url;
-      socket = io(ENDPOINT);
+      socket = io(server_url);
   }
 
   updateStateHandler = (property) => {
     this.setState({selected: property}, () => {
-    }, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]))); //always emit last
+    }//, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]))); //always emit last
   };
+  componentDidMount() {
+      try {
+          axios.get(server_url + "/Codes").then(res => {
+              let retrievedCodes = extractCodesFromJson(res.data);
+              this.setState({
+                  codeObjects: retrievedCodes,
+                  selected: retrievedCodes[0]
+              })
+          }).catch(err => {
+              console.log(err);
+          })
+      }
+      catch (err) {
+          console.log(err)
+      }
+  }
 
   updateSelectedQuoteHandler = (event) => {
     console.log('HANDLER WORKS!');
@@ -53,7 +69,7 @@ class App extends Component {
     });
   }
 
-  //this function updates parent (app.js) state as expected
+    //this function updates parent (app.js) state as expected
   addNameAndRoom = (name, room) => {
       this.setState({
           name: name,
@@ -67,15 +83,17 @@ class App extends Component {
       let codes = [...this.state.codeObjects, code];
       this.setState({
           codeObjects: codes
-        }, console.log(this.state.codeObjects) //should be removed at some point
+        } //should be removed at some point
       );
+      //setTimeout(socket.emit, 100, "newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]));
+      socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]));
   };
 
   addReceivedCode = (code) => {
       let codes = [...this.state.codeObjects, code];
       this.setState({
               codeObjects: codes
-          }, console.log(this.state.codeObjects) //should be removed at some point
+          } //should be removed at some point
       );
   };
 
@@ -154,6 +172,18 @@ class App extends Component {
         </div>
       )
   }
+}
+
+function extractCodesFromJson(jsonArray){
+    let codes = [];
+    jsonArray.map(jsoncode => {
+        let code = new Code(jsoncode.codeName, jsoncode._id);
+        code.color = jsoncode.color;
+        code.link = jsoncode.link;
+        code.memo = jsoncode.memo;
+        codes = [...codes, code];
+    });
+    return codes;
 }
 
 export default App
