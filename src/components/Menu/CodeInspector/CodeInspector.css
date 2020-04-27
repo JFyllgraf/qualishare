@@ -1,4 +1,4 @@
-.codeToggle-container {
+.codeInspector-container {
   margin: 10px;
   padding: 10px;
   display: flex;
@@ -7,17 +7,17 @@
   color: #FFFFFF;
 }
 
-.codeToggle-container h4 {
+.codeInspector-container h4 {
   text-align: center;
   padding: 5px;
   width: 100%;
 }
 
-.codeToggle-container Label {
+.codeInspector-container Label {
   margin: 0;
 }
 
-.codeToggle-container Button {
+.codeInspector-container Button {
   font-weight: bold;
   margin: 10px 0;
 }
