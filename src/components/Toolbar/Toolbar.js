@@ -42,7 +42,19 @@ function Toolbar ({codes, selected, handler, emmitChange, uploadFile, handleFile
   }
    socket.on("newQuote", function(data) {
      console.log("Receiving client data: ", data); //probably have to do duplicate checking
-     selectedCode.addQuote(constructQuoteFromData(JSON.parse(data))); //create and add new client side quote
+
+     //find correct code
+     //check the list of correct code, if the current quote is already there
+     //if not there then add
+     let quote = constructQuoteFromData(JSON.parse(data));
+     for (let i = 0; i<codeList.length; i++){
+       if(codeList[i]._id === quote.codeRefs){ //the code that this quote belongs to
+         let quoteRefs = codeList[i].quoteRefs;
+         if(!isQuoteInList(quote, quoteRefs)){
+           codeList[i].addQuote(quote); //create and add new client side quote
+         }
+       }
+     }
   });
 
   const addQuote = (event) => { 
@@ -51,7 +63,7 @@ function Toolbar ({codes, selected, handler, emmitChange, uploadFile, handleFile
     let offset = window.getSelection().anchorOffset;
 
     if(selectedText === null || selectedText === undefined || selectedText ==='') {
-      return null
+      //do nothing
     }
     else {
       let data = {
@@ -61,14 +73,54 @@ function Toolbar ({codes, selected, handler, emmitChange, uploadFile, handleFile
         documentNum: 0 //default for now
       }
       axios.post(server_url+"/newQuote", data).then(res => {
+
         socket.emit("newQuote", JSON.stringify(res.data));
-        selectedCode.addQuote(constructQuoteFromData(res.data));
+        selectedCode.addQuote(constructQuoteFromData(res.data)); //selected code is wrong code
       }).catch(err => {
         console.log(err);
       });
     }
+    var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
+    console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end);
     highlight(selectedCode.getColor());
   };
+  function isQuoteInList(quote, list){
+    for(let i = 0; i < list.length;i++){
+      if(quote._id === list[i]._id){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function getSelectionCharacterOffsetWithin(element) {
+    var start = 0;
+    var end = 0;
+    var doc = element.ownerDocument || element.document;
+    var win = doc.defaultView || doc.parentWindow;
+    var sel;
+    if (typeof win.getSelection != "undefined") {
+      sel = win.getSelection();
+      if (sel.rangeCount > 0) {
+        var range = win.getSelection().getRangeAt(0);
+        var preCaretRange = range.cloneRange();
+        preCaretRange.selectNodeContents(element);
+        preCaretRange.setEnd(range.startContainer, range.startOffset);
+        start = preCaretRange.toString().length;
+        preCaretRange.setEnd(range.endContainer, range.endOffset);
+        end = preCaretRange.toString().length;
+      }
+    } else if ( (sel = doc.selection) && sel.type != "Control") {
+      var textRange = sel.createRange();
+      var preCaretTextRange = doc.body.createTextRange();
+      preCaretTextRange.moveToElementText(element);
+      preCaretTextRange.setEndPoint("EndToStart", textRange);
+      start = preCaretTextRange.text.length;
+      preCaretTextRange.setEndPoint("EndToEnd", textRange);
+      end = preCaretTextRange.text.length;
+    }
+    return { start: start, end: end };
+  }
 
   const removeQuote = (event) => {
     event.preventDefault();
@@ -79,11 +131,11 @@ function Toolbar ({codes, selected, handler, emmitChange, uploadFile, handleFile
     let firstTime = true;
     for (let i = 0; i < quotes.length; i++){
       if (quotes[i].getQuoteText() === text){
-        selectedCode.removeQuote(quotes[i]);
+        selectedCode.removeQuote(quotes[i]); //does not work
         if(firstTime) {
           axios.delete(server_url+'/deleteQuote', {data: quotes[i]}).then(res =>{
             firstTime = false;
-            console.log("Deleted quote");
+            console.log("Deleted quote: ", res);
           }).catch(err =>{
             console.log(err);
           })
@@ -94,11 +146,10 @@ function Toolbar ({codes, selected, handler, emmitChange, uploadFile, handleFile
     }
   };
 
-
-
   //for getting state information from button click
   const info = e => {
-    console.log("stuffz");
+    e.preventDefault();
+    console.log(codeList);
   }
 
 
@@ -106,7 +157,7 @@ function Toolbar ({codes, selected, handler, emmitChange, uploadFile, handleFile
     <div className="toolbar-container">
       <div className="toolbar-innerContainer">
         <span className="label">Select Code: </span>
-        <select value="{selectedCode.codeName}" onChange={newSelection} className="toolbarSelect" type="select" name="select">
+        <select  onChange={newSelection} className="toolbarSelect" type="select" name="select">
           {
             (codeList) ?
             codeList.map(code => {
@@ -126,7 +177,9 @@ function Toolbar ({codes, selected, handler, emmitChange, uploadFile, handleFile
 }
 
 function constructQuoteFromData(data){
-  return new Quote(data.id, data.quoteText, data.offset, [data.codeRefs], data.documentNum);
+  let q = new Quote(data._id, data.quoteText, data.offset, data.codeRefs, data.documentNum);
+  console.log("QQ: ",q);
+  return q;
 }
 
 export default Toolbar;

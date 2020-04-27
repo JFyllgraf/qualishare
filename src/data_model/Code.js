@@ -4,14 +4,14 @@ var randomColor = require('randomcolor');
 class Code {
     constructor(name, id) {
         this.codeName = name; //'const' is private variable
-        this.id = id
+        this._id = id
         this.memo = []; //'this' is publicly accessible variable
         this.link = undefined;
         this.color = undefined
         this.quoteRefs = [];
         //getters
         this.getName = function() { return this.codeName };
-        this.getId = function() { return this.id };
+        this.getId = function() { return this._id };
         this.getColor = function() { return this.color};
         this.getQuotes = function () { return this.quoteRefs; };
 

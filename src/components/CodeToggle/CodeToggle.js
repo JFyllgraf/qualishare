@@ -6,9 +6,6 @@ import io from "socket.io-client";
 import {server_url} from "../../Utility/GlobalVariables";
 import axios from 'axios';
 
-
-
-
 let socket;
 const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode}) => {
     const [codename, setcodeName] = useState('');
@@ -16,14 +13,12 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
     
     const ENDPOINT = server_url;
     socket = io(ENDPOINT);
-    
 
     socket.on("newCode", function (data) {
         let receivedCode = JSON.parse(data);
-        console.log("Received Code", receivedCode);
-        if (!isCodeInList(receivedCode.id)){
+        if (!isCodeInList(receivedCode._id)){
             let newCode = new Code(receivedCode.codeName);
-            newCode.id = receivedCode.id;
+            newCode._id = receivedCode._id;
             newCode.color = receivedCode.color;
             addReceivedCode(newCode);
         }
@@ -84,7 +79,6 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
         for (let i = 0; i < codes.length; i++){
             if (codes[i].getName() === codeToDelete){
                 axios.delete(server_url+"/deleteCode", {data: codes[i]}).then(res=>{
-                    console.log(res);
                     deleteCodeFromList(i);
                     onChangeEvent.target.value = '';//reset
                     setonChangeEvent(undefined)//reset
@@ -128,8 +122,8 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
                 {
                     codes.map(code => {
                         return (
-                            <div className="code" key={code.id}>
-                                <CustomInput type="checkbox" id={"q"+code.id} label={code.getName()}/>
+                            <div className="code" key={code.getId()}>
+                                <CustomInput type="checkbox" id={+code.getId()} label={code.getName()}/>
                             </div>
                         )
                     })
@@ -141,7 +135,6 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
 
   return (
     <div className="codeToggle-container">
-
       <h4>ACTIVE CODES</h4>
       <div className="btn-group">
         <a className="toggleButton"  id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null} color="dark" size="sm">+</a>

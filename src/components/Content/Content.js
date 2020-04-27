@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ContentEditable from 'react-contenteditable';
 import io from "socket.io-client";
-import Quote from '../../data_model/Quote'
 import './Content.css';
 
 import Toolbar from '../Toolbar/Toolbar';
@@ -29,7 +28,6 @@ function Content({selected, codeObjects, handler}) {
   }, [text])
 
   socket.on('editingText', function(data){
-    //console.log('Client: receiving data: '+ data);
     setText(data);
   });
 
@@ -55,12 +53,12 @@ function Content({selected, codeObjects, handler}) {
           'content-Type':'multipart/form-data'
         }
       });
-      console.log(res.data);
-      setText(res.data);
-      
+      let newString = res.data.replace(new RegExp('\r?\n','g'), '<br />');
+      setText(newString);
+
     } catch (err){
       if (err.status === 500){
-        alert("Problem with the server: ");
+        console.log("Problem with the server: ", err);
       }
       else{
         console.log("Error: ", err);
@@ -84,6 +82,7 @@ function Content({selected, codeObjects, handler}) {
         handleFileChange={handleFileChange}
       />
       <ContentEditable
+          id="textDiv"
         onDragover={preventDragging}
         onDrop={preventDragging}
         onKeyDown={(event) => event.preventDefault()}
