@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import ContentEditable from 'react-contenteditable';
 import io from "socket.io-client";
-import './Editor.css';
+import './Content.css';
 
-import { getDefaultText } from '../../../Utility/Helpers';
-import { server_url } from '../../../Utility/GlobalVariables';
+import { getDefaultText } from '../../Utility/Helpers';
+import { server_url } from '../../Utility/GlobalVariables';
 
 import Toolbar from '../Toolbar/Toolbar';
 import axios from "axios";
 let socket;
 
-function Editor({name, selected, codeObjects, handler, quoteHandler}) {
-  const [userName] = useState(name);
+function Content({name, selected, codeObjects, handler, quoteHandler}) {
+  const [userName, setUserName] = useState(name);
   const initialText = getDefaultText;
   const [text, setText] = useState(initialText);
   const [selectedCode, setSelectedCode] = useState(selected);
@@ -24,7 +24,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   useEffect(() => {
     setSelectedCode(selected);
     setCodeList(codeObjects);
-  }, [name, selected, selectedCode, codeObjects, fileName]);
+  }, [name, selected, selectedCode, codeObjects]);
 
   useEffect(() => {
     socket.emit('editingText', text);
@@ -75,7 +75,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   };
 
   return (
-    <div className="editor-container">
+    <div className="content-container">
       <Toolbar
         name={userName}
         codes={codeList}
@@ -94,7 +94,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         onKeyDown={(event) => event.preventDefault()}
         html={text}
         onChange={handleChange}
-        className="editor-input">
+        className="content-input">
       </ContentEditable>
 
     </div>
@@ -105,10 +105,10 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
 
 // <div
 //   id="textDiv"
-//   className="editor-input">
+//   className="content-input">
 //   {text}
 // </div>
 
 
 //onSelect={window.getSelection().toString() ? handleOnSelect() : null}
-export default Editor;
+export default Content;

@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import { FormGroup } from 'reactstrap';
-import './CodeInspector.css';
-import Code from '../../../data_model/Code'
+import './CodeToggle.css';
+import Code from '../../data_model/Code'
 import io from "socket.io-client";
-import {server_url} from "../../../Utility/GlobalVariables";
+import {server_url} from "../../Utility/GlobalVariables";
 import axios from 'axios';
 import CustomInput from "reactstrap/es/CustomInput";
 
 let socket;
-const CodeInspector = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode}) => {
+const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode}) => {
     const [codename, setcodeName] = useState('');
     const [onChangeEvent, setonChangeEvent] = useState();
 
@@ -137,7 +137,7 @@ const CodeInspector = ({addCodeToList, deleteCodeFromList, getCodes, addReceived
 
 
   return (
-    <div className="codeInspector-container">
+    <div className="codeToggle-container">
       <h4>ACTIVE CODES</h4>
       <div className="btn-group">
         <a className="toggleButton" href="/#" id="addbtn" onClick={(e) => CheckValidInput(e) ? handleOnClick(e) : null}>+</a>
@@ -160,4 +160,4 @@ const CodeInspector = ({addCodeToList, deleteCodeFromList, getCodes, addReceived
 
 
 
-export default CodeInspector;
+export default CodeToggle;

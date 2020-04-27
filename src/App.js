@@ -3,9 +3,9 @@ import React, {Component} from 'react';
 import Join from './components/Join/Join';
 import Chat from './components/Chat/Chat';
 import Header from './components/Header/Header';
-import Editor from './components/Content/Editor/Editor';
-import CodeToggle from './components/Menu/CodeInspector/CodeInspector';
-import CodeFeed from './components/Menu/CodeManager/CodeManager';
+import Content from './components/Content/Content';
+import CodeToggle from './components/CodeToggle/CodeToggle';
+import CodeFeed from './components/CodeFeed/CodeFeed';
 import Code from './data_model/Code';
 import { server_url } from './Utility/GlobalVariables';
 
@@ -139,7 +139,7 @@ class App extends Component {
               <CodeFeed user={this.state.clickedQuote}/>
             </div>
             <div className="content">
-              <Editor
+              <Content
                selected={
                  !this.state.selected ?
                   this.state.codeObjects[0] : this.state.selected

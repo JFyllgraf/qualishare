@@ -1,9 +1,9 @@
 import React, { useState, useEffect} from 'react';
 
-import './CodeManager.css';
+import './CodeFeed.css';
 
 
-function CodeManager({user}) {
+function CodeFeed({user}) {
   const [userName, setUserName] = useState(user);
 
   useEffect(() => {
@@ -17,11 +17,11 @@ function CodeManager({user}) {
   });
 
   return (
-    <div className="codeManager-container">
+    <div className="codeFeed-container">
       <h4>Selected Code: </h4>
       <p>User Name: {userName}</p>
     </div>
   );
 }
 
-export default CodeManager;
+export default CodeFeed;
