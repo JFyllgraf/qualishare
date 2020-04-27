@@ -7,7 +7,6 @@ import { getDefaultText } from '../../Utility/Helpers';
 import { server_url } from '../../Utility/GlobalVariables';
 
 import Toolbar from '../Toolbar/Toolbar';
-import {server_url} from "../../Utility/GlobalVariables";
 import axios from "axios";
 let socket;
 

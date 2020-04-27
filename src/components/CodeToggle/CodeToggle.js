@@ -124,7 +124,7 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
                     codes.map(code => {
                         return (
                             <div className="code" key={code.getId()}>
-                                <CustomInput type="checkbox" id={+code.getId()} label={code.getName()}/>
+                                <li type="checkbox" id={+code.getId()} label={code.getName()}/>
                             </div>
                         )
                     })

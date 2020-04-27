@@ -42,7 +42,7 @@ class App extends Component {
 
   updateStateHandler = (property) => {
     this.setState({selected: property}, () => {
-    }//, socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]))); //always emit last
+    })
   };
   componentDidMount() {
       try {

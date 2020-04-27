@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Mark from 'mark.js';
-
+import Input from 'react';
 import './Toolbar.css';
 import { highlight } from '../../Utility/Helpers';
 import Quote from "../../data_model/Quote";
@@ -8,13 +8,14 @@ import axios from 'axios';
 import {server_url} from "../../Utility/GlobalVariables";
 import io from "socket.io-client";
 
+/*
 //'Content-Type': 'application/json',
 const config = {
   headers:{
         "Access-Control-Allow-Origin": "*"}
 }
 //axios.defaults.headers.common = config;
-
+*/
 
 let socket;
 socket = io(server_url);
