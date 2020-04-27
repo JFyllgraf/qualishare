@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Mark from 'mark.js';
 import './Toolbar.css';
-import { highlight } from '../../Utility/Helpers';
-import Quote from "../../data_model/Quote";
+import { highlight } from '../../../Utility/Helpers';
+import Quote from "../../../data_model/Quote";
 import axios from 'axios';
-import {server_url} from "../../Utility/GlobalVariables";
+import {server_url} from "../../../Utility/GlobalVariables";
 import io from "socket.io-client";
 
 /*

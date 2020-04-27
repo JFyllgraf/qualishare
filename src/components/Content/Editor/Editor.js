@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import ContentEditable from 'react-contenteditable';
 import io from "socket.io-client";
-import './Content.css';
+import './Editor.css';
 
-import { getDefaultText } from '../../Utility/Helpers';
-import { server_url } from '../../Utility/GlobalVariables';
+import { getDefaultText } from '../../../Utility/Helpers';
+import { server_url } from '../../../Utility/GlobalVariables';
 
 import Toolbar from '../Toolbar/Toolbar';
 import axios from "axios";
 let socket;
 
-function Content({name, selected, codeObjects, handler, quoteHandler}) {
+function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   const [userName, setUserName] = useState(name);
   const initialText = getDefaultText;
   const [text, setText] = useState(initialText);
@@ -75,7 +75,7 @@ function Content({name, selected, codeObjects, handler, quoteHandler}) {
   };
 
   return (
-    <div className="content-container">
+    <div className="editor-container">
       <Toolbar
         name={userName}
         codes={codeList}
@@ -94,7 +94,7 @@ function Content({name, selected, codeObjects, handler, quoteHandler}) {
         onKeyDown={(event) => event.preventDefault()}
         html={text}
         onChange={handleChange}
-        className="content-input">
+        className="editor-input">
       </ContentEditable>
 
     </div>
@@ -105,10 +105,10 @@ function Content({name, selected, codeObjects, handler, quoteHandler}) {
 
 // <div
 //   id="textDiv"
-//   className="content-input">
+//   className="editor-input">
 //   {text}
 // </div>
 
 
 //onSelect={window.getSelection().toString() ? handleOnSelect() : null}
-export default Content;
+export default Editor;
