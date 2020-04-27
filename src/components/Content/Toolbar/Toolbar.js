@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Mark from 'mark.js';
 import './Toolbar.css';
 import { highlight } from '../../../Utility/Helpers';
 import Quote from "../../../data_model/Quote";
@@ -20,11 +19,12 @@ let socket;
 socket = io(server_url);
 
 function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange}) {
-  const [userName, setUserName] = useState(name);
+  const [userName] = useState(name);
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
 
-  const [uploadedFile, setUploadedFile] = useState(undefined);
+  //const [uploadedFile, setUploadedFile] = useState(undefined);
+
   useEffect(() => {
     handler(selectedCode);
     setCodeList(codes);
@@ -75,7 +75,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
             preCaretRange.setEnd(range.endContainer, range.endOffset);
             end = preCaretRange.toString().length;
         }
-    } else if ( (sel = doc.selection) && sel.type != "Control") {
+    } else if ( (sel = doc.selection) && sel.type !== "Control") {
         var textRange = sel.createRange();
         var preCaretTextRange = doc.body.createTextRange();
         preCaretTextRange.moveToElementText(element);
