@@ -6,6 +6,7 @@ import Quote from "../../data_model/Quote";
 import axios from 'axios';
 import {server_url} from "../../Utility/GlobalVariables";
 import io from "socket.io-client";
+import Code from "../../data_model/Code";
 
 /*
 //'Content-Type': 'application/json',
@@ -23,13 +24,47 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
   const [userName, setUserName] = useState(name);
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
-
+  const [quoteList, setQuoteList] = useState([]);
   const [uploadedFile, setUploadedFile] = useState(undefined);
+
+
+
   useEffect(() => {
-    handler(selectedCode);
+    //handler(selectedCode); //this can be left out
     setCodeList(codes);
+    //setSelectedCode(selected); //this can be left out
+  }, [codes]);
+  useEffect(()=>{
     setSelectedCode(selected);
-  }, [selectedCode, codes, handler, selected]);
+    setCodeList(codes);
+    //draw document: i.e get all quotes and highlight based on offsets
+    axios.get(server_url+"/Quotes").then(res=>{
+      let quotes = ExtractQuotesFromData(res.data);
+      setQuoteList(quotes);
+    }).catch(err=>{
+      console.log(err);
+    });
+
+  },[selected]);
+
+/* parameterized get for quotes by id
+axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9a7"}}).then(res=>{
+      console.log("my res: ", res.data);
+      let quotes = ExtractQuotesFromData(res.data);
+      setQuoteList(quotes);
+    }).catch(err=>{
+      console.log(err);
+    });
+ */
+
+  function ExtractQuotesFromData(jsonArray) {
+      let quotes = [];
+      jsonArray.map(jsonQuote => {
+        let quote = new Quote(jsonQuote._id, jsonQuote.quoteText, jsonQuote.quoteOffset, jsonQuote.codeRefs);
+        quotes = [...quotes, quote];
+      });
+      return quotes;
+    }
 
   function newSelection(event){
     let i;
@@ -91,28 +126,30 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
     event.preventDefault();
     console.log(selectedCode);
     let selectedText = window.getSelection().toString();
-    let offset = window.getSelection().anchorOffset;
 
+    var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
     if(selectedText === null || selectedText === undefined || selectedText ==='') {
       //do nothing
     }
     else {
       let data = {
         quoteText: selectedText,
-        quoteOffset: offset,
+        quoteOffset: selOffsets.start,
         codeRefs: selectedCode._id,
         documentNum: 0 //default for now
       }
       axios.post(server_url+"/newQuote", data).then(res => {
 
         socket.emit("newQuote", JSON.stringify(res.data));
-        selectedCode.addQuote(constructQuoteFromData(res.data)); //selected code is wrong code
+        let quote = constructQuoteFromData(res.data);
+        selectedCode.addQuote(quote); //selected code is wrong code
+        setQuoteList([...quoteList, quote]);
       }).catch(err => {
         console.log(err);
       });
     }
-    var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
-    console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end);
+
+    console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
 
     highlight(selectedCode.getColor(), userName);
 
@@ -155,7 +192,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
   //for getting state information from button click
   const info = e => {
     e.preventDefault();
-    console.log(selectedCode);
+    console.log(quoteList);
   }
 
 

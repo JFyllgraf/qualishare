@@ -17,6 +17,8 @@ class Code {
 
         //setter
         this.addQuote = function (quote) {
+            //also modfify database objects
+                //do here
             this.quoteRefs = [...this.quoteRefs, quote];
         };
         this.removeQuote = function (quoteText) {

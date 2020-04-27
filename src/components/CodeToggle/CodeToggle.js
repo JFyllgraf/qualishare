@@ -52,13 +52,13 @@ const CodeToggle = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCod
         setcodeName(e.target.value);
     };
 
-    //this adds new code through the button
+    //this adds new code through the button: add new code
     const handleOnClick = (e) => {
         e.preventDefault();
+
         axios.post(server_url+"/newCode", {codeName: codename}).then(res => {
             let code = constructCodeFromData(res.data);
             addCodeToList(code);
-
         }).catch(err =>{
             console.log(err);
         })
