@@ -6,7 +6,7 @@ import Quote from "../../../data_model/Quote";
 import axios from 'axios';
 import {server_url} from "../../../Utility/GlobalVariables";
 import io from "socket.io-client";
-import Code from "../../data_model/Code";
+import Code from "../../../data_model/Code";
 
 /*
 //'Content-Type': 'application/json',
