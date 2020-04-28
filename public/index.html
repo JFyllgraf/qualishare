@@ -55,7 +55,7 @@
         // 	span.parentNode.replaceChild(docFrag, span);
         // }
         const name = span.getAttribute('user');
-        const id = span.getId();
+        const id = span.id;
         var event = new CustomEvent('testEvent', {
           detail: {
             username: name,

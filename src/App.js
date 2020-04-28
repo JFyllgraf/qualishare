@@ -4,8 +4,8 @@ import Join from './components/Join/Join';
 import Chat from './components/Chat/Chat';
 import Header from './components/Header/Header';
 import Editor from './components/Content/Editor/Editor';
-import CodeToggle from './components/Menu/CodeInspector/CodeInspector';
-import CodeFeed from './components/Menu/CodeManager/CodeManager';
+import CodeInspector from './components/Menu/CodeInspector/CodeInspector';
+import CodeManager from './components/Menu/CodeManager/CodeManager';
 import Code from './data_model/Code';
 import { server_url } from './Utility/GlobalVariables';
 
@@ -135,8 +135,8 @@ class App extends Component {
               <Header name={this.state.name}/>
             </div>
             <div className="menu">
-              <CodeToggle addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} addReceivedCode={this.addReceivedCode} />
-              <CodeFeed user={this.state.clickedQuote}/>
+              <CodeManager addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} addReceivedCode={this.addReceivedCode} />
+              <CodeInspector user={this.state.clickedQuote}/>
             </div>
             <div className="content">
               <Editor

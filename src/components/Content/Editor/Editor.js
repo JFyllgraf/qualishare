@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ContentEditable from 'react-contenteditable';
 import io from "socket.io-client";
 import './Editor.css';
@@ -20,6 +20,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   const [fileName, setFileName] = useState(undefined);
 
   socket = io(server_url);
+  const textRef = useRef(null);
 
   useEffect(() => {
     setSelectedCode(selected);
@@ -85,6 +86,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         emmitChange={emmitChange}
         uploadFile={uploadFile}
         handleFileChange={handleFileChange}
+        ref={textRef}
       />
 
       <ContentEditable
