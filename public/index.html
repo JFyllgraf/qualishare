@@ -55,9 +55,11 @@
         // 	span.parentNode.replaceChild(docFrag, span);
         // }
         const name = span.getAttribute('user');
+        const id = span.getId();
         var event = new CustomEvent('testEvent', {
           detail: {
-            username: name
+            username: name,
+            id: id
           }
         });
         window.dispatchEvent(event);

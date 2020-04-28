@@ -142,6 +142,9 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         let quote = constructQuoteFromData(res.data);
         selectedCode.addQuote(quote); //selected code is wrong code
         setQuoteList([...quoteList, quote]);
+
+        // Add new span with: current codecolor, current username, new quote ID
+        highlight(selectedCode.getColor(), userName, quote._id);
       }).catch(err => {
         console.log(err);
       });
@@ -149,7 +152,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
 
     console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
 
-    highlight(selectedCode.getColor(), userName);
+
 
     //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
     //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
