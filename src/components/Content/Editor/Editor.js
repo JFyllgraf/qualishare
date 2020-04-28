@@ -11,7 +11,7 @@ import axios from "axios";
 let socket;
 
 function Editor({name, selected, codeObjects, handler, quoteHandler}) {
-  const [userName] = useState(name);
+  const [userName, setUserName] = useState(name);
   const initialText = getDefaultText;
   const [text, setText] = useState(initialText);
   const [selectedCode, setSelectedCode] = useState(selected);
@@ -24,7 +24,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   useEffect(() => {
     setSelectedCode(selected);
     setCodeList(codeObjects);
-  }, [name, selected, selectedCode, codeObjects, fileName]);
+  }, [name, selected, selectedCode, codeObjects]);
 
   useEffect(() => {
     socket.emit('editingText', text);
