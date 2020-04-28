@@ -1,6 +1,8 @@
 import React, { useState, useEffect} from 'react';
 
 import './CodeInspector.css';
+import axios from "axios";
+import {server_url} from "../../../Utility/GlobalVariables";
 
 
 function CodeInspector({user}) {
@@ -32,6 +34,11 @@ function CodeInspector({user}) {
    	span.parentNode.replaceChild(docFrag, span);
     document.getElementById('textDiv').focus();
     // remove quote from DB
+      axios.delete(server_url+'/deleteQuote', {data: {_id:spanID}}).then(res =>{
+          console.log("Deleted quote: ", res);
+      }).catch(err =>{
+          console.log(err);
+      })
    }
 
   return (
