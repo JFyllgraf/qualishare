@@ -21,7 +21,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   const [memo, setMemo] = useState("");
   socket = io(server_url);
   const textRef = useRef(null);
-  const [onChangeEvent, setonChangeEvent] = useState();
+  const [onChangeEvent, setonChangeEvent] = useState(null);
 
   useEffect(() => {
     setSelectedCode(selected);
@@ -82,8 +82,10 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     setMemo(e.target.value);
   }
   const getMemo = () => {
-    onChangeEvent.target.value = ""; //reset
-    setonChangeEvent(null);
+    if(onChangeEvent !==null) {
+      onChangeEvent.target.value = ""; //reset
+      setonChangeEvent(null);
+    }
     return memo;
   }
 
