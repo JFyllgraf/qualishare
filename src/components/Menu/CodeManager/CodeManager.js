@@ -118,6 +118,10 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
         return bool;
     }
 
+    function numOfQuotes(code) {
+        return " ("+code.quoteRefs.length.toString()+")";
+    }
+
     function DisplayCode() {
         let codes = getCodes();
         return (
@@ -126,7 +130,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
                     codes.map(code => {
                         return (
                             <div className="code" key={code.getId()}>
-                                <CustomInput type="checkbox" id={code.getId()} label={code.getName()}/>
+                                <CustomInput type="checkbox" id={code.getId()} label={code.getName()+numOfQuotes(code)}/>
                             </div>
                         )
                     })

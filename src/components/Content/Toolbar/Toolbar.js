@@ -44,9 +44,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
     });
 
   },[selected]);
-  useEffect(()=>{
-
-  })
 
 /* parameterized get for quotes by id
 axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9a7"}}).then(res=>{
