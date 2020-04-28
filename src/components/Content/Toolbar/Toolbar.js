@@ -20,7 +20,7 @@ const config = {
 let socket;
 socket = io(server_url);
 
-function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange}) {
+function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange, getMemo}) {
   const [userName] = useState(name);
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
@@ -44,6 +44,9 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
     });
 
   },[selected]);
+  useEffect(()=>{
+
+  })
 
 /* parameterized get for quotes by id
 axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9a7"}}).then(res=>{
@@ -134,7 +137,9 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         quoteText: selectedText,
         quoteOffset: selOffsets.start,
         codeRefs: selectedCode._id,
-        documentNum: 0 //default for now
+        documentNum: 0, //default for now
+        userName: "default",
+        memo: getMemo(),
       }
       axios.post(server_url+"/newQuote", data).then(res => {
 
@@ -222,6 +227,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
 
 function constructQuoteFromData(data){
   let q = new Quote(data._id, data.quoteText, data.offset, data.codeRefs, data.documentNum);
+  q.memo = data.memo;
   console.log("QQ: ",q);
   return q;
 }
