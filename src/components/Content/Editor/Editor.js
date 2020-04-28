@@ -11,7 +11,7 @@ import axios from "axios";
 let socket;
 
 function Editor({name, selected, codeObjects, handler, quoteHandler}) {
-  const [userName, setUserName] = useState(name);
+  const [userName] = useState(name);
   const initialText = getDefaultText;
   const [text, setText] = useState(initialText);
   const [selectedCode, setSelectedCode] = useState(selected);

@@ -21,15 +21,12 @@ let socket;
 socket = io(server_url);
 
 function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange}) {
-  const [userName, setUserName] = useState(name);
+  const [userName] = useState(name);
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
   const [quoteList, setQuoteList] = useState([]);
   const [uploadedFile, setUploadedFile] = useState(undefined);
 
-
-
-  const [uploadedFile, setUploadedFile] = useState(undefined);
   useEffect(() => {
     //handler(selectedCode); //this can be left out
     setCodeList(codes);
@@ -111,7 +108,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
             preCaretRange.setEnd(range.endContainer, range.endOffset);
             end = preCaretRange.toString().length;
         }
-    } else if ( (sel = doc.selection) && sel.type != "Control") {
+    } else if ( (sel = doc.selection) && sel.type !== "Control") {
         var textRange = sel.createRange();
         var preCaretTextRange = doc.body.createTextRange();
         preCaretTextRange.moveToElementText(element);

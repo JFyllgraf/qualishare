@@ -1,5 +1,4 @@
 //import * as Helpers from '../Utility/Helpers';
-var randomColor = require('randomcolor');
 
 class Code {
     constructor(name, id) {

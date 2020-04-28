@@ -176,7 +176,7 @@ class App extends Component {
 
 function extractCodesFromJson(jsonArray){
     let codes = [];
-    jsonArray.map(jsonCode => {
+    jsonArray.forEach(jsonCode => {
         let code = new Code(jsonCode.codeName, jsonCode._id);
         code.color = jsonCode.color;
         code.link = jsonCode.link;
