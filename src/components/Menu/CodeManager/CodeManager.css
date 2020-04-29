@@ -61,3 +61,43 @@
 .code {
   font-size: 18px;
 }
+
+/* MODAL */
+
+/* Outer container (document) */
+.custom-modal {
+  max-width: 80vw;
+  width: 80vw;
+}
+
+/* container for entire dialog */
+.modal-content {
+  max-height: 80vh;
+  height: 80vh;
+  max-width: 80vw;
+  width: 80vw;
+}
+
+.modal-header {}
+.modal-body {}
+
+.my-icon {
+  float: right;
+}
+
+.code-element {
+  padding: 5px;
+}
+
+.code-element:hover {
+  border: 1px solid #FFFFFF;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.code-element:after {
+  content: '\f105';
+  font-family: FontAwesome;
+  float: right;
+  padding-left: 5px;
+}
