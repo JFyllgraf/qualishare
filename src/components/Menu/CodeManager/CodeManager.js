@@ -119,7 +119,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
     }
 
     function numOfQuotes(code) {
-        return " ("+code.quoteRefs.length.toString()+")";
+        return "";//" ("+code.quoteRefs.length.toString()+")";
     }
 
     function DisplayCode() {
