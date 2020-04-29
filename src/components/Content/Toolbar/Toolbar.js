@@ -195,7 +195,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
   //for getting state information from button click
   const info = e => {
     e.preventDefault();
-    console.log(quoteList);
+    console.log(codeList);
   }
 
 

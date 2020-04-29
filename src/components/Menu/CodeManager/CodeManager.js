@@ -8,7 +8,7 @@ import axios from 'axios';
 import CustomInput from "reactstrap/es/CustomInput";
 
 let socket;
-const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode}) => {
+const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode, userName}) => {
     const [codename, setcodeName] = useState('');
     const [onChangeEvent, setonChangeEvent] = useState();
 
@@ -20,6 +20,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
             let newCode = new Code(receivedCode.codeName);
             newCode._id = receivedCode._id;
             newCode.color = receivedCode.color;
+            newCode.userName = receivedCode.userName;
             addReceivedCode(newCode);
         }
         //do nothing
@@ -56,7 +57,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
     const handleOnClick = (e) => {
         e.preventDefault();
 
-        axios.post(server_url+"/newCode", {codeName: codename}).then(res => {
+        axios.post(server_url+"/newCode", {codeName: codename, userName:userName}).then(res => {
             let code = constructCodeFromData(res.data);
             addCodeToList(code);
         }).catch(err =>{
@@ -70,6 +71,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
         let code = new Code(data.codeName, data._id);
         code.color = data.color
         code.quoteRefs = data.quoteRefs;
+        code.userName = data.userName;
         return code;
     }
     const handleOnClickDeleteCode = (e) => {

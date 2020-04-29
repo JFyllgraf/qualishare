@@ -135,7 +135,7 @@ class App extends Component {
               <Header name={this.state.name}/>
             </div>
             <div className="menu">
-              <CodeManager addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} addReceivedCode={this.addReceivedCode} />
+              <CodeManager addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} addReceivedCode={this.addReceivedCode} userName={this.state.name} />
               <CodeInspector user={this.state.clickedQuote}/>
             </div>
             <div className="content">
@@ -181,6 +181,7 @@ function extractCodesFromJson(jsonArray){
         code.color = jsonCode.color;
         code.link = jsonCode.link;
         code.memo = jsonCode.memo;
+        code.userName = jsonCode.userName;
         codes = [...codes, code];
     });
     return codes;

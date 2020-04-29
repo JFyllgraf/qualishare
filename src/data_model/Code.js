@@ -8,6 +8,7 @@ class Code {
         this.link = undefined;
         this.color = undefined
         this.quoteRefs = [];
+        this.userName = null;
         //getters
         this.getName = function() { return this.codeName };
         this.getId = function() { return this._id };
