@@ -203,16 +203,21 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
         dialogClassName="custom-modal"
         aria-labelledby="example-custom-modal-styling-title"
         centered
+        scrollable
       >
         <Modal.Header closeButton>
-          <Modal.Title id="example-custom-modal-styling-title">
-            Code: {activeCodeName}
+          <Modal.Title id="modal-title">
+            <b>Code: </b>{activeCodeName}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div>
-            { (quoteList && quoteList.length > 0) ? <p>{quoteList[0]._id}</p> : <p>This code has not been applied yet...</p>}
-          </div>
+          <ul id="quoteList">
+            { (quoteList && quoteList.length > 0) ?
+              quoteList.map(quote => {
+                return <li className="quote-element">{quote.quoteText} <i className="quoteUsername"> - coded by {quote.userName}</i></li>
+              }) :
+              <p>This code has not been applied yet...</p>}
+          </ul>
         </Modal.Body>
       </Modal>
 
