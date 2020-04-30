@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { FormGroup } from 'reactstrap';
 import './CodeManager.css';
-import Code from '../../../data_model/Code'
+import Code from '../../../data_model/Code';
+import Quote from '../../../data_model/Quote';
 import io from "socket.io-client";
 import {server_url} from "../../../Utility/GlobalVariables";
 import axios from 'axios';
@@ -13,12 +14,17 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
   const [codename, setcodeName] = useState('');
   const [onChangeEvent, setonChangeEvent] = useState();
 
+
   const [activeCodeName, setActiveCodeName] = useState();
   const [activeCodeId, setActiveCodeId] = useState();
-  const [quoteList, setCodeList] = useState();
+  const [quoteList, setQuoteList] = useState();
 
   //modal handling
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    console.log(quoteList);
+  }, [quoteList])
 
   const ENDPOINT = server_url;
   socket = io(ENDPOINT);
@@ -156,6 +162,26 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
     console.log(event.target.getAttribute('name'));
   }
 
+  function updateQuoteList() {
+    axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: activeCodeId}}).then(res=>{
+      console.log("my res: ", res.data);
+      let quotes = ExtractQuotesFromData(res.data);
+      setQuoteList(quotes);
+    }).catch(err=>{
+      console.log(err);
+    });
+    console.log("Quotes: " + quoteList);
+  }
+
+  function ExtractQuotesFromData(jsonArray) {
+      let quotes = [];
+      jsonArray.map(jsonQuote => {
+        let quote = new Quote(jsonQuote._id, jsonQuote.quoteText, jsonQuote.quoteOffset, jsonQuote.codeRefs, null, jsonQuote.userName);
+        quotes = [...quotes, quote];
+      });
+      return quotes;
+  }
+
   return (
     <div className="codeManager-container">
       <h4>ACTIVE CODES</h4>
@@ -173,7 +199,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
       <Modal
         show={show}
         onHide={() => setShow(false)}
-        onEnter={() => console.log('Entering modal')}
+        onEnter={updateQuoteList}
         dialogClassName="custom-modal"
         aria-labelledby="example-custom-modal-styling-title"
         centered
@@ -184,9 +210,9 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>
-            text here
-          </p>
+          <div>
+            { (quoteList && quoteList.length > 0) ? <p>{quoteList[0]._id}</p> : <p>This code has not been applied yet...</p>}
+          </div>
         </Modal.Body>
       </Modal>
 

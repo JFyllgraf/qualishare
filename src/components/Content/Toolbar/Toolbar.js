@@ -122,7 +122,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
 
   const addQuote = (event) => {
     event.preventDefault();
-    console.log(selectedCode);
+    //console.log(selectedCode);
     let selectedText = window.getSelection().toString();
 
     var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
@@ -135,8 +135,8 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         quoteOffset: selOffsets.start,
         codeRefs: selectedCode._id,
         documentNum: 0, //default for now
-        userName: "default",
-        memo: getMemo(),
+        userName: userName,
+        memo: getMemo()
       }
       axios.post(server_url+"/newQuote", data).then(res => {
 
@@ -225,7 +225,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
 function constructQuoteFromData(data){
   let q = new Quote(data._id, data.quoteText, data.offset, data.codeRefs, data.documentNum);
   q.memo = data.memo;
-  console.log("QQ: ",q);
+  //console.log("QQ: ",q);
   return q;
 }
 
