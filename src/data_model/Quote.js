@@ -1,14 +1,14 @@
 const summary_length = 5;
 class Quote {
 
-    constructor(id, quoteText, quoteOffset, codeRef, summary, userName) {
+    constructor(id, quoteText, quoteOffset, codeRef, summary, memo, userName) {
         this._id = id;
         this.quoteText = quoteText;
         this.quoteOffset = quoteOffset;
         this.codeRefs = codeRef;
         this.summary = this.quoteText.match(/([\w]*\s|[\w]*)/gm).splice(0, summary_length).toString(); //index out of range is not a problem, will always return at most
                                                                           // summary_length number of words
-        this.memo = null;
+        this.memo = memo;
         this.userName = userName;
         this.getQuoteText = function () { return this.quoteText; };
         this.getQuoteOffset = function () { return this.quoteOffset; };

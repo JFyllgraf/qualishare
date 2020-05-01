@@ -6,7 +6,7 @@ import {server_url} from "../../../Utility/GlobalVariables";
 
 
 function CodeInspector({user}) {
-  const [userName, setUserName] = useState(user);
+  const [userName, setUserName] = useState('');
   const [spanID, setSpanID] = useState('');
 
   useEffect(() => {
@@ -39,13 +39,18 @@ function CodeInspector({user}) {
       }).catch(err =>{
           console.log(err);
       })
+    setUserName('');
    }
 
   return (
     <div className="codeInspector-container">
-      <h4>Selected Code: </h4>
-      <p>User Name: {userName}</p>
-      {(spanID) ? <button onClick={removeQuote}>Delete quote</button> : <div></div> }
+
+      {(userName) ?<div>
+          <h4> Selected Code: </h4>
+          <p>Coded by: {userName}</p>
+          <button onClick={removeQuote}>Delete quote</button>
+        </div>
+      : <div></div>}
     </div>
   );
 }

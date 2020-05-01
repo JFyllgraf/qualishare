@@ -1,6 +1,8 @@
 .toolbar-container {
   padding: 10px;
   width: 100%;
+  vertical-align: middle;
+  display: flex;
 }
 
 .label {
@@ -38,8 +40,50 @@
   background-color: #FFFFFF;
 }
 
-@media (max-width: 640px) {
+#memo-input {
+  height: 34px;
+  margin: 0 0.3em 0 0;
+  padding: 0.45em 0.8em;
+}
 
+#toolbarSelect {
+  height: 34;
+  font-size: 14px;
+  background-color: transparent;
+  padding:0.45em 0.8em;
+  border:0.1em solid #FFFFFF;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  font-weight: 300;
+  color: #FFFFFF;
+  text-align: center;
+  transition: all 0.2s;
+  max-width: 200px;
+  width: 200px;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+select option {
+  color: #454545;
+  background-color: white;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* SCALING */
+@media (max-width: 1050px) {
+
+  .toolbar-container{
+    display: inline;
+  }
+}
+
+@media (max-width: 870px) {
   .toolbar-innerContainer {
     display: flex;
     flex-direction: column;
@@ -47,30 +91,10 @@
     align-items: center;
   }
 
+  .editor-container {
+    padding-top: 0px;
+  }
   .toolbar-innerContainer > * {
     margin: 5px;
   }
-}
-
-.toolbarSelect {
-  height: 34;
-  font-size: 14px;
-  background-color: transparent;
-  display:inline-block;
-  padding:0.45em 1.2em;
-  border:0.1em solid #FFFFFF;
-  margin: 0 0.3em 0.3em 0;
-  border-radius: 0.12em;
-  box-sizing: border-box;
-  text-decoration: none;
-  font-family: sans-serif;
-  font-weight: 300;
-  color: #FFFFFF;
-  text-align: center;
-  transition: all 0.2s;
-}
-
-select option {
-  color: #454545;
-  background-color: white;
 }

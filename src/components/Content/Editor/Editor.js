@@ -18,10 +18,8 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   const [codeList, setCodeList] = useState(codeObjects);
   const [file, setFile] = useState(undefined);
   const [fileName, setFileName] = useState(undefined);
-  const [memo, setMemo] = useState("");
   socket = io(server_url);
   const textRef = useRef(null);
-  const [onChangeEvent, setonChangeEvent] = useState(null);
 
   useEffect(() => {
     setSelectedCode(selected);
@@ -75,19 +73,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
   };
-  const handleOnChange = (e) =>{
-    e.preventDefault();
-    e.persist();
-    setonChangeEvent(e);
-    setMemo(e.target.value);
-  }
-  const getMemo = () => {
-    if(onChangeEvent !==null) {
-      onChangeEvent.target.value = ""; //reset
-      setonChangeEvent(null);
-    }
-    return memo;
-  }
 
   return (
     <div className="editor-container">
@@ -101,9 +86,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         uploadFile={uploadFile}
         handleFileChange={handleFileChange}
         ref={textRef}
-        getMemo={getMemo}
       />
-      <div> <input type="text" onChange={handleOnChange} />   </div>
 
       <ContentEditable
         id="textDiv"

@@ -20,12 +20,13 @@ const config = {
 let socket;
 socket = io(server_url);
 
-function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange, getMemo}) {
+function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange}) {
   const [userName] = useState(name);
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
   const [quoteList, setQuoteList] = useState([]);
   const [uploadedFile, setUploadedFile] = useState(undefined);
+  const [memo, setMemo] = useState("");
 
   useEffect(() => {
     //handler(selectedCode); //this can be left out
@@ -136,7 +137,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         codeRefs: selectedCode._id,
         documentNum: 0, //default for now
         userName: userName,
-        memo: getMemo()
+        memo: memo
       }
       axios.post(server_url+"/newQuote", data).then(res => {
 
@@ -155,7 +156,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
 
 
-
+    setMemo("");
     //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
     //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
   };
@@ -198,12 +199,17 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     console.log(codeList);
   }
 
+  function handleMemoInput(event) {
+    setMemo(event.target.value);
+    console.log(memo);
+  }
+
 
   return (
     <div className="toolbar-container">
       <div className="toolbar-innerContainer">
         <span className="label">Select Code: </span>
-        <select  onChange={newSelection} className="toolbarSelect" type="select" name="select">
+        <select  onChange={newSelection} id="toolbarSelect" type="select" name="select">
           {
             (codeList) ?
             codeList.map(code => {
@@ -212,15 +218,18 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
             null
           }
         </select>
+        <input id="memo-input" type="text" value={memo} placeholder="optional memo..." onChange={handleMemoInput} />
         <a href="something" className="toolbarButton" onKeyDown={(e) => e.keyCode===66 ? addQuote(e) : null} onClick={addQuote}>Apply</a>
-        <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
-        <input type="file" onChange={handleFileChange} className="toolbarButton"/>
-        <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
-        <a href="something" className="toolbarButton" onClick={info}> info </a>
+
       </div>
     </div>
   );
 }
+
+// <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
+// <input type="file" onChange={handleFileChange} className="toolbarButton"/>
+// <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
+// <a href="something" className="toolbarButton" onClick={info}> info </a>
 
 function constructQuoteFromData(data){
   let q = new Quote(data._id, data.quoteText, data.offset, data.codeRefs, data.documentNum);
