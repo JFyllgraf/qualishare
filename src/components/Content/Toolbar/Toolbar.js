@@ -124,15 +124,16 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     event.preventDefault();
     //console.log(selectedCode);
     let selectedText = window.getSelection().toString();
-
-    var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
+    let offset = window.getSelection().anchorOffset;
+    console.log("offset: ",offset);
+    //var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
     if(selectedText === null || selectedText === undefined || selectedText ==='') {
       //do nothing
     }
     else {
       let data = {
         quoteText: selectedText,
-        quoteOffset: selOffsets.start,
+        quoteOffset: offset,
         codeRefs: selectedCode._id,
         documentNum: 0, //default for now
         userName: userName,
@@ -151,10 +152,8 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         console.log(err);
       });
     }
-
-    console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
-
-
+    //console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
+    console.log("Selection offset: " + offset);
 
     //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
     //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
