@@ -23,7 +23,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   socket = io(server_url);
   const textRef = useRef(null);
   const [onChangeEvent, setonChangeEvent] = useState(null);
-  const [quoteList, setQuoteList] = useState([]);
 
   // const quoteList = [
   //   new Quote(1, "text here", { start: 12, end: 16 }, null, null, "morten"),
@@ -47,7 +46,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     return comparison;
   }
 
-  function styleText(){
+  function styleText(quoteList){
     var i;
     for (i = 0; i < quoteList.length; i++){
       //console.log(quoteList[i]);
@@ -77,21 +76,16 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   useEffect(() => {
     axios.get(server_url+"/Quotes").then(res=>{
       let quotes = ExtractQuotesFromData(res.data);
-      setQuoteList(quotes);
-      //quoteList.sort(compare);
+      quotes.sort(compare);
+      styleText(quotes);
     }).catch(err=>{
       console.log(err);
     });
-  }, [userName])
+  }, [])
 
-  useEffect(() => {
-    quoteList.sort(compare);
-    styleText();
-    console.log(quoteList);
-  });
 
   function tester() {
-    console.log(quoteList);
+    //console.log(quoteList);
   }
 
   function ExtractQuotesFromData(jsonArray) {

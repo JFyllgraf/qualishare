@@ -117,6 +117,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         preCaretTextRange.setEndPoint("EndToEnd", textRange);
         end = preCaretTextRange.text.length;
     }
+    console.log("start: " + start + " End: " + end);
     return { start: start, end: end };
   }
 
@@ -125,7 +126,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     //console.log(selectedCode);
     let selectedText = window.getSelection().toString();
     var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
-    
+
     if(selectedText === null || selectedText === undefined || selectedText ==='') {
       //do nothing
     }
@@ -236,7 +237,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         <input type="file" onChange={handleFileChange} className="toolbarButton"/>
         <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
         <a href="something" className="toolbarButton" onClick={info}> info </a>
-        <button onClick={selectAll}>test</button>
+        <button onClick={() => getSelectionCharacterOffsetWithin(document.getElementById("textDiv"))}>test</button>
       </div>
     </div>
   );
