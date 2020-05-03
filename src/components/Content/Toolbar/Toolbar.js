@@ -72,22 +72,22 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
       }
     }
   }
-   socket.on("newQuote", function(data) {
-     console.log("Receiving client data: ", data); //probably have to do duplicate checking
-
-     //find correct code
-     //check the list of correct code, if the current quote is already there
-     //if not there then add
-     let quote = constructQuoteFromData(JSON.parse(data));
-     for (let i = 0; i<codeList.length; i++){
-       if(codeList[i]._id === quote.codeRefs){ //the code that this quote belongs to
-         let quoteRefs = codeList[i].quoteRefs;
-         if(!isQuoteInList(quote, quoteRefs)){
-           codeList[i].addQuote(quote); //create and add new client side quote
-         }
-       }
-     }
-  });
+  //  socket.on("newQuote", function(data) {
+  //    console.log("Receiving client data: ", data); //probably have to do duplicate checking
+  //
+  //    //find correct code
+  //    //check the list of correct code, if the current quote is already there
+  //    //if not there then add
+  //    let quote = constructQuoteFromData(JSON.parse(data));
+  //    for (let i = 0; i<codeList.length; i++){
+  //      if(codeList[i]._id === quote.codeRefs){ //the code that this quote belongs to
+  //        let quoteRefs = codeList[i].quoteRefs;
+  //        if(!isQuoteInList(quote, quoteRefs)){
+  //          codeList[i].addQuote(quote); //create and add new client side quote
+  //        }
+  //      }
+  //    }
+  // });
 
   // from: https://stackoverflow.com/questions/52019642/get-selected-element-based-on-caret-position-in-contenteditable-div
   // returns start and end offset from argument; DOM element
@@ -117,7 +117,6 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         preCaretTextRange.setEndPoint("EndToEnd", textRange);
         end = preCaretTextRange.text.length;
     }
-    console.log("start: " + start + " End: " + end);
     return { start: start, end: end };
   }
 
@@ -125,8 +124,8 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     event.preventDefault();
     //console.log(selectedCode);
     let selectedText = window.getSelection().toString();
-    var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
 
+    var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
     if(selectedText === null || selectedText === undefined || selectedText ==='') {
       //do nothing
     }
@@ -210,7 +209,6 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     //create new span around the text
     var span = document.createElement("span");
     span.style.backgroundColor = "green";
-    span.innerText = "textlllllllllllll";
     span.setAttribute('user', "user");
     span.setAttribute('onclick', "removeSPan(this)");
     range.surroundContents(span)
@@ -237,7 +235,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         <input type="file" onChange={handleFileChange} className="toolbarButton"/>
         <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
         <a href="something" className="toolbarButton" onClick={info}> info </a>
-        <button onClick={() => getSelectionCharacterOffsetWithin(document.getElementById("textDiv"))}>test</button>
+        <button onClick={selectAll}>test</button>
       </div>
     </div>
   );

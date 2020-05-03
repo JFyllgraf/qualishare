@@ -3,6 +3,7 @@ import ContentEditable from 'react-contenteditable';
 import io from "socket.io-client";
 import './Editor.css';
 import Quote from "../../../data_model/Quote";
+import Code from "../../../data_model/Code";
 
 import { getDefaultText } from '../../../Utility/Helpers';
 import { server_url } from '../../../Utility/GlobalVariables';
@@ -47,20 +48,39 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   }
 
   function styleText(quoteList){
-    var i;
-    for (i = 0; i < quoteList.length; i++){
-      //console.log(quoteList[i]);
-      var range = document.createRange();
-      range.setStart(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.start);
-      range.setEnd(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.end);
+    let retrievedCodes = null;
+    axios.get(server_url + "/Codes").then(res => {
+          console.log(res.data);
+          retrievedCodes = extractCodesFromJson(res.data);
+          return retrievedCodes;
+      }).then(retrievedCodes => {
+        console.log(retrievedCodes);
+        var i;
+        for (i = 0; i < quoteList.length; i++){
+          let code = findCorrectCodeFromQuote(retrievedCodes, quoteList[i]);
+          //console.log(quoteList[i]);
+          var range = document.createRange();
+          range.setStart(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.start);
+          range.setEnd(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.end);
 
-      //create new span around the text
-      var span = document.createElement("span");
-      span.style.backgroundColor = "green";
-      span.innerText = quoteList[i].quoteText;
-      span.setAttribute('user', quoteList[i].userName);
-      span.setAttribute('onclick', "removeSPan(this)");
-      range.surroundContents(span);
+          //create new span around the text
+          var span = document.createElement("span");
+          span.style.backgroundColor = code.color;
+          span.innerText = quoteList[i].quoteText;
+          span.setAttribute('user', quoteList[i].userName);
+          span.setAttribute('onclick', "removeSPan(this)");
+          range.surroundContents(span);
+        }
+      }).catch(err => {
+          console.log(err);
+      })
+  }
+
+  function findCorrectCodeFromQuote(codeObjects, quote){
+    for(let i = 0; i<codeObjects.length;i++){
+      if(codeObjects[i]._id === quote.codeRefs){
+        return codeObjects[i];
+      }
     }
   }
 
@@ -69,13 +89,14 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     setCodeList(codeObjects);
   }, [name, selected, selectedCode, codeObjects]);
 
-  // useEffect(() => {
-  //   socket.emit('editingText', text);
-  // }, [text])
+  useEffect(() => {
+    socket.emit('editingText', text);
+  }, [text])
 
   useEffect(() => {
     axios.get(server_url+"/Quotes").then(res=>{
       let quotes = ExtractQuotesFromData(res.data);
+      console.log(quotes);
       quotes.sort(compare);
       styleText(quotes);
     }).catch(err=>{
@@ -83,6 +104,19 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     });
   }, [])
 
+  function extractCodesFromJson(jsonArray){
+      let codes = [];
+      jsonArray.forEach(jsonCode => {
+          let code = new Code(jsonCode.codeName, jsonCode._id);
+          code.color = jsonCode.color;
+          code.link = jsonCode.link;
+          code.memo = jsonCode.memo;
+          code.userName = jsonCode.userName;
+          codes = [...codes, code];
+      });
+      console.log(codes);
+      return codes;
+  }
 
   function tester() {
     //console.log(quoteList);
@@ -152,6 +186,13 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
       setonChangeEvent(null);
     }
     return memo;
+  }
+
+  function constructQuoteFromData(data){
+    let q = new Quote(data._id, data.quoteText, data.quoteOffset, data.codeRefs);
+    q.memo = data.memo;
+    //console.log("QQ: ",q);
+    return q;
   }
 
   return (
