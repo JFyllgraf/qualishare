@@ -124,15 +124,18 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     event.preventDefault();
     //console.log(selectedCode);
     let selectedText = window.getSelection().toString();
-
     var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
+    
     if(selectedText === null || selectedText === undefined || selectedText ==='') {
       //do nothing
     }
     else {
       let data = {
         quoteText: selectedText,
-        quoteOffset: selOffsets.start,
+        quoteOffset: {
+          start: selOffsets.start,
+          end: selOffsets.end
+        },
         codeRefs: selectedCode._id,
         documentNum: 0, //default for now
         userName: userName,
@@ -198,6 +201,22 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     console.log(codeList);
   }
 
+  function selectAll(){
+    var range = document.createRange();
+    range.setStart(document.getElementById("textDiv"), 0);
+    range.setEnd(document.getElementById("textDiv"), 1);
+
+    //create new span around the text
+    var span = document.createElement("span");
+    span.style.backgroundColor = "green";
+    span.innerText = "textlllllllllllll";
+    span.setAttribute('user', "user");
+    span.setAttribute('onclick', "removeSPan(this)");
+    range.surroundContents(span)
+
+    window.getSelection().addRange(range);
+
+  }
 
   return (
     <div className="toolbar-container">
@@ -217,6 +236,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         <input type="file" onChange={handleFileChange} className="toolbarButton"/>
         <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
         <a href="something" className="toolbarButton" onClick={info}> info </a>
+        <button onClick={selectAll}>test</button>
       </div>
     </div>
   );
