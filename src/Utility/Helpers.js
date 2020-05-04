@@ -19,7 +19,7 @@ export function highlight(color, user, quoteID){
   console.log(range);
   range.surroundContents(span);
   console.log(span.previousSibling.previousSibling);
-  //document.execCommand('insertHTML', false, span.outerHTML);
+  document.getElementById('textDiv').focus();
 }
 
 export function getDefaultText(){

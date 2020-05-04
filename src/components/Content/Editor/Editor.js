@@ -67,6 +67,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
           span.style.backgroundColor = code.color;
           span.id = quoteList[i]._id;
           span.innerText = quoteList[i].quoteText;
+          span.setAttribute('memo', quoteList[i].memo);
           span.setAttribute('user', quoteList[i].userName);
           span.setAttribute('onclick', "removeSPan(this)");
           range.surroundContents(span);
@@ -122,14 +123,11 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
       return codes;
   }
 
-  function tester() {
-    //console.log(quoteList);
-  }
-
   function ExtractQuotesFromData(jsonArray) {
     let quotes = [];
     jsonArray.map(jsonQuote => {
       let quote = new Quote(jsonQuote._id, jsonQuote.quoteText, jsonQuote.quoteOffset, jsonQuote.codeRefs, null, jsonQuote.userName);
+      quote.memo = jsonQuote.memo;
       quotes = [...quotes, quote];
     });
     return quotes;
@@ -216,7 +214,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         onChange={handleChange}
         className="editor-input">
       </ContentEditable>
-      <button onClick={tester}>test list</button>
 
     </div>
   );
