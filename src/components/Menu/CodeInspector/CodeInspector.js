@@ -1,13 +1,17 @@
 import React, { useState, useEffect} from 'react';
+import io from "socket.io-client";
 
 import './CodeInspector.css';
 import axios from "axios";
 import {server_url} from "../../../Utility/GlobalVariables";
 
+let socket;
+socket = io(server_url);
 
 function CodeInspector({user}) {
   const [userName, setUserName] = useState('');
   const [spanID, setSpanID] = useState('');
+
 
   useEffect(() => {
     setUserName(user);
@@ -36,6 +40,7 @@ function CodeInspector({user}) {
     // remove quote from DB
       axios.delete(server_url+'/deleteQuote', {data: {_id:spanID}}).then(res =>{
           console.log("Deleted quote: ", res);
+          socket.emit("newQuote", "delete quote");
       }).catch(err =>{
           console.log(err);
       })

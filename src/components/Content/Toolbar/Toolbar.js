@@ -73,22 +73,22 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
       }
     }
   }
-   socket.on("newQuote", function(data) {
-     console.log("Receiving client data: ", data); //probably have to do duplicate checking
-
-     //find correct code
-     //check the list of correct code, if the current quote is already there
-     //if not there then add
-     let quote = constructQuoteFromData(JSON.parse(data));
-     for (let i = 0; i<codeList.length; i++){
-       if(codeList[i]._id === quote.codeRefs){ //the code that this quote belongs to
-         let quoteRefs = codeList[i].quoteRefs;
-         if(!isQuoteInList(quote, quoteRefs)){
-           codeList[i].addQuote(quote); //create and add new client side quote
-         }
-       }
-     }
-  });
+  //  socket.on("newQuote", function(data) {
+  //    console.log("Receiving client data: ", data); //probably have to do duplicate checking
+  //
+  //    //find correct code
+  //    //check the list of correct code, if the current quote is already there
+  //    //if not there then add
+  //    let quote = constructQuoteFromData(JSON.parse(data));
+  //    for (let i = 0; i<codeList.length; i++){
+  //      if(codeList[i]._id === quote.codeRefs){ //the code that this quote belongs to
+  //        let quoteRefs = codeList[i].quoteRefs;
+  //        if(!isQuoteInList(quote, quoteRefs)){
+  //          codeList[i].addQuote(quote); //create and add new client side quote
+  //        }
+  //      }
+  //    }
+  // });
 
   // from: https://stackoverflow.com/questions/52019642/get-selected-element-based-on-caret-position-in-contenteditable-div
   // returns start and end offset from argument; DOM element
@@ -124,7 +124,11 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
   const addQuote = (event) => {
     event.preventDefault();
     //console.log(selectedCode);
-    let selectedText = window.getSelection().toString();
+    let selection = window.getSelection();
+    let selectedText = selection.toString();
+    let startRange = selection.getRangeAt(0).startOffset;
+    let endRange = selection.getRangeAt(0).endOffset;
+    console.log(selection);
 
     var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
     if(selectedText === null || selectedText === undefined || selectedText ==='') {
@@ -133,7 +137,10 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     else {
       let data = {
         quoteText: selectedText,
-        quoteOffset: selOffsets.start,
+        quoteOffset: {
+          start: selOffsets.start,
+          end: selOffsets.end
+        },
         codeRefs: selectedCode._id,
         documentNum: 0, //default for now
         userName: userName,
@@ -148,6 +155,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
 
         // Add new span with: current codecolor, current username, new quote ID
         highlight(selectedCode.getColor(), userName, quote._id);
+
       }).catch(err => {
         console.log(err);
       });
