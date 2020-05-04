@@ -18,7 +18,7 @@ export function highlight(color, user, quoteID){
   span.setAttribute('onclick', "removeSPan(this)");
   console.log(range);
   range.surroundContents(span);
-  document.getElementById('textDiv').focus();
+  document.getElementById('textDiv').focus(); // hack to prevent textDiv from rerendering
 }
 
 export function getDefaultText(){

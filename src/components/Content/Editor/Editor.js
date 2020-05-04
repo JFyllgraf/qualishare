@@ -96,6 +96,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
 
   useEffect(() => {
     updateStyles();
+    document.getElementById('textDiv').focus(); // hack to prevent textDiv from rerendering
   }, [])
 
   function updateStyles(){
@@ -204,7 +205,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         handleFileChange={handleFileChange}
         ref={textRef}
       />
-
       <ContentEditable
         id="textDiv"
         onDragOver={preventDragging}
@@ -214,7 +214,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         onChange={handleChange}
         className="editor-input">
       </ContentEditable>
-
     </div>
   );
 }
