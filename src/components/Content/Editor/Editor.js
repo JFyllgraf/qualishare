@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import ContentEditable from 'react-contenteditable';
 import io from "socket.io-client";
 import './Editor.css';
+import Quote from "../../../data_model/Quote";
+import Code from "../../../data_model/Code";
 
 import { getDefaultText } from '../../../Utility/Helpers';
 import { server_url } from '../../../Utility/GlobalVariables';
@@ -12,29 +14,139 @@ let socket;
 
 function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   const [userName] = useState(name);
-  const initialText = getDefaultText;
+  const initialText = getDefaultText();
   const [text, setText] = useState(initialText);
   const [selectedCode, setSelectedCode] = useState(selected);
   const [codeList, setCodeList] = useState(codeObjects);
   const [file, setFile] = useState(undefined);
   const [fileName, setFileName] = useState(undefined);
   const [memo, setMemo] = useState("");
-  socket = io(server_url);
+  const ENDPOINT = server_url;
   const textRef = useRef(null);
   const [onChangeEvent, setonChangeEvent] = useState(null);
+
+  // const quoteList = [
+  //   new Quote(1, "text here", { start: 12, end: 16 }, null, null, "morten"),
+  //   new Quote(2, "more text", { start: 22, end: 26 }, null, null, "Peter"),
+  //   new Quote(4, "dasdasdsa", { start: 52, end: 56 }, null, null, "Lis"),
+  //   new Quote(3, "blah blah", { start: 32, end: 36 }, null, null, "Sofie"),
+  //   new Quote(5, "dasdasdsa", { start: 62, end: 66 }, null, null, "Niels"),
+  //   new Quote(6, "dasdasdsa", { start: 42, end: 46 }, null, null, "Ole")
+  // ];
+
+  function compare(a, b){
+    const aStart = a.quoteOffset.start;
+    const bStart = b.quoteOffset.start;
+
+    let comparison = 0;
+    if (aStart < bStart){
+      comparison = 1;
+    } else if (aStart > bStart) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
+  function styleText(quoteList){
+    document.getElementById("textDiv").innerHTML = initialText;
+    let retrievedCodes = null;
+    axios.get(server_url + "/Codes").then(res => {
+          console.log(res.data);
+          retrievedCodes = extractCodesFromJson(res.data);
+          return retrievedCodes;
+      }).then(retrievedCodes => {
+        console.log(retrievedCodes);
+        var i;
+        for (i = 0; i < quoteList.length; i++){
+          let code = findCorrectCodeFromQuote(retrievedCodes, quoteList[i]);
+          console.log(quoteList[i]);
+          var range = document.createRange();
+          range.setStart(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.start);
+          range.setEnd(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.end);
+
+          //create new span around the text
+          var span = document.createElement("span");
+          span.style.backgroundColor = code.color;
+          span.id = quoteList[i]._id;
+          span.innerText = quoteList[i].quoteText;
+          span.setAttribute('user', quoteList[i].userName);
+          span.setAttribute('onclick', "removeSPan(this)");
+          range.surroundContents(span);
+        }
+      }).catch(err => {
+          console.log(err);
+      })
+  }
+
+  function findCorrectCodeFromQuote(codeObjects, quote){
+    for(let i = 0; i<codeObjects.length;i++){
+      if(codeObjects[i]._id === quote.codeRefs){
+        return codeObjects[i];
+      }
+    }
+  }
 
   useEffect(() => {
     setSelectedCode(selected);
     setCodeList(codeObjects);
   }, [name, selected, selectedCode, codeObjects]);
 
-  useEffect(() => {
-    socket.emit('editingText', text);
-  }, [text])
+  // useEffect(() => {
+  //   socket.emit('editingText', text);
+  // }, [text])
 
-  socket.on('editingText', function(data){
-    setText(data);
-  });
+  useEffect(() => {
+    updateStyles();
+  }, [])
+
+  function updateStyles(){
+    axios.get(server_url+"/Quotes").then(res=>{
+      var quoteList = ExtractQuotesFromData(res.data);
+      console.log(quoteList);
+      quoteList.sort(compare);
+      styleText(quoteList);
+    }).catch(err=>{
+      console.log(err);
+    });
+  }
+
+  function extractCodesFromJson(jsonArray){
+      let codes = [];
+      jsonArray.forEach(jsonCode => {
+          let code = new Code(jsonCode.codeName, jsonCode._id);
+          code.color = jsonCode.color;
+          code.link = jsonCode.link;
+          code.memo = jsonCode.memo;
+          code.userName = jsonCode.userName;
+          codes = [...codes, code];
+      });
+      console.log(codes);
+      return codes;
+  }
+
+  function tester() {
+    //console.log(quoteList);
+  }
+
+  function ExtractQuotesFromData(jsonArray) {
+    let quotes = [];
+    jsonArray.map(jsonQuote => {
+      let quote = new Quote(jsonQuote._id, jsonQuote.quoteText, jsonQuote.quoteOffset, jsonQuote.codeRefs, null, jsonQuote.userName);
+      quotes = [...quotes, quote];
+    });
+    return quotes;
+  }
+
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.on('newQuote', function(data){
+      updateStyles();
+    });
+    // socket.on('deleteQuote', function(data){
+    //   updateStyles();
+    // });
+  }, [ENDPOINT])
+
 
   function handleChange(event) {
     setText(event.target.value);
@@ -89,6 +201,13 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     return memo;
   }
 
+  function constructQuoteFromData(data){
+    let q = new Quote(data._id, data.quoteText, data.quoteOffset, data.codeRefs);
+    q.memo = data.memo;
+    //console.log("QQ: ",q);
+    return q;
+  }
+
   return (
     <div className="editor-container">
       <Toolbar
@@ -114,6 +233,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         onChange={handleChange}
         className="editor-input">
       </ContentEditable>
+      <button onClick={tester}>test list</button>
 
     </div>
   );
