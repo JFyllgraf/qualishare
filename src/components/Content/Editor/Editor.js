@@ -91,6 +91,28 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     return memo;
   }
 
+  function info(e){
+    e.preventDefault()
+    let root = document.getElementById("textDiv");
+    console.log(root.childNodes);
+    root.appendChild(createSpan());
+    console.log(root.childNodes);
+    let quotes = null
+    let quote = null;
+    axios.get(server_url+"/Quotes").then(res=>{
+      quotes = ExtractQuotesFromData(res.data);
+      quote = quotes[0];
+      insertSpan(root, quote);
+      return quote
+    }).then((res)=>{
+      console.log(res);
+
+      console.log(root.childNodes);
+    }).catch(err=>{
+      console.log(err);
+    });
+  }
+
   function insertSpan(root, quote){
     for(let i = 0; i < root.childNodes.length;i++) {
       console.log(root.childNodes[i].textContent);
@@ -113,9 +135,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
       }
     }
   }
-  function insertAfter(newNode, existingNode) {
-    existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
-  }
   function createSpan(quote){
     let span = document.createElement("span");
     span.style.backgroundColor = "#d41c1c"; //code color
@@ -125,6 +144,10 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     span.setAttribute('onclick', "removeSPan(this)");
     return span;
   }
+  function insertAfter(newNode, existingNode) {
+    existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+  }
+
   function ExtractQuotesFromData(jsonArray) {
     let quotes = [];
     jsonArray.map(jsonQuote => {
@@ -134,27 +157,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     });
     return quotes;
   }
-  function info(e){
-    e.preventDefault()
-    let root = document.getElementById("textDiv");
-    let quotes = null
-    let quote = null;
-    let span = null;
-    axios.get(server_url+"/Quotes").then(res=>{
-      quotes = ExtractQuotesFromData(res.data);
-      quote = quotes[0];
-      insertSpan(root, quote);
-      return root
-    }).then((res)=>{
-      console.log(res);
-      //root.appendChild()
-      console.log(root.childNodes);
-    }).catch(err=>{
-      console.log(err);
-    });
 
-
-  }
 
   return (
     <div className="editor-container">
