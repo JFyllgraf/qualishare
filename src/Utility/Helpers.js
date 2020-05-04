@@ -18,7 +18,6 @@ export function highlight(color, user, quoteID){
   span.setAttribute('onclick', "removeSPan(this)");
   console.log(range);
   range.surroundContents(span);
-  console.log(span.previousSibling.previousSibling);
   document.getElementById('textDiv').focus();
 }
 
