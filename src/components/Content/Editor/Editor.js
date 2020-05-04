@@ -14,14 +14,14 @@ let socket;
 
 function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   const [userName] = useState(name);
-  const initialText = getDefaultText;
+  const initialText = getDefaultText();
   const [text, setText] = useState(initialText);
   const [selectedCode, setSelectedCode] = useState(selected);
   const [codeList, setCodeList] = useState(codeObjects);
   const [file, setFile] = useState(undefined);
   const [fileName, setFileName] = useState(undefined);
   const [memo, setMemo] = useState("");
-  socket = io(server_url);
+  const ENDPOINT = server_url;
   const textRef = useRef(null);
   const [onChangeEvent, setonChangeEvent] = useState(null);
 
@@ -59,7 +59,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         var i;
         for (i = 0; i < quoteList.length; i++){
           let code = findCorrectCodeFromQuote(retrievedCodes, quoteList[i]);
-          //console.log(quoteList[i]);
+          console.log(quoteList[i]);
           var range = document.createRange();
           range.setStart(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.start);
           range.setEnd(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.end);
@@ -131,15 +131,22 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   function ExtractQuotesFromData(jsonArray) {
     let quotes = [];
     jsonArray.map(jsonQuote => {
-      let quote = new Quote(jsonQuote._id, jsonQuote.quoteText, jsonQuote.quoteOffset, jsonQuote.codeRefs);
+      let quote = new Quote(jsonQuote._id, jsonQuote.quoteText, jsonQuote.quoteOffset, jsonQuote.codeRefs, null, jsonQuote.userName);
       quotes = [...quotes, quote];
     });
     return quotes;
   }
 
-  socket.on('newQuote', function(data){
-    updateStyles();
-  });
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.on('newQuote', function(data){
+      updateStyles();
+    });
+    // socket.on('deleteQuote', function(data){
+    //   updateStyles();
+    // });
+  }, [ENDPOINT])
+
 
   function handleChange(event) {
     setText(event.target.value);
