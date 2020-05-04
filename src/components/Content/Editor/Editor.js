@@ -48,6 +48,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   }
 
   function styleText(quoteList){
+    document.getElementById("textDiv").innerHTML = initialText;
     let retrievedCodes = null;
     axios.get(server_url + "/Codes").then(res => {
           console.log(res.data);
@@ -66,6 +67,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
           //create new span around the text
           var span = document.createElement("span");
           span.style.backgroundColor = code.color;
+          span.id = quoteList[i]._id;
           span.innerText = quoteList[i].quoteText;
           span.setAttribute('user', quoteList[i].userName);
           span.setAttribute('onclick', "removeSPan(this)");
@@ -89,20 +91,24 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     setCodeList(codeObjects);
   }, [name, selected, selectedCode, codeObjects]);
 
-  useEffect(() => {
-    socket.emit('editingText', text);
-  }, [text])
+  // useEffect(() => {
+  //   socket.emit('editingText', text);
+  // }, [text])
 
   useEffect(() => {
+    updateStyles();
+  }, [])
+
+  function updateStyles(){
     axios.get(server_url+"/Quotes").then(res=>{
-      let quotes = ExtractQuotesFromData(res.data);
-      console.log(quotes);
-      quotes.sort(compare);
-      styleText(quotes);
+      var quoteList = ExtractQuotesFromData(res.data);
+      console.log(quoteList);
+      quoteList.sort(compare);
+      styleText(quoteList);
     }).catch(err=>{
       console.log(err);
     });
-  }, [])
+  }
 
   function extractCodesFromJson(jsonArray){
       let codes = [];
@@ -131,8 +137,8 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     return quotes;
   }
 
-  socket.on('editingText', function(data){
-    setText(data);
+  socket.on('newQuote', function(data){
+    updateStyles();
   });
 
   function handleChange(event) {

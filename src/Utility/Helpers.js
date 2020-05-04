@@ -1,21 +1,25 @@
 export function highlight(color, user, quoteID){
   //remove any format to avoid overlap issues
-  document.execCommand('removeFormat', false, null);
+  //document.execCommand('removeFormat', false, null);
   //save selected text
-  var text = "";
-  if (window.getSelection) {
-      text = window.getSelection().toString();
-  } else if (document.selection && document.selection.type !== "Control") {
-      text = document.selection.createRange().text;
-  }
+  // var text = "";
+  // if (window.getSelection) {
+  //     text = window.getSelection().toString();
+  // } else if (document.selection && document.selection.type !== "Control") {
+  //     text = document.selection.createRange().text;
+  // }
+  let range = window.getSelection().getRangeAt(0);
   //create new span around the text
   var span = document.createElement("span");
   span.style.backgroundColor = color;
-  span.innerText = text;
+  //span.innerText = text;
   span.setAttribute('user', user);
   span.id = quoteID;
   span.setAttribute('onclick', "removeSPan(this)");
-  document.execCommand('insertHTML', false, span.outerHTML);
+  console.log(range);
+  range.surroundContents(span);
+  console.log(span.previousSibling.previousSibling);
+  //document.execCommand('insertHTML', false, span.outerHTML);
 }
 
 export function getDefaultText(){

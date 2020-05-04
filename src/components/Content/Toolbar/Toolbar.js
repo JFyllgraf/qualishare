@@ -123,7 +123,11 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
   const addQuote = (event) => {
     event.preventDefault();
     //console.log(selectedCode);
-    let selectedText = window.getSelection().toString();
+    let selection = window.getSelection();
+    let selectedText = selection.toString();
+    let startRange = selection.getRangeAt(0).startOffset;
+    let endRange = selection.getRangeAt(0).endOffset;
+    console.log(selection);
 
     var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
     if(selectedText === null || selectedText === undefined || selectedText ==='') {
@@ -150,6 +154,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
 
         // Add new span with: current codecolor, current username, new quote ID
         highlight(selectedCode.getColor(), userName, quote._id);
+
       }).catch(err => {
         console.log(err);
       });
