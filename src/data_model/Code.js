@@ -16,20 +16,23 @@ class Code {
         this.getQuotes = function () { return this.quoteRefs; };
 
         //setter
-        this.addQuote = function (quote) {
+        this.addQuote = function (id) {
             //also modfify database objects
                 //do here
-            this.quoteRefs = [...this.quoteRefs, quote];
+            this.quoteRefs = [...this.quoteRefs, id];
         };
-        this.removeQuote = function (quoteText) {
+        this.removeQuote = function (quote) {
             for (let i = 0; i < this.quoteRefs.length; i++){
-                if (this.quoteRefs[i].getQuoteText() === quoteText){
-                    this.quoteRefs.slice(i, 1); //remove element
+                if (this.quoteRefs[i] === quote._id){
+                    this.quoteRefs.splice(i, 1); //remove element
+
                     break;
                 }
             }
         }
     }
 }
-
-export default Code
+module.exports = {
+    Code: Code,
+}
+//export default Code

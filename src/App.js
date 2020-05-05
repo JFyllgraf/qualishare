@@ -6,10 +6,7 @@ import Header from './components/Header/Header';
 import Editor from './components/Content/Editor/Editor';
 import CodeInspector from './components/Menu/CodeInspector/CodeInspector';
 import CodeManager from './components/Menu/CodeManager/CodeManager';
-import Code from './data_model/Code';
 import { server_url } from './Utility/GlobalVariables';
-
-
 import {CSSTransition} from 'react-transition-group';
 
 import './App.css';
@@ -19,7 +16,8 @@ import axios from "axios";
     //   <Route path="/" exact component={Join} />
     //   <Route path="/chat" component={Chat} />
     // </Router>
-
+const {Quote} = require('../src/data_model/Quote');
+const {Code} = require('../src/data_model/Code');
 let socket;
 
 //added comment to reset server

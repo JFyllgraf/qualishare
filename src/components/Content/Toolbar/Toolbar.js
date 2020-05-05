@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Mark from 'mark.js';
 import './Toolbar.css';
 import { highlight } from '../../../Utility/Helpers';
-import Quote from "../../../data_model/Quote";
 import axios from 'axios';
 import {server_url} from "../../../Utility/GlobalVariables";
 import io from "socket.io-client";
-import Code from "../../../data_model/Code";
 
 /*
 //'Content-Type': 'application/json',
@@ -16,7 +14,8 @@ const config = {
 }
 //axios.defaults.headers.common = config;
 */
-
+const {Quote} = require('../../../data_model/Quote');
+const {Code} = require('../../../data_model/Code');
 let socket;
 socket = io(server_url);
 
@@ -160,7 +159,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
       });
     }
     //console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
-    console.log("Selection offset: " + offset);
+    //console.log("Selection offset: " + offset);
 
     //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
     //console.log(selectedCode.getName() + ": " + selectedCode.getColor());

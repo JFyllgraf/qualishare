@@ -19,4 +19,7 @@ class Quote {
 
 //const quote1 = new Quote("This is a really random summary text of which we would like to have the five first words returned", 2, [5]);
 //console.log(quote1.getSummary().toString());
-export default Quote;
+module.exports = {
+    Quote: Quote,
+}
+//export default Quote;
