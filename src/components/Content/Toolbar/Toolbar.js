@@ -123,51 +123,58 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
 
   const addQuote = (event) => {
     event.preventDefault();
-    //console.log(selectedCode);
     let selection = window.getSelection();
-    let selectedText = selection.toString();
-    let startRange = selection.getRangeAt(0).startOffset;
-    let endRange = selection.getRangeAt(0).endOffset;
-    console.log(selection);
+    let range = selection.getRangeAt(0);
+    if (range.startContainer.parentElement.nodeName == "SPAN" || range.endContainer.parentElement.nodeName == "SPAN"){
+      alert("Please don't overlap selections.");
+    } else {
 
-    var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
-    if(selectedText === null || selectedText === undefined || selectedText ==='') {
-      //do nothing
-    }
-    else {
-      let data = {
-        quoteText: selectedText,
-        quoteOffset: {
-          start: selOffsets.start,
-          end: selOffsets.end
-        },
-        codeRefs: selectedCode._id,
-        documentNum: 0, //default for now
-        userName: userName,
-        memo: memo
+      //console.log(selectedCode);
+
+      let selectedText = selection.toString();
+      let startRange = selection.getRangeAt(0).startOffset;
+      let endRange = selection.getRangeAt(0).endOffset;
+      console.log(selection);
+
+      var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
+      if(selectedText === null || selectedText === undefined || selectedText ==='') {
+        //do nothing
       }
-      axios.post(server_url+"/newQuote", data).then(res => {
+      else {
+        let data = {
+          quoteText: selectedText,
+          quoteOffset: {
+            start: selOffsets.start,
+            end: selOffsets.end
+          },
+          codeRefs: selectedCode._id,
+          documentNum: 0, //default for now
+          userName: userName,
+          memo: memo
+        }
+        axios.post(server_url+"/newQuote", data).then(res => {
 
-        socket.emit("newQuote", JSON.stringify(res.data));
-        let quote = constructQuoteFromData(res.data);
-        selectedCode.addQuote(quote); //selected code is wrong code
-        setQuoteList([...quoteList, quote]);
+          socket.emit("newQuote", JSON.stringify(res.data));
+          let quote = constructQuoteFromData(res.data);
+          selectedCode.addQuote(quote); //selected code is wrong code
+          setQuoteList([...quoteList, quote]);
 
-        // Add new span with: current codecolor, current username, new quote ID
-        highlight(selectedCode.getColor(), userName, quote._id);
+          // Add new span with: current codecolor, current username, new quote ID
+          highlight(selectedCode.getColor(), userName, quote._id);
 
-      }).catch(err => {
-        console.log(err);
-      });
+        }).catch(err => {
+          console.log(err);
+        });
+      }
+
+      console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
+      setMemo("");
+      //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
+      //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
     }
 
-    console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
-
-
-    setMemo("");
-    //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
-    //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
   };
+
   function isQuoteInList(quote, list){
     for(let i = 0; i < list.length;i++){
       if(quote._id === list[i]._id){
@@ -227,7 +234,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
           }
         </select>
         <input id="memo-input" type="text" value={memo} placeholder="optional memo..." onChange={handleMemoInput} />
-        <a href="something" className="toolbarButton" onKeyDown={(e) => e.keyCode===66 ? addQuote(e) : null} onClick={addQuote}>Apply</a>
+        <a href="/#" className="toolbarButton" onKeyDown={(e) => e.keyCode===66 ? addQuote(e) : null} onClick={addQuote}>Apply</a>
 
       </div>
     </div>
@@ -240,8 +247,13 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
 // <a href="something" className="toolbarButton" onClick={info}> info </a>
 
 function constructQuoteFromData(data){
-  let q = new Quote(data._id, data.quoteText, data.offset, data.codeRefs, data.documentNum);
+  let q = new Quote();
+  q._id = data._id;
+  q.quoteText = data.quoteText;
+  q.quoteOffset = data.offset;
+  q.codeRefs = data.codeRefs;
   q.memo = data.memo;
+  q.userName = data.userName;
   //console.log("QQ: ",q);
   return q;
 }

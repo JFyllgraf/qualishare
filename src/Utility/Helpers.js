@@ -9,6 +9,7 @@ export function highlight(color, user, quoteID){
   //     text = document.selection.createRange().text;
   // }
   let range = window.getSelection().getRangeAt(0);
+  console.log(range);
   //create new span around the text
   var span = document.createElement("span");
   span.style.backgroundColor = color;
