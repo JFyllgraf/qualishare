@@ -189,7 +189,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
   function ExtractQuotesFromData(jsonArray) {
       let quotes = [];
       jsonArray.map(jsonQuote => {
-        let quote = new Quote(jsonQuote._id, jsonQuote.quoteText, jsonQuote.quoteOffset, jsonQuote.codeRefs, null, jsonQuote.memo, jsonQuote.userName);
+        let quote = new Quote(jsonQuote._id, jsonQuote.quoteText, jsonQuote.quoteOffset, jsonQuote.codeRefs, jsonQuote.memo, jsonQuote.userName);
         quotes = [...quotes, quote];
       });
       return quotes;
