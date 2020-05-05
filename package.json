@@ -28,7 +28,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -50,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "jest": "^26.0.1",
     "mark.js": "^8.11.1"
   }
 }
