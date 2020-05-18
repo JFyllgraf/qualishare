@@ -230,15 +230,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   }
 
    */
-  function createSpan(quote){
-    let span = document.createElement("span");
-    span.style.backgroundColor = "#d41c1c"; //code color
-    span.innerText = quote.quoteText;
-    span.setAttribute('user', quote.userName);
-    span.id = quote._id;
-    span.setAttribute('onclick', "removeSPan(this)");
-    return span;
-  }
+
   function ExtractQuotesFromData(jsonArray) {
     let quotes = [];
     jsonArray.map(jsonQuote => {
@@ -299,9 +291,20 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   );
 }
 
+function createSpan(quote){
+  let span = document.createElement("span");
+  span.style.backgroundColor = "#d41c1c"; //code color
+  span.innerText = quote.quoteText;
+  span.setAttribute('user', quote.userName);
+  span.id = quote._id;
+  span.setAttribute('onclick', "removeSPan(this)");
+  return span;
+}
 
 
+module.exports = {
+  Editor: Editor,
+  createSpan: createSpan,
+};
 
-
-
-export default Editor;
+//export default Editor;

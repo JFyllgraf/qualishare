@@ -21,5 +21,5 @@ class Quote {
 //console.log(quote1.getSummary().toString());
 module.exports = {
     Quote: Quote,
-}
+};
 //export default Quote;
