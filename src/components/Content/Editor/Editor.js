@@ -4,13 +4,15 @@ import io from "socket.io-client";
 import './Editor.css';
 
 
-import {getCleanDefaultText, getDefaultText} from '../../../Utility/Helpers';
+
 import { server_url } from '../../../Utility/GlobalVariables';
 
 import Toolbar from '../Toolbar/Toolbar';
 import axios from "axios";
 const {Quote} = require('../../../data_model/Quote');
 const {Code} = require('../../../data_model/Code');
+const {getDefaultText, getEarlyQuote} = require('../../../Utility/Helpers');
+
 let socket;
 
 function Editor({name, selected, codeObjects, handler, quoteHandler}) {
@@ -98,7 +100,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
 
   useEffect(() => {
     //updateStyles();
-  }, [])
+  }, []);
 
   function updateStyles(){
     axios.get(server_url+"/Quotes").then(res=>{
@@ -146,7 +148,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     // socket.on('deleteQuote', function(data){
     //   updateStyles();
     // });
-  }, [ENDPOINT])
+  }, [ENDPOINT]);
 
 
   function handleChange(event) {
@@ -193,43 +195,14 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     e.persist();
     setonChangeEvent(e);
     setMemo(e.target.value);
-  }
+  };
   const getMemo = () => {
     if(onChangeEvent !==null) {
       onChangeEvent.target.value = ""; //reset
       setonChangeEvent(null);
     }
     return memo;
-  }
-
-  function insertSpan(root, quote){
-    for(let i = 0; i < root.childNodes.length;i++) {
-      console.log(root.childNodes[i].textContent);
-      let textToMatch = root.childNodes[i].textContent.slice(quote.quoteOffset, quote.quoteText.length)
-      if(textToMatch === quote.quoteText){
-        let span = createSpan(quote)
-        let newNode = root.childNodes[i].cloneNode(true);
-
-        root.childNodes[i].textContent = root.childNodes[i].textContent.slice(0, quote.quoteOffset);
-        newNode.textContent = root.childNodes[i].textContent.slice(quote.quoteOffset+quote.quoteText.length, root.childNodes[i].textContent.length);
-
-        if(root.lastChild.isEqualNode(root.childNodes[i])){
-          root.appendChild(span)
-          root.appendChild(newNode);
-        }
-        else{
-          root.insertBefore(span, root.childNodes[i+1]);
-          root.insertBefore(newNode, root.childNodes[i+1])
-        }
-      }
-    }
-  }
-  /*
-  function insertAfter(newNode, existingNode) {
-    existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
-  }
-
-   */
+  };
 
   function ExtractQuotesFromData(jsonArray) {
     let quotes = [];
@@ -241,22 +214,10 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     return quotes;
   }
   function info(e){
-    e.preventDefault()
+    e.preventDefault();
     let root = document.getElementById("textDiv");
-    let quotes = null
-    let quote = null;
-    let span = null;
-    axios.get(server_url+"/Quotes").then(res=>{
-      quotes = ExtractQuotesFromData(res.data);
-      quote = quotes[0];
-      return quote
-    }).then((res)=>{
-      console.log(res);
-      insertSpan(root, res);
-      console.log(root.childNodes);
-    }).catch(err=>{
-      console.log(err);
-    });
+    let quote = getEarlyQuote();
+    splitNodeAndInsertSpan(root, quote);
   }
 
   return (
@@ -286,11 +247,46 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         className="editor-input">
       </ContentEditable>
       <button onClick={tester}>test list</button>
-
     </div>
   );
 }
 
+function splitNodeAndInsertSpan(rootNode, quote){
+  let [nodeToSplit, index] = findCorrectChildNode(rootNode, quote);
+  let leftText = nodeToSplit.textContent.slice(0, quote.quoteOffset.start);
+  let rightText = nodeToSplit.textContent.slice(quote.quoteOffset.end, nodeToSplit.textContent.length);
+
+  let leftTextNode = document.createTextNode(leftText);
+  let span = createSpan(quote);
+  let rightTextNode = document.createTextNode(rightText);
+
+  //insert the three nodes into root, before
+  if(rootNode.childNodes.length === index+1){
+    rootNode.append(leftTextNode);
+    rootNode.append(span);
+    rootNode.append(rightTextNode);
+  }
+  else{
+    rootNode.insertBefore(leftTextNode, rootNode.childNodes[index+1]);
+    rootNode.insertBefore(span, rootNode.childNodes[index+1]);
+    rootNode.insertBefore(rightTextNode, rootNode.childNodes[index+1]);
+  }
+
+  //then delete child with index, because that was the original child, that is now replaced by three others
+  rootNode.removeChild(rootNode.childNodes[index]);
+}
+
+function findCorrectChildNode(rootNode, quote){
+  let text = quote.quoteText;
+  for(let i = 0; i<rootNode.childNodes.length;i++){
+    if(rootNode.childNodes[i].nodeType===3 && rootNode.childNodes[i].textContent.includes(text)){
+      return [rootNode.childNodes[i], i];
+    }
+  }
+  return [null, null];
+}
+
+//is not correct yet, because we need also need to access the referenced code
 function createSpan(quote){
   let span = document.createElement("span");
   span.style.backgroundColor = "#d41c1c"; //code color
@@ -303,8 +299,10 @@ function createSpan(quote){
 
 
 module.exports = {
-  Editor: Editor,
+  //Editor: Editor,
   createSpan: createSpan,
+  findCorrectChildNode: findCorrectChildNode,
+  splitNodeAndInsertSpan: splitNodeAndInsertSpan,
 };
 
-//export default Editor;
+export default Editor;
