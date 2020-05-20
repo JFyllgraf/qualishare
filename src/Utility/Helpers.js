@@ -117,6 +117,13 @@ export function createSpan(quote){
   span.setAttribute('onclick', "removeSPan(this)");
   return span;
 }
+export function constructQuoteFromData(data){
+  console.log(data);
+  let q = new Quote(data._id, data.quoteText, data.quoteOffset, data.codeRefs);
+  q.memo = data.memo;
+  q.userName = data.userName;
+  return q;
+}
 
 /*
 module.exports = {

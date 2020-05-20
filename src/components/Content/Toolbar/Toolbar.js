@@ -3,7 +3,8 @@ import './Toolbar.css';
 import axios from 'axios';
 import {server_url} from "../../../Utility/GlobalVariables";
 import io from "socket.io-client";
-const {splitNodeAndInsertSpan} = require('../../../Utility/Helpers');
+const {splitNodeAndInsertSpan, constructQuoteFromData} = require('../../../Utility/Helpers');
+
 /*
 //'Content-Type': 'application/json',
 const config = {
@@ -48,17 +49,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
     });
 
   },[selected]);
-
-/* parameterized get for quotes by id
-axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9a7"}}).then(res=>{
-      console.log("my res: ", res.data);
-      let quotes = ExtractQuotesFromData(res.data);
-      setQuoteList(quotes);
-    }).catch(err=>{
-      console.log(err);
-    });
- */
-
+  
   function ExtractQuotesFromData(jsonArray) {
       let quotes = [];
       jsonArray.map(jsonQuote => {
@@ -147,10 +138,9 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         codeRefs: selectedCode._id,
         documentNum: 0, //default for now
         userName: userName,
-        memo: getMemo()
+        memo: getMemo(),
       };
       axios.post(server_url+"/newQuote", data).then(res => {
-
         socket.emit("newQuote", JSON.stringify(res.data));
         let quote = constructQuoteFromData(res.data);
         selectedCode.addQuote(quote); //selected code is wrong code
@@ -158,11 +148,13 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
 
         // Add new span with: current codecolor, current username, new quote ID
         //highlight(selectedCode.getColor(), userName, quote._id);
-        splitNodeAndInsertSpan(document.getElementById("textdiv"), quote);
+
+        splitNodeAndInsertSpan(document.getElementById("textDiv"), quote);
       }).catch(err => {
         console.log(err);
       });
     }
+
     //console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
     //console.log("Selection offset: " + offset);
 
@@ -248,11 +240,6 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
   );
 }
 
-function constructQuoteFromData(data){
-  let q = new Quote(data._id, data.quoteText, data.offset, data.codeRefs, data.documentNum);
-  q.memo = data.memo;
-  //console.log("QQ: ",q);
-  return q;
-}
+
 
 export default Toolbar;
