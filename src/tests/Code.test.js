@@ -14,7 +14,7 @@ test("Should instantiate new Code", ()=> {
 test("Id should be undefined if not given as parameter",()=>{
     let code = new Code("Code 1");
     expect(code._id).toBeUndefined();
-})
+});
 
 
 test("Should add and remove quotes", ()=>{

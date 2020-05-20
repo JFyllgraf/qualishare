@@ -3,7 +3,7 @@ import './Toolbar.css';
 import axios from 'axios';
 import {server_url} from "../../../Utility/GlobalVariables";
 import io from "socket.io-client";
-
+const {splitNodeAndInsertSpan} = require('../../../Utility/Helpers');
 /*
 //'Content-Type': 'application/json',
 const config = {
@@ -148,7 +148,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         documentNum: 0, //default for now
         userName: userName,
         memo: getMemo()
-      }
+      };
       axios.post(server_url+"/newQuote", data).then(res => {
 
         socket.emit("newQuote", JSON.stringify(res.data));
@@ -157,8 +157,8 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         setQuoteList([...quoteList, quote]);
 
         // Add new span with: current codecolor, current username, new quote ID
-        highlight(selectedCode.getColor(), userName, quote._id);
-
+        //highlight(selectedCode.getColor(), userName, quote._id);
+        splitNodeAndInsertSpan(document.getElementById("textdiv"), quote);
       }).catch(err => {
         console.log(err);
       });
@@ -194,7 +194,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
             console.log("Deleted quote: ", res);
           }).catch(err =>{
             console.log(err);
-          })
+          });
           document.execCommand('removeFormat', false, null);
         }
         break;
@@ -206,7 +206,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
   const info = e => {
     e.preventDefault();
     console.log(codeList);
-  }
+  };
 
   function selectAll(){
     var range = document.createRange();
@@ -218,7 +218,7 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     span.style.backgroundColor = "green";
     span.setAttribute('user', "user");
     span.setAttribute('onclick', "removeSPan(this)");
-    range.surroundContents(span)
+    range.surroundContents(span);
 
     window.getSelection().addRange(range);
 

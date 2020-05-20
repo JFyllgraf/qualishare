@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 
+import Editor from './components/Content/Editor/Editor';
 import Join from './components/Join/Join';
 import Chat from './components/Chat/Chat';
 import Header from './components/Header/Header';
-import Editor from './components/Content/Editor/Editor';
 import CodeInspector from './components/Menu/CodeInspector/CodeInspector';
 import CodeManager from './components/Menu/CodeManager/CodeManager';
 import { server_url } from './Utility/GlobalVariables';
@@ -16,6 +16,8 @@ import axios from "axios";
     //   <Route path="/" exact component={Join} />
     //   <Route path="/chat" component={Chat} />
     // </Router>
+
+//const {Editor} = require('./components/Content/Editor/Editor');
 const {Quote} = require('../src/data_model/Quote');
 const {Code} = require('../src/data_model/Code');
 let socket;

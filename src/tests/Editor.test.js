@@ -1,4 +1,4 @@
-const {createSpan, findCorrectChildNode, splitNodeAndInsertSpan} = require('../components/Content/Editor/Editor');
+const {createSpan, findCorrectChildNode, splitNodeAndInsertSpan} = require('../Utility/Helpers');
 const {getQuote, getHeaderElementWithChild, getRandomTextNode, getSmallDefaultText} = require('../tests/setup'); //this works, but the following: "require(''setup)" does not work...
 
 test('Should output default text', ()=>{

@@ -1,18 +1,29 @@
 import React, {useState, useEffect, useRef, createElement} from 'react';
+//const {React, useState, useEffect, useRef, createElment} = require('react');
+
 import ContentEditable from 'react-contenteditable';
+//const ContentEditable = require('react-contenteditable');
+
 import io from "socket.io-client";
+//const io = require('socket.io-client');
+
 import './Editor.css';
-
-
+//require('./Editor.css');
 
 import { server_url } from '../../../Utility/GlobalVariables';
+//const server_url = require('../../../Utility/GlobalVariables');
 
 import Toolbar from '../Toolbar/Toolbar';
+//const Toolbar = require('../Toolbar/Toolbar');
+
 import axios from "axios";
+
+//const axios = require('axios');
+
 const {Quote} = require('../../../data_model/Quote');
 const {Code} = require('../../../data_model/Code');
-const {getDefaultText, getEarlyQuote} = require('../../../Utility/Helpers');
-
+const {getDefaultText, getEarlyQuote, splitNodeAndInsertSpan} = require('../../../Utility/Helpers');
+//const {splitNodeAndInsertSpan} = require("../../../Utility/Helpers");
 let socket;
 
 function Editor({name, selected, codeObjects, handler, quoteHandler}) {
@@ -250,59 +261,5 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     </div>
   );
 }
-
-function splitNodeAndInsertSpan(rootNode, quote){
-  let [nodeToSplit, index] = findCorrectChildNode(rootNode, quote);
-  let leftText = nodeToSplit.textContent.slice(0, quote.quoteOffset.start);
-  let rightText = nodeToSplit.textContent.slice(quote.quoteOffset.end, nodeToSplit.textContent.length);
-
-  let leftTextNode = document.createTextNode(leftText);
-  let span = createSpan(quote);
-  let rightTextNode = document.createTextNode(rightText);
-
-  //insert the three nodes into root, before
-  if(rootNode.childNodes.length === index+1){
-    rootNode.append(leftTextNode);
-    rootNode.append(span);
-    rootNode.append(rightTextNode);
-  }
-  else{
-    rootNode.insertBefore(leftTextNode, rootNode.childNodes[index+1]);
-    rootNode.insertBefore(span, rootNode.childNodes[index+1]);
-    rootNode.insertBefore(rightTextNode, rootNode.childNodes[index+1]);
-  }
-
-  //then delete child with index, because that was the original child, that is now replaced by three others
-  rootNode.removeChild(rootNode.childNodes[index]);
-}
-
-function findCorrectChildNode(rootNode, quote){
-  let text = quote.quoteText;
-  for(let i = 0; i<rootNode.childNodes.length;i++){
-    if(rootNode.childNodes[i].nodeType===3 && rootNode.childNodes[i].textContent.includes(text)){
-      return [rootNode.childNodes[i], i];
-    }
-  }
-  return [null, null];
-}
-
-//is not correct yet, because we need also need to access the referenced code
-function createSpan(quote){
-  let span = document.createElement("span");
-  span.style.backgroundColor = "#d41c1c"; //code color
-  span.innerText = quote.quoteText;
-  span.setAttribute('user', quote.userName);
-  span.id = quote._id;
-  span.setAttribute('onclick', "removeSPan(this)");
-  return span;
-}
-
-
-module.exports = {
-  //Editor: Editor,
-  createSpan: createSpan,
-  findCorrectChildNode: findCorrectChildNode,
-  splitNodeAndInsertSpan: splitNodeAndInsertSpan,
-};
 
 export default Editor;
