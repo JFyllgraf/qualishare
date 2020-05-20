@@ -72,13 +72,13 @@ export function rainbow(numOfSteps, step) {
 
 //we want to have this function in Editor, where it is used, however don't know how to
 //do this currently, and still being able to test it.
-export function splitNodeAndInsertSpan(rootNode, quote){
+export function splitNodeAndInsertSpan(rootNode, quote, color){
   let [nodeToSplit, index] = findCorrectChildNode(rootNode, quote);
   let leftText = nodeToSplit.textContent.slice(0, quote.quoteOffset.start);
   let rightText = nodeToSplit.textContent.slice(quote.quoteOffset.end, nodeToSplit.textContent.length);
 
   let leftTextNode = document.createTextNode(leftText);
-  let span = createSpan(quote);
+  let span = createSpan(quote, color);
   let rightTextNode = document.createTextNode(rightText);
 
   //insert the three nodes into root, before
@@ -108,9 +108,9 @@ export function findCorrectChildNode(rootNode, quote){
 }
 
 //is not correct yet, because we need also need to access the referenced code
-export function createSpan(quote){
+export function createSpan(quote, color){
   let span = document.createElement("span");
-  span.style.backgroundColor = "#d41c1c"; //code color
+  span.style.backgroundColor = color; //code color
   span.innerText = quote.quoteText;
   span.setAttribute('user', quote.userName);
   span.id = quote._id;

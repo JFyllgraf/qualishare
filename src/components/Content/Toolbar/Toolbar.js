@@ -14,12 +14,6 @@ const config = {
 //axios.defaults.headers.common = config;
 */
 
-//const { highlight } = require('../../../Utility/Helpers');
-
-function highlight() {
-  return "";
-}
-
 const {Quote} = require('../../../data_model/Quote');
 const {Code} = require('../../../data_model/Code');
 let socket;
@@ -49,7 +43,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
     });
 
   },[selected]);
-  
+
   function ExtractQuotesFromData(jsonArray) {
       let quotes = [];
       jsonArray.map(jsonQuote => {
@@ -149,7 +143,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
         // Add new span with: current codecolor, current username, new quote ID
         //highlight(selectedCode.getColor(), userName, quote._id);
 
-        splitNodeAndInsertSpan(document.getElementById("textDiv"), quote);
+        splitNodeAndInsertSpan(document.getElementById("textDiv"), quote, selectedCode.color);
       }).catch(err => {
         console.log(err);
       });

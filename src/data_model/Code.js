@@ -3,10 +3,10 @@
 class Code {
     constructor(name, id) {
         this.codeName = name; //'const' is private variable
-        this._id = id
+        this._id = id;
         this.memo = []; //'this' is publicly accessible variable
         this.link = undefined;
-        this.color = undefined
+        this.color = undefined;
         this.quoteRefs = [];
         this.userName = null;
         //getters
@@ -34,5 +34,5 @@ class Code {
 }
 module.exports = {
     Code: Code,
-}
+};
 //export default Code
