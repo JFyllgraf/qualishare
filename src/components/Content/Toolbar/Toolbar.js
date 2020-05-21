@@ -111,23 +111,28 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
 
   const addQuote = (event) => {
     event.preventDefault();
-    //console.log(selectedCode);
+    let quote = null;
+    /*
     let selection = window.getSelection();
-    let selectedText = selection.toString();
     let startRange = selection.getRangeAt(0).startOffset;
     let endRange = selection.getRangeAt(0).endOffset;
-    console.log(selection);
 
-    var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
-    if(selectedText === null || selectedText === undefined || selectedText ==='') {
+     */
+
+    //var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv")); //old way of getting offsets
+    let selectedText = window.getSelection().toString();
+    let offsetStart = window.getSelection().anchorOffset; //offset according to previous sibling
+    let offsetEnd = offsetStart+selectedText.length; //length of text must be end
+    console.log("my offsets ", offsetStart, offsetEnd);
+    if(selectedText === '') {
       //do nothing
     }
     else {
       let data = {
         quoteText: selectedText,
         quoteOffset: {
-          start: selOffsets.start,
-          end: selOffsets.end
+          start: offsetStart,
+          end: offsetEnd,
         },
         codeRefs: selectedCode._id,
         documentNum: 0, //default for now
@@ -136,17 +141,16 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
       };
       axios.post(server_url+"/newQuote", data).then(res => {
         socket.emit("newQuote", JSON.stringify(res.data));
-        let quote = constructQuoteFromData(res.data);
         selectedCode.addQuote(quote); //selected code is wrong code
         setQuoteList([...quoteList, quote]);
-
-        // Add new span with: current codecolor, current username, new quote ID
-        //highlight(selectedCode.getColor(), userName, quote._id);
-
+        quote = constructQuoteFromData(res.data);
+        return quote;
+      }).then(quote =>{
         splitNodeAndInsertSpan(document.getElementById("textDiv"), quote, selectedCode.color);
       }).catch(err => {
         console.log(err);
       });
+      //highlight(selectedCode.getColor(), userName, quote._id);
     }
 
     //console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
@@ -155,14 +159,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
     //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
     //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
   };
-  function isQuoteInList(quote, list){
-    for(let i = 0; i < list.length;i++){
-      if(quote._id === list[i]._id){
-        return true;
-      }
-    }
-    return false;
-  }
+
 
   const removeQuote = (event) => {
     event.preventDefault();

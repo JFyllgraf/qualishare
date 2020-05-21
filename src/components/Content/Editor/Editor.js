@@ -118,7 +118,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
       var quoteList = ExtractQuotesFromData(res.data);
       console.log(quoteList);
       quoteList.sort(compare);
-      styleText(quoteList);
+      //styleText(quoteList);
     }).catch(err=>{
       console.log(err);
     });
@@ -167,7 +167,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   }
 
   function emmitChange(offsets){
-    socket.emit('editingText', text);
+    //socket.emit('editingText', text);
   }
 
   function preventDragging(event){
