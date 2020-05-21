@@ -1,7 +1,7 @@
 import {getCleanDefaultText} from "../Utility/Helpers";
 
 const {splitNodeAndInsertSpan, constructQuoteFromData, createSpan, getEarlyQuote, findCorrectChildNode} = require('../Utility/Helpers');
-const {getHeaderElementWithChild, getQuote, getRandomTextNode, getSmallDefaultText, getDefaultTextSetup, getDefaultQuote_1, getDefaultQuote_2} = require('../tests/setup');
+const {getHeaderElementWithChild, getQuote, getRandomTextNode, getSmallDefaultText, getDefaultTextSetup, getDefaultQuote_1, getDefaultQuote_2, getDefaultQuote_3} = require('../tests/setup');
 //#1
 test('Should output default text', ()=>{
     const text = "a";

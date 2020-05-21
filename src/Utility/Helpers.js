@@ -89,8 +89,8 @@ export function splitNodeAndInsertSpan(rootNode, quote, color){
   }
   else{
     rootNode.insertBefore(leftTextNode, rootNode.childNodes[index+1]);
-    rootNode.insertBefore(span, rootNode.childNodes[index+1]);
-    rootNode.insertBefore(rightTextNode, rootNode.childNodes[index+1]);
+    rootNode.insertBefore(span, rootNode.childNodes[index+2]);
+    rootNode.insertBefore(rightTextNode, rootNode.childNodes[index+3]);
   }
 
   //then delete child with index, because that was the original child, that is now replaced by three others
