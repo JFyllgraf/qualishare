@@ -1,6 +1,6 @@
 import {Quote} from "../data_model/Quote";
 
-function highlight(color, user, quoteID){
+export function highlight(color, user, quoteID){
   //remove any format to avoid overlap issues
   //document.execCommand('removeFormat', false, null);
   //save selected text

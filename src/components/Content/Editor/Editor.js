@@ -198,12 +198,16 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
   };
+  /*
   const handleOnChange = (e) =>{
     e.preventDefault();
     e.persist();
     setonChangeEvent(e);
     setMemo(e.target.value);
   };
+
+   */
+  /*
   const getMemo = () => {
     if(onChangeEvent !==null) {
       onChangeEvent.target.value = ""; //reset
@@ -211,6 +215,8 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     }
     return memo;
   };
+
+   */
 
   function ExtractQuotesFromData(jsonArray) {
     let quotes = [];
@@ -221,11 +227,12 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     });
     return quotes;
   }
-  function info(e){
+  function info(e) {
     e.preventDefault();
     let root = document.getElementById("textDiv");
     let quote = getEarlyQuote();
     splitNodeAndInsertSpan(root, quote);
+  }
   function constructQuoteFromData(data){
     let q = new Quote(data._id, data.quoteText, data.quoteOffset, data.codeRefs);
     q.memo = data.memo;
@@ -258,5 +265,4 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     </div>
   );
 }
-
 export default Editor;

@@ -3,7 +3,7 @@ import './Toolbar.css';
 import axios from 'axios';
 import {server_url} from "../../../Utility/GlobalVariables";
 import io from "socket.io-client";
-const {splitNodeAndInsertSpan, constructQuoteFromData} = require('../../../Utility/Helpers');
+const {splitNodeAndInsertSpan, constructQuoteFromData, highlight} = require('../../../Utility/Helpers');
 
 /*
 //'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
     event.preventDefault();
     let selection = window.getSelection();
     let range = selection.getRangeAt(0);
-    if (range.startContainer.parentElement.nodeName == "SPAN" || range.endContainer.parentElement.nodeName == "SPAN"){
+    if (range.startContainer.parentElement.nodeName === "SPAN" || range.endContainer.parentElement.nodeName === "SPAN"){
       alert("Please don't overlap selections.");
     } else {
 
@@ -140,7 +140,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
           documentNum: 0, //default for now
           userName: userName,
           memo: memo
-        }
+        };
         axios.post(server_url+"/newQuote", data).then(res => {
 
           socket.emit("newQuote", JSON.stringify(res.data));
@@ -197,16 +197,20 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
       }
     }
   };
-
+/*
   //for getting state information from button click
   const info = e => {
     e.preventDefault();
     console.log(codeList);
   };
 
+ */
+
   function handleMemoInput(event) {
     setMemo(event.target.value);
     console.log(memo);
+  }
+    /*
   function selectAll(){
     var range = document.createRange();
     range.setStart(document.getElementById("textDiv"), 0);
@@ -222,6 +226,8 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
     window.getSelection().addRange(range);
 
   }
+
+     */
 
 
   return (
@@ -250,6 +256,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
 // <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
 // <a href="something" className="toolbarButton" onClick={info}> info </a>
 
+/*
 function constructQuoteFromData(data){
   let q = new Quote();
   q._id = data._id;
@@ -261,5 +268,7 @@ function constructQuoteFromData(data){
   //console.log("QQ: ",q);
   return q;
 }
+
+ */
 
 export default Toolbar;
