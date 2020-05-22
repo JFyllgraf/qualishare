@@ -8,7 +8,7 @@ import App from "./App";
 const ClientRouter = () => (
       <Router>
         <Route path="/" exact component={Join} />
-        <Route path="/home" render={(props) => <App {...props} isAuthed={true}/>}/>
+        <Route path="/home" exact render={(props) => <App {...props} isAuthed={true}/>}/>
       </Router>
 );
 

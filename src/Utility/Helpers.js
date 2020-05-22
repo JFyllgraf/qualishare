@@ -20,8 +20,7 @@ function highlight(color, user, quoteID){
   span.setAttribute('onclick', "removeSPan(this)");
   console.log(range);
   range.surroundContents(span);
-  console.log(span.previousSibling.previousSibling);
-  //document.execCommand('insertHTML', false, span.outerHTML);
+  document.getElementById('textDiv').focus();
 }
 
 export function getDefaultText(){

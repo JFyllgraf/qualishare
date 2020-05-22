@@ -34,10 +34,8 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   const [codeList, setCodeList] = useState(codeObjects);
   const [file, setFile] = useState(undefined);
   const [fileName, setFileName] = useState(undefined);
-  const [memo, setMemo] = useState("");
   const ENDPOINT = server_url;
   const textRef = useRef(null);
-  const [onChangeEvent, setonChangeEvent] = useState(null);
 
   // const quoteList = [
   //   new Quote(1, "text here", { start: 12, end: 16 }, null, null, "morten"),
@@ -83,6 +81,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
           span.style.backgroundColor = code.color;
           span.id = quoteList[i]._id;
           span.innerText = quoteList[i].quoteText;
+          span.setAttribute('memo', quoteList[i].memo);
           span.setAttribute('user', quoteList[i].userName);
           span.setAttribute('onclick', "removeSPan(this)");
           range.surroundContents(span);
@@ -110,15 +109,16 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   // }, [text])
 
   useEffect(() => {
-    //updateStyles();
-  }, []);
+    updateStyles();
+    document.getElementById('textDiv').focus(); // hack to prevent textDiv from rerendering
+  }, [])
 
   function updateStyles(){
     axios.get(server_url+"/Quotes").then(res=>{
       var quoteList = ExtractQuotesFromData(res.data);
       console.log(quoteList);
       quoteList.sort(compare);
-      //styleText(quoteList);
+      styleText(quoteList);
     }).catch(err=>{
       console.log(err);
     });
@@ -138,14 +138,11 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
       return codes;
   }
 
-  function tester() {
-    //console.log(quoteList);
-  }
-
   function ExtractQuotesFromData(jsonArray) {
     let quotes = [];
     jsonArray.map(jsonQuote => {
       let quote = new Quote(jsonQuote._id, jsonQuote.quoteText, jsonQuote.quoteOffset, jsonQuote.codeRefs, null, jsonQuote.userName);
+      quote.memo = jsonQuote.memo;
       quotes = [...quotes, quote];
     });
     return quotes;
@@ -229,6 +226,11 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     let root = document.getElementById("textDiv");
     let quote = getEarlyQuote();
     splitNodeAndInsertSpan(root, quote);
+  function constructQuoteFromData(data){
+    let q = new Quote(data._id, data.quoteText, data.quoteOffset, data.codeRefs);
+    q.memo = data.memo;
+    //console.log("QQ: ",q);
+    return q;
   }
 
   return (
@@ -243,11 +245,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         uploadFile={uploadFile}
         handleFileChange={handleFileChange}
         ref={textRef}
-        getMemo={getMemo}
       />
-      <div> <input type="text" onChange={handleOnChange} />   </div>
-
-      <a href="something" className="toolbarButton" onClick={info}> info2 </a>
       <ContentEditable
         id="textDiv"
         onDragOver={preventDragging}
@@ -257,7 +255,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         onChange={handleChange}
         className="editor-input">
       </ContentEditable>
-      <button onClick={tester}>test list</button>
     </div>
   );
 }

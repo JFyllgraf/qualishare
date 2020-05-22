@@ -1,7 +1,7 @@
 const summary_length = 5;
 class Quote {
 
-    constructor(id, quoteText, quoteOffset, codeRef, summary, userName) {
+    constructor(id, quoteText, quoteOffset, codeRef, memo, userName) {
         this._id = id;
         this.quoteText = quoteText;
         this.quoteOffset = quoteOffset;
