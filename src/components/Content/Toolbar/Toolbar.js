@@ -112,12 +112,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
   const addQuote = (event) => {
     event.preventDefault();
     let quote = null;
-    /*
-    let selection = window.getSelection();
-    let startRange = selection.getRangeAt(0).startOffset;
-    let endRange = selection.getRangeAt(0).endOffset;
-
-     */
 
     //var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv")); //old way of getting offsets
     let selectedText = window.getSelection().toString();
@@ -150,14 +144,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
       }).catch(err => {
         console.log(err);
       });
-      //highlight(selectedCode.getColor(), userName, quote._id);
     }
-
-    //console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
-    //console.log("Selection offset: " + offset);
-
-    //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
-    //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
   };
 
 

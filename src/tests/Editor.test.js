@@ -15,17 +15,6 @@ test("Span id's should be different",()=>{
    expect(span.id).not.toEqual(clonedSpan.id);
 });
 
-//We test the function splitNodeAndInsertSpan
-//the function should find the correct textNode, create two new ones
-//insert
-/*
-test("Test function splitNodeAndInsertSpan",()=>{
-    let rootNode = getHeaderElementWithChild();
-    let quote = getQuote();
-    expect(rootNode.childElementCount === 3)
-});
-*/
-
 //test function find correct child text node
 test("Should return the only text child node", ()=>{
     let rootNode = getHeaderElementWithChild();
