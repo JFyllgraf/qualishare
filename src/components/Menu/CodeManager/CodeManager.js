@@ -1,12 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import { FormGroup } from 'reactstrap';
 import './CodeManager.css';
 import Code from '../../../data_model/Code';
 import Quote from '../../../data_model/Quote';
 import io from "socket.io-client";
 import {server_url} from "../../../Utility/GlobalVariables";
 import axios from 'axios';
-import { ListGroup, ListGroupItem } from 'reactstrap';
 import Modal from 'react-bootstrap/Modal';
 
 let socket;
@@ -24,7 +22,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
 
   useEffect(() => {
     console.log(quoteList);
-  }, [quoteList])
+  }, [quoteList]);
 
   const ENDPOINT = server_url;
   socket = io(ENDPOINT);
@@ -41,7 +39,6 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
   });
   socket.on("deleteCode", function(data){
       let codes = getCodes();
-
       for (let i = 0; i < codes.length; i++){
           if (codes[i].getName() === data){
               deleteCodeFromList(i);
@@ -51,7 +48,6 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
   function isCodeInList(id){
       let codes = getCodes();
       let bool = false;
-
       for (let i = 0; i < codes.length; i++){
           if (codes[i].getId() === id){
               bool = true;
@@ -70,20 +66,18 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
   //this adds new code through the button: add new code
   const handleOnClick = (e) => {
       e.preventDefault();
-
       axios.post(server_url+"/newCode", {codeName: codename, userName:userName}).then(res => {
           let code = constructCodeFromData(res.data);
           addCodeToList(code);
       }).catch(err =>{
           console.log(err);
-      })
+      });
       onChangeEvent.target.value = ''; //reset
       setonChangeEvent(undefined); //reset
-
   };
   function constructCodeFromData(data){
       let code = new Code(data.codeName, data._id);
-      code.color = data.color
+      code.color = data.color;
       code.quoteRefs = data.quoteRefs;
       code.userName = data.userName;
       return code;
@@ -98,28 +92,20 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
               axios.delete(server_url+"/deleteCode", {data: codes[i]}).then(res=>{
                   deleteCodeFromList(i);
                   onChangeEvent.target.value = '';//reset
-                  setonChangeEvent(undefined)//reset
+                  setonChangeEvent(undefined);//reset
                   socket.emit("deleteCode", codeToDelete);
-
-
                   axios.delete(server_url+"/deleteQuotes/by_Code_id", {data:{_id:codes[i]._id}}).then(res=>{
                       socket.emit("newQuote", ""); //this is a hack, in order to updatestyle
                       console.log("Success, deleted all quotes of code", res);
                   }).catch(err => {
                       console.log(err);
                   });
-
               }).catch(err=>{
                   console.log(err);
               });
-
-
-
-
           }
       }
   };
-
 
   function CheckValidInput(e){
       if(onChangeEvent === undefined){
@@ -138,17 +124,10 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
           bool = false;
         }
       }
-
-
-
       if(e.target.id === "deletebtn"){
           bool = !bool;
       }
       return bool;
-  }
-
-  function numOfQuotes(code) {
-      return "";//" ("+code.quoteRefs.length.toString()+")";
   }
 
   function DisplayCode() {
@@ -237,12 +216,5 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
     </div>
   );
 };
-/*
-<CustomInput type="checkbox" id="1" label="Red" />
-<CustomInput type="checkbox" id="2" label="Green" />
-    <CustomInput type="checkbox" id="3" label="Blue" />
-*/
-
-
 
 export default CodeManager;

@@ -12,17 +12,10 @@ import {CSSTransition} from 'react-transition-group';
 import './App.css';
 import io from "socket.io-client";
 import axios from "axios";
-    // <Router>
-    //   <Route path="/" exact component={Join} />
-    //   <Route path="/chat" component={Chat} />
-    // </Router>
 
-//const {Editor} = require('./components/Content/Editor/Editor');
-const {Quote} = require('../src/data_model/Quote');
 const {Code} = require('../src/data_model/Code');
 let socket;
 
-//added comment to reset server
 
 class App extends Component {
 
@@ -33,7 +26,7 @@ class App extends Component {
         room: "",
         isLoggedIn: false,
         displayChat: true,
-        codeObjects: [],//[new Code('Political spin'), new Code('Chinese critique'), new Code('Racist remarks')],
+        codeObjects: [],
         selected: '',
         clickedQuote: ''
     };
@@ -67,9 +60,9 @@ class App extends Component {
     this.setState({
       clickedQuote: event.target.getAttribute('username')
     });
-  }
+  };
 
-    //this function updates parent (app.js) state as expected
+  //this function updates parent (app.js) state as expected
   addNameAndRoom = (name, room) => {
       this.setState({
           name: name,
@@ -115,7 +108,6 @@ class App extends Component {
       )
   };
   chat = () => {
-      //console.log("In chat: ", this.state);
       return (
       <Chat Name={this.state.name} Room={this.state.room} />
       )
@@ -166,7 +158,6 @@ class App extends Component {
                 onClick={(event) => this.toggle(event)}>{this.state.displayChat ? "Hide Chat" : "Show Chat"}
               </a>
             </div>
-
             <div className="footer">
             </div>
         </div>

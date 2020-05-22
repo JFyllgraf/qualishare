@@ -1,15 +1,8 @@
 import {Quote} from "../data_model/Quote";
 
+//in general, we export functions with "export" at each function, and not with export default, because JEST cannot handle this
+//and because of some weird interaction with Babel and transipilation, we also do not use module.exports
 export function highlight(color, user, quoteID){
-  //remove any format to avoid overlap issues
-  //document.execCommand('removeFormat', false, null);
-  //save selected text
-  // var text = "";
-  // if (window.getSelection) {
-  //     text = window.getSelection().toString();
-  // } else if (document.selection && document.selection.type !== "Control") {
-  //     text = document.selection.createRange().text;
-  // }
   let range = window.getSelection().getRangeAt(0);
   //create new span around the text
   var span = document.createElement("span");
@@ -132,22 +125,17 @@ function isQuoteInList(quote, list){
   return false;
 }
 
-/*
-module.exports = {
-    getDefaultText: getDefaultText,
-    highlight: highlight,
-    getEarlyQuote: getEarlyQuote,
-    createSpan: createSpan,
-    findCorrectChildNode: findCorrectChildNode,
-    splitNodeAndInsertSpan: splitNodeAndInsertSpan,
-};
- */
+function selectAll(){
+  var range = document.createRange();
+  range.setStart(document.getElementById("textDiv"), 0);
+  range.setEnd(document.getElementById("textDiv"), 1);
 
-/*
-export default {getDefaultText: getDefaultText,
-  highlight: highlight,
-  getEarlyQuote: getEarlyQuote,
-  createSpan: createSpan,
-  findCorrectChildNode: findCorrectChildNode,
-  splitNodeAndInsertSpan: splitNodeAndInsertSpan,}
- */
+  //create new span around the text
+  var span = document.createElement("span");
+  span.style.backgroundColor = "green";
+  span.setAttribute('user', "user");
+  span.setAttribute('onclick', "removeSPan(this)");
+  range.surroundContents(span);
+
+  window.getSelection().addRange(range);
+}

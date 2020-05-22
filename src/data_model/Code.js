@@ -1,5 +1,3 @@
-//import * as Helpers from '../Utility/Helpers';
-
 class Code {
     constructor(name, id) {
         this.codeName = name; //'const' is private variable
@@ -35,4 +33,3 @@ class Code {
 module.exports = {
     Code: Code,
 };
-//export default Code
