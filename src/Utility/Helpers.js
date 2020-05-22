@@ -18,8 +18,7 @@ function highlight(color, user, quoteID){
   span.setAttribute('onclick', "removeSPan(this)");
   console.log(range);
   range.surroundContents(span);
-  console.log(span.previousSibling.previousSibling);
-  //document.execCommand('insertHTML', false, span.outerHTML);
+  document.getElementById('textDiv').focus();
 }
 
 function getDefaultText(){
@@ -65,4 +64,3 @@ module.exports = {
     highlight: highlight,
 }
 //export default {surroundSelection, rainbowStop, rainbow};
-

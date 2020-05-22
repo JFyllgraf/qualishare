@@ -20,12 +20,13 @@ const config = {
 let socket;
 socket = io(server_url);
 
-function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange, getMemo}) {
+function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange}) {
   const [userName] = useState(name);
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
   const [quoteList, setQuoteList] = useState([]);
   const [uploadedFile, setUploadedFile] = useState(undefined);
+  const [memo, setMemo] = useState("");
 
   useEffect(() => {
     //handler(selectedCode); //this can be left out
@@ -122,51 +123,58 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
 
   const addQuote = (event) => {
     event.preventDefault();
-    //console.log(selectedCode);
     let selection = window.getSelection();
-    let selectedText = selection.toString();
-    let startRange = selection.getRangeAt(0).startOffset;
-    let endRange = selection.getRangeAt(0).endOffset;
-    console.log(selection);
+    let range = selection.getRangeAt(0);
+    if (range.startContainer.parentElement.nodeName == "SPAN" || range.endContainer.parentElement.nodeName == "SPAN"){
+      alert("Please don't overlap selections.");
+    } else {
 
-    var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
-    if(selectedText === null || selectedText === undefined || selectedText ==='') {
-      //do nothing
-    }
-    else {
-      let data = {
-        quoteText: selectedText,
-        quoteOffset: {
-          start: selOffsets.start,
-          end: selOffsets.end
-        },
-        codeRefs: selectedCode._id,
-        documentNum: 0, //default for now
-        userName: userName,
-        memo: getMemo()
+      //console.log(selectedCode);
+
+      let selectedText = selection.toString();
+      let startRange = selection.getRangeAt(0).startOffset;
+      let endRange = selection.getRangeAt(0).endOffset;
+      console.log(selection);
+
+      var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
+      if(selectedText === null || selectedText === undefined || selectedText ==='') {
+        //do nothing
       }
-      axios.post(server_url+"/newQuote", data).then(res => {
+      else {
+        let data = {
+          quoteText: selectedText,
+          quoteOffset: {
+            start: selOffsets.start,
+            end: selOffsets.end
+          },
+          codeRefs: selectedCode._id,
+          documentNum: 0, //default for now
+          userName: userName,
+          memo: memo
+        }
+        axios.post(server_url+"/newQuote", data).then(res => {
 
-        socket.emit("newQuote", JSON.stringify(res.data));
-        let quote = constructQuoteFromData(res.data);
-        selectedCode.addQuote(quote); //selected code is wrong code
-        setQuoteList([...quoteList, quote]);
+          socket.emit("newQuote", JSON.stringify(res.data));
+          let quote = constructQuoteFromData(res.data);
+          selectedCode.addQuote(quote); //selected code is wrong code
+          setQuoteList([...quoteList, quote]);
 
-        // Add new span with: current codecolor, current username, new quote ID
-        highlight(selectedCode.getColor(), userName, quote._id);
+          // Add new span with: current codecolor, current username, new quote ID
+          highlight(selectedCode.getColor(), userName, quote._id);
 
-      }).catch(err => {
-        console.log(err);
-      });
+        }).catch(err => {
+          console.log(err);
+        });
+      }
+
+      console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
+      setMemo("");
+      //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
+      //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
     }
 
-    console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
-
-
-
-    //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
-    //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
   };
+
   function isQuoteInList(quote, list){
     for(let i = 0; i < list.length;i++){
       if(quote._id === list[i]._id){
@@ -206,27 +214,17 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     console.log(codeList);
   }
 
-  function selectAll(){
-    var range = document.createRange();
-    range.setStart(document.getElementById("textDiv"), 0);
-    range.setEnd(document.getElementById("textDiv"), 1);
-
-    //create new span around the text
-    var span = document.createElement("span");
-    span.style.backgroundColor = "green";
-    span.setAttribute('user', "user");
-    span.setAttribute('onclick', "removeSPan(this)");
-    range.surroundContents(span)
-
-    window.getSelection().addRange(range);
-
+  function handleMemoInput(event) {
+    setMemo(event.target.value);
+    console.log(memo);
   }
+
 
   return (
     <div className="toolbar-container">
       <div className="toolbar-innerContainer">
         <span className="label">Select Code: </span>
-        <select  onChange={newSelection} className="toolbarSelect" type="select" name="select">
+        <select  onChange={newSelection} id="toolbarSelect" type="select" name="select">
           {
             (codeList) ?
             codeList.map(code => {
@@ -235,20 +233,27 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
             null
           }
         </select>
-        <a href="something" className="toolbarButton" onKeyDown={(e) => e.keyCode===66 ? addQuote(e) : null} onClick={addQuote}>Apply</a>
-        <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
-        <input type="file" onChange={handleFileChange} className="toolbarButton"/>
-        <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
-        <a href="something" className="toolbarButton" onClick={info}> info </a>
-        <button onClick={selectAll}>test</button>
+        <input id="memo-input" type="text" value={memo} placeholder="optional memo..." onChange={handleMemoInput} />
+        <a href="/#" className="toolbarButton" onKeyDown={(e) => e.keyCode===66 ? addQuote(e) : null} onClick={addQuote}>Apply</a>
+
       </div>
     </div>
   );
 }
 
+// <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
+// <input type="file" onChange={handleFileChange} className="toolbarButton"/>
+// <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
+// <a href="something" className="toolbarButton" onClick={info}> info </a>
+
 function constructQuoteFromData(data){
-  let q = new Quote(data._id, data.quoteText, data.offset, data.codeRefs, data.documentNum);
+  let q = new Quote();
+  q._id = data._id;
+  q.quoteText = data.quoteText;
+  q.quoteOffset = data.offset;
+  q.codeRefs = data.codeRefs;
   q.memo = data.memo;
+  q.userName = data.userName;
   //console.log("QQ: ",q);
   return q;
 }

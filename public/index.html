@@ -56,10 +56,12 @@
         // 	span.parentNode.replaceChild(docFrag, span);
         // }
         const name = span.getAttribute('user');
+        const memo = span.getAttribute('memo');
         const id = span.id;
         var event = new CustomEvent('testEvent', {
           detail: {
             username: name,
+            quoteMemo: memo,
             id: id
           }
         });

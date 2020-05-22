@@ -9,8 +9,9 @@ let socket;
 socket = io(server_url);
 
 function CodeInspector({user}) {
-  const [userName, setUserName] = useState(user);
+  const [userName, setUserName] = useState('');
   const [spanID, setSpanID] = useState('');
+  const [memo, setMemo] = useState('');
 
 
   useEffect(() => {
@@ -21,6 +22,7 @@ function CodeInspector({user}) {
     window.addEventListener("testEvent", function (e) {
       setUserName(e.detail.username);
       setSpanID(e.detail.id);
+      setMemo(e.detail.quoteMemo);
     }, false);
   });
 
@@ -44,13 +46,19 @@ function CodeInspector({user}) {
       }).catch(err =>{
           console.log(err);
       })
+    setUserName('');
    }
 
   return (
     <div className="codeInspector-container">
-      <h4>Selected Code: </h4>
-      <p>User Name: {userName}</p>
-      {(spanID) ? <button onClick={removeQuote}>Delete quote</button> : <div></div> }
+
+      {(userName) ?<div>
+          <h4> Selected Code: </h4>
+          <p>Coded by: {userName}</p>
+          {(memo) ? <p>Memo: {memo}</p> : <p></p>}
+          <button onClick={removeQuote}>Delete quote</button>
+        </div>
+      : <div></div>}
     </div>
   );
 }

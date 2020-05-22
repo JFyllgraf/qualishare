@@ -20,10 +20,8 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
   const [codeList, setCodeList] = useState(codeObjects);
   const [file, setFile] = useState(undefined);
   const [fileName, setFileName] = useState(undefined);
-  const [memo, setMemo] = useState("");
   const ENDPOINT = server_url;
   const textRef = useRef(null);
-  const [onChangeEvent, setonChangeEvent] = useState(null);
 
   // const quoteList = [
   //   new Quote(1, "text here", { start: 12, end: 16 }, null, null, "morten"),
@@ -69,6 +67,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
           span.style.backgroundColor = code.color;
           span.id = quoteList[i]._id;
           span.innerText = quoteList[i].quoteText;
+          span.setAttribute('memo', quoteList[i].memo);
           span.setAttribute('user', quoteList[i].userName);
           span.setAttribute('onclick', "removeSPan(this)");
           range.surroundContents(span);
@@ -97,6 +96,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
 
   useEffect(() => {
     updateStyles();
+    document.getElementById('textDiv').focus(); // hack to prevent textDiv from rerendering
   }, [])
 
   function updateStyles(){
@@ -124,14 +124,11 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
       return codes;
   }
 
-  function tester() {
-    //console.log(quoteList);
-  }
-
   function ExtractQuotesFromData(jsonArray) {
     let quotes = [];
     jsonArray.map(jsonQuote => {
       let quote = new Quote(jsonQuote._id, jsonQuote.quoteText, jsonQuote.quoteOffset, jsonQuote.codeRefs, null, jsonQuote.userName);
+      quote.memo = jsonQuote.memo;
       quotes = [...quotes, quote];
     });
     return quotes;
@@ -187,19 +184,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
   };
-  const handleOnChange = (e) =>{
-    e.preventDefault();
-    e.persist();
-    setonChangeEvent(e);
-    setMemo(e.target.value);
-  }
-  const getMemo = () => {
-    if(onChangeEvent !==null) {
-      onChangeEvent.target.value = ""; //reset
-      setonChangeEvent(null);
-    }
-    return memo;
-  }
 
   function constructQuoteFromData(data){
     let q = new Quote(data._id, data.quoteText, data.quoteOffset, data.codeRefs);
@@ -220,10 +204,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         uploadFile={uploadFile}
         handleFileChange={handleFileChange}
         ref={textRef}
-        getMemo={getMemo}
       />
-      <div> <input type="text" onChange={handleOnChange} />   </div>
-
       <ContentEditable
         id="textDiv"
         onDragOver={preventDragging}
@@ -233,8 +214,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         onChange={handleChange}
         className="editor-input">
       </ContentEditable>
-      <button onClick={tester}>test list</button>
-
     </div>
   );
 }
