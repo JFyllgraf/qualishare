@@ -14,7 +14,6 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
   const [codename, setcodeName] = useState('');
   const [onChangeEvent, setonChangeEvent] = useState();
 
-
   const [activeCodeName, setActiveCodeName] = useState();
   const [activeCodeId, setActiveCodeId] = useState();
   const [quoteList, setQuoteList] = useState();
