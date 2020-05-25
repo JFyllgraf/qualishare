@@ -10,6 +10,7 @@ const {Quote} = require('../../../data_model/Quote');
 const {Code} = require('../../../data_model/Code');
 const {getDefaultText, getEarlyQuote, splitNodeAndInsertSpan, constructQuoteFromData} = require('../../../Utility/Helpers');
 let socket;
+socket = io(server_url);
 
 function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToList, addReceivedQuote}) {
   const [userName] = useState(name);
@@ -19,8 +20,8 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
   const [codeList, setCodeList] = useState(codeObjects);
   const [file, setFile] = useState(undefined);
   const [fileName, setFileName] = useState(undefined);
-  const ENDPOINT = server_url;
   const textRef = useRef(null);
+
 
   function compare(a, b){
     const aStart = a.quoteOffset.start;
@@ -120,13 +121,15 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
   }
 
   useEffect(() => {
-    socket = io(ENDPOINT);
     socket.on('newQuote', function(data){
       updateStyles();
-      //addReceivedQuote(constructQuoteFromData(data));
-      console.log(data);
+      console.log(" ON NEW QUOTE");
+      let quote = constructQuoteFromData(JSON.parse(data));
+      //if quote already in list, don't add
+      addReceivedQuote(quote);
     });
-  }, [ENDPOINT]);
+  }, [server_url]);
+
 
   function handleChange(event) {
     setText(event.target.value);

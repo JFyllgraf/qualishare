@@ -10,7 +10,7 @@ const {Code} = require('../../../data_model/Code');
 const {Quote} = require('../../../data_model/Quote');
 
 let socket;
-const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, getQuotes, addReceivedCode, userName}) => {
+const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, quoteObjects, addReceivedCode, userName}) => {
   const [codename, setcodeName] = useState('');
   const [onChangeEvent, setonChangeEvent] = useState();
 
@@ -131,7 +131,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, getQuotes, ad
       return bool;
   }
   function getNumQuotesOfCode(code){
-      let quotes = getQuotes();
+      let quotes = quoteObjects;
       let counter = 0;
       quotes.forEach(quote=>{
           if(quote.codeRefs === code._id){

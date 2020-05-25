@@ -110,7 +110,8 @@ class App extends Component {
       let quotes = [...this.state.quoteObjects, quote];
       this.setState({
           quoteObjects: quotes
-      })
+      });
+      console.log("Received Quote, socket.io:", this.state.quoteObjects);
   };
 
   deleteCodeFromList = (index) => {
@@ -166,7 +167,7 @@ class App extends Component {
               <Header name={this.state.name}/>
             </div>
             <div className="menu">
-              <CodeManager addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} getQuotes={this.getQuotes} addReceivedCode={this.addReceivedCode} userName={this.state.name} />
+              <CodeManager addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} quoteObjects={this.state.quoteObjects} addReceivedCode={this.addReceivedCode} userName={this.state.name} />
               <CodeInspector user={this.state.clickedQuote} deleteQuoteFromList={this.deleteQuoteFromList}/>
             </div>
             <div className="content">
