@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import './CodeManager.css';
 import Code from '../../../data_model/Code';
-import Quote from '../../../data_model/Quote';
 import io from "socket.io-client";
 import {server_url} from "../../../Utility/GlobalVariables";
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
+
+
+const {Quote} = require('../../../data_model/Quote');
 
 let socket;
 const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode, userName}) => {
@@ -206,7 +208,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
           <ul id="quoteList">
             { (quoteList && quoteList.length > 0) ?
               quoteList.map(quote => {
-                return <li className="quote-element">{quote.quoteText} <i className="quoteUsername"> - coded by {quote.userName}</i></li>
+                return <li className="quote-element" key={quote._id}>{quote.quoteText} <i className="quoteUsername"> - coded by {quote.userName}</i></li>
               }) :
               <p>This code has not been applied yet...</p>}
           </ul>
