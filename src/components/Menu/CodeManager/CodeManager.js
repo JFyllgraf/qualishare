@@ -1,16 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import './CodeManager.css';
-import Code from '../../../data_model/Code';
 import io from "socket.io-client";
 import {server_url} from "../../../Utility/GlobalVariables";
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 
 
+const {Code} = require('../../../data_model/Code');
 const {Quote} = require('../../../data_model/Quote');
 
 let socket;
-const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCode, userName}) => {
+const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, getQuotes, addReceivedCode, userName}) => {
   const [codename, setcodeName] = useState('');
   const [onChangeEvent, setonChangeEvent] = useState();
 
@@ -130,6 +130,17 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
       }
       return bool;
   }
+  function getNumQuotesOfCode(code){
+      let quotes = getQuotes();
+      let counter = 0;
+      quotes.forEach(quote=>{
+          if(quote.codeRefs === code._id){
+              counter++;
+          }
+      });
+      return counter.toString();
+  }
+
 
   function DisplayCode() {
     let codes = getCodes();
@@ -139,7 +150,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
             codes.map(code => {
                 return (
                   <div className="code-element" name={code.getName()} id={code.getId()} key={code.getId()} onClick={openCodeModal}>
-                    {code.getName() }
+                    {code.getName()+" (" + getNumQuotesOfCode(code)+")"}
                   </div>
                 )
             })

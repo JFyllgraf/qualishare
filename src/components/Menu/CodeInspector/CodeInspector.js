@@ -45,7 +45,7 @@ function CodeInspector({user}) {
           socket.emit("newQuote", "delete quote");
       }).catch(err =>{
           console.log(err);
-      })
+      });
     setUserName('');
    }
 

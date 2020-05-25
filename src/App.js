@@ -13,6 +13,7 @@ import './App.css';
 import io from "socket.io-client";
 import axios from "axios";
 
+const {ExtractQuotesFromData, extractCodesFromJson} = require('./Utility/Helpers');
 const {Code} = require('../src/data_model/Code');
 let socket;
 
@@ -28,7 +29,8 @@ class App extends Component {
         displayChat: true,
         codeObjects: [],
         selected: '',
-        clickedQuote: ''
+        clickedQuote: '',
+        quoteObjects: [],
     };
       socket = io(server_url);
   }
@@ -47,7 +49,15 @@ class App extends Component {
               })
           }).catch(err => {
               console.log(err);
-          })
+          });
+          axios.get(server_url + "/Quotes").then(res => {
+              let retrievedQuotes = ExtractQuotesFromData(res.data);
+              this.setState({
+                  quoteObjects: retrievedQuotes,
+              });
+          }).catch(err => {
+              console.log(err);
+          });
       }
       catch (err) {
           console.log(err)
@@ -76,10 +86,17 @@ class App extends Component {
       let codes = [...this.state.codeObjects, code];
       this.setState({
           codeObjects: codes
-        } //should be removed at some point
+        }
       );
-      //setTimeout(socket.emit, 100, "newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]));
       socket.emit("newCode", JSON.stringify(this.state.codeObjects[this.state.codeObjects.length-1]));
+  };
+  addQuoteToList = (quote) =>{
+      let quotes = [...this.state.quoteObjects, quote];
+      this.setState({
+          quoteObjects: quotes
+          }
+      );
+      socket.emit("newQuote", JSON.stringify((this.state.codeObjects[this.state.quoteOffset.length-1])));
   };
 
   addReceivedCode = (code) => {
@@ -88,6 +105,12 @@ class App extends Component {
               codeObjects: codes
           } //should be removed at some point
       );
+  };
+  addReceivedQuote = (quote) =>{
+      let quotes = [this.state.quoteObjects, quote];
+      this.setState({
+          quoteObjects: quotes
+      })
   };
 
   deleteCodeFromList = (index) => {
@@ -98,8 +121,19 @@ class App extends Component {
       })
   };
 
+  deleteQuoteFromList = (index) =>{
+      let temp = [...this.state.quoteObjects];
+      temp.splice(index, 1);
+      this.setState({
+          quoteObjects: temp
+      });
+  };
+
   getCodes = () => {
       return this.state.codeObjects;
+  };
+  getQuotes = () =>{
+      return this.state.quoteObjects;
   };
 
   join = () => {
@@ -127,7 +161,7 @@ class App extends Component {
               <Header name={this.state.name}/>
             </div>
             <div className="menu">
-              <CodeManager addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} addReceivedCode={this.addReceivedCode} userName={this.state.name} />
+              <CodeManager addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} getQuotes={this.getQuotes} addReceivedCode={this.addReceivedCode} userName={this.state.name} />
               <CodeInspector user={this.state.clickedQuote}/>
             </div>
             <div className="content">
@@ -140,6 +174,7 @@ class App extends Component {
                codeObjects={this.state.codeObjects}
                handler={this.updateStateHandler}
                quoteHandler={this.updateSelectedQuoteHandler}
+               addQuoteToList={this.addQuoteToList}
                />
             </div>
             <div className="extra">
@@ -165,17 +200,7 @@ class App extends Component {
   }
 }
 
-function extractCodesFromJson(jsonArray){
-    let codes = [];
-    jsonArray.forEach(jsonCode => {
-        let code = new Code(jsonCode.codeName, jsonCode._id);
-        code.color = jsonCode.color;
-        code.link = jsonCode.link;
-        code.memo = jsonCode.memo;
-        code.userName = jsonCode.userName;
-        codes = [...codes, code];
-    });
-    return codes;
-}
+
+
 
 export default App

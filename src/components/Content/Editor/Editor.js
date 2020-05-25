@@ -11,7 +11,7 @@ const {Code} = require('../../../data_model/Code');
 const {getDefaultText, getEarlyQuote, splitNodeAndInsertSpan} = require('../../../Utility/Helpers');
 let socket;
 
-function Editor({name, selected, codeObjects, handler, quoteHandler}) {
+function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToList}) {
   const [userName] = useState(name);
   const initialText = getDefaultText();
   const [text, setText] = useState(initialText);
@@ -204,6 +204,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler}) {
         uploadFile={uploadFile}
         handleFileChange={handleFileChange}
         ref={textRef}
+        addQuoteToList={addQuoteToList}
       />
       <ContentEditable
         id="textDiv"

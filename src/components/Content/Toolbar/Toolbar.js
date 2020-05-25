@@ -9,11 +9,11 @@ const {Quote} = require('../../../data_model/Quote');
 let socket;
 socket = io(server_url);
 
-function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange}) {
+function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange, addQuoteToList}) {
   const [userName] = useState(name);
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
-  const [quoteList, setQuoteList] = useState([]);
+  //const [quoteList, setQuoteList] = useState([]);
   const [uploadedFile, setUploadedFile] = useState(undefined);
   const [memo, setMemo] = useState("");
 
@@ -23,13 +23,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
   useEffect(()=>{
     setSelectedCode(selected);
     setCodeList(codes);
-    //draw document: i.e get all quotes and highlight based on offsets
-    axios.get(server_url+"/Quotes").then(res=>{
-      let quotes = ExtractQuotesFromData(res.data);
-      setQuoteList(quotes);
-    }).catch(err=>{
-      console.log(err);
-    });
   },[selected]);
 
   function ExtractQuotesFromData(jsonArray) {
@@ -128,9 +121,11 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
         };
         axios.post(server_url+"/newQuote", data).then(res => {
           socket.emit("newQuote", JSON.stringify(res.data));
+
           let quote = constructQuoteFromData(res.data);
           selectedCode.addQuote(quote); //selected code is wrong code
-          setQuoteList([...quoteList, quote]);
+          //setQuoteList([...quoteList, quote]);
+          addQuoteToList(quote);
           // Add new span with: current codeColor, current username, new quote ID
           highlight(selectedCode.getColor(), userName, quote._id);
         }).catch(err => {
