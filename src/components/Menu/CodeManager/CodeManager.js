@@ -140,7 +140,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
             codes.map(code => {
                 return (
                   <div className="code-element" name={code.getName()} id={code.getId()} key={code.getId()} onClick={openCodeModal}>
-                    {code.getName()}
+                    {code.getName() }
                   </div>
                 )
             })
@@ -201,7 +201,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, addReceivedCo
       >
         <Modal.Header closeButton>
           <Modal.Title id="modal-title">
-            <b>Code: </b>{activeCodeName}
+            <b>Code: </b>{ (quoteList && quoteList.length > 0) ? activeCodeName + " (" + quoteList.length + ")" : activeCodeName + " (0)"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
