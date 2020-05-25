@@ -8,7 +8,7 @@ import {server_url} from "../../../Utility/GlobalVariables";
 let socket;
 socket = io(server_url);
 
-function CodeInspector({user}) {
+function CodeInspector({user, deleteQuoteFromList}) {
   const [userName, setUserName] = useState('');
   const [spanID, setSpanID] = useState('');
   const [memo, setMemo] = useState('');
@@ -43,6 +43,7 @@ function CodeInspector({user}) {
       axios.delete(server_url+'/deleteQuote', {data: {_id:spanID}}).then(res =>{
           console.log("Deleted quote: ", res);
           socket.emit("newQuote", "delete quote");
+          deleteQuoteFromList(spanID);
       }).catch(err =>{
           console.log(err);
       });

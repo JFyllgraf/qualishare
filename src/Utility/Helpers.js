@@ -115,7 +115,11 @@ export function createSpan(quote, color){
 }
 export function constructQuoteFromData(data){
   console.log(data);
-  let q = new Quote(data._id, data.quoteText, data.quoteOffset, data.codeRefs);
+  let q = new Quote();
+  q._id = data._id;
+  q.quoteText = data.quoteText;
+  q.quoteOffset = data.quoteOffset;
+  q.codeRefs = data.codeRefs;
   q.memo = data.memo;
   q.userName = data.userName;
   return q;

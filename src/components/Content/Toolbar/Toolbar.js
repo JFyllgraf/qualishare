@@ -120,7 +120,7 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
           memo: memo
         };
         axios.post(server_url+"/newQuote", data).then(res => {
-          socket.emit("newQuote", JSON.stringify(res.data));
+
 
           let quote = constructQuoteFromData(res.data);
           selectedCode.addQuote(quote); //selected code is wrong code

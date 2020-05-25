@@ -6,8 +6,8 @@ class Quote {
         this.quoteText = quoteText;
         this.quoteOffset = quoteOffset;
         this.codeRefs = codeRef;
-        this.summary = this.quoteText.match(/([\w]*\s|[\w]*)/gm).splice(0, summary_length).toString(); //index out of range is not a problem, will always return at most
-                                                                          // summary_length number of words
+        //this.summary = this.quoteText.match(/([\w]*\s|[\w]*)/gm).splice(0, summary_length).toString(); //index out of range is not a problem, will always return at most
+        this.summary = null;                                                              // summary_length number of words
         this.memo = null;
         this.userName = userName;
         this.getQuoteText = function () { return this.quoteText; };

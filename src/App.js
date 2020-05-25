@@ -96,7 +96,7 @@ class App extends Component {
           quoteObjects: quotes
           }
       );
-      socket.emit("newQuote", JSON.stringify((this.state.codeObjects[this.state.quoteOffset.length-1])));
+      socket.emit("newQuote", JSON.stringify((this.state.quoteObjects[this.state.quoteObjects.length-1])));
   };
 
   addReceivedCode = (code) => {
@@ -107,7 +107,7 @@ class App extends Component {
       );
   };
   addReceivedQuote = (quote) =>{
-      let quotes = [this.state.quoteObjects, quote];
+      let quotes = [...this.state.quoteObjects, quote];
       this.setState({
           quoteObjects: quotes
       })
@@ -121,9 +121,14 @@ class App extends Component {
       })
   };
 
-  deleteQuoteFromList = (index) =>{
+  deleteQuoteFromList = (id) =>{
       let temp = [...this.state.quoteObjects];
-      temp.splice(index, 1);
+      for (let i = 0; i < temp.length; i++){
+        if (temp[i]._id === id){
+          temp.splice(i, 1);
+        }
+      }
+
       this.setState({
           quoteObjects: temp
       });
@@ -162,7 +167,7 @@ class App extends Component {
             </div>
             <div className="menu">
               <CodeManager addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} getQuotes={this.getQuotes} addReceivedCode={this.addReceivedCode} userName={this.state.name} />
-              <CodeInspector user={this.state.clickedQuote}/>
+              <CodeInspector user={this.state.clickedQuote} deleteQuoteFromList={this.deleteQuoteFromList}/>
             </div>
             <div className="content">
               <Editor
@@ -175,6 +180,7 @@ class App extends Component {
                handler={this.updateStateHandler}
                quoteHandler={this.updateSelectedQuoteHandler}
                addQuoteToList={this.addQuoteToList}
+               addReceivedQuote={this.addReceivedQuote}
                />
             </div>
             <div className="extra">

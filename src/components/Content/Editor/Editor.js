@@ -8,10 +8,10 @@ import axios from "axios";
 
 const {Quote} = require('../../../data_model/Quote');
 const {Code} = require('../../../data_model/Code');
-const {getDefaultText, getEarlyQuote, splitNodeAndInsertSpan} = require('../../../Utility/Helpers');
+const {getDefaultText, getEarlyQuote, splitNodeAndInsertSpan, constructQuoteFromData} = require('../../../Utility/Helpers');
 let socket;
 
-function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToList}) {
+function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToList, addReceivedQuote}) {
   const [userName] = useState(name);
   const initialText = getDefaultText();
   const [text, setText] = useState(initialText);
@@ -123,6 +123,8 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
     socket = io(ENDPOINT);
     socket.on('newQuote', function(data){
       updateStyles();
+      //addReceivedQuote(constructQuoteFromData(data));
+      console.log(data);
     });
   }, [ENDPOINT]);
 
