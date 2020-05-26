@@ -15,7 +15,7 @@ import axios from "axios";
 
 const {ExtractQuotesFromData, extractCodesFromJson} = require('./Utility/Helpers');
 const {Code} = require('../src/data_model/Code');
-let socket;
+
 
 
 class App extends Component {
@@ -31,8 +31,8 @@ class App extends Component {
         selected: '',
         clickedQuote: '',
         quoteObjects: [],
+        socket: io(server_url),
     };
-      socket = io(server_url);
   }
 
   updateStateHandler = (property) => {
@@ -59,6 +59,7 @@ class App extends Component {
               console.log(err);
           });
       }
+
       catch (err) {
           console.log(err)
       }
