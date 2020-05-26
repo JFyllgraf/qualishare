@@ -1,18 +1,14 @@
-import React, { useState, useEffect} from 'react';
-import io from "socket.io-client";
-
+import React, { useState, useEffect, useContext} from 'react';
 import './CodeInspector.css';
 import axios from "axios";
 import {server_url} from "../../../Utility/GlobalVariables";
-
-let socket;
-socket = io(server_url);
+import SocketContext from "../../../Utility/SocketContext";
 
 function CodeInspector({user, deleteQuoteFromList}) {
   const [userName, setUserName] = useState('');
   const [spanID, setSpanID] = useState('');
   const [memo, setMemo] = useState('');
-
+  const socket = useContext(SocketContext);
 
   useEffect(() => {
     setUserName(user);

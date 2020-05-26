@@ -1,15 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import './CodeManager.css';
-import io from "socket.io-client";
 import {server_url} from "../../../Utility/GlobalVariables";
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
-
+import SocketContext from "../../../Utility/SocketContext";
 
 const {Code} = require('../../../data_model/Code');
 const {Quote} = require('../../../data_model/Quote');
 
-let socket;
+
 const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, quoteObjects, addReceivedCode, userName}) => {
   const [codename, setcodeName] = useState('');
   const [onChangeEvent, setonChangeEvent] = useState();
@@ -20,32 +19,38 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, quoteObjects,
 
   //modal handling
   const [show, setShow] = useState(false);
+  const socket = useContext(SocketContext);
 
   useEffect(() => {
     console.log(quoteList);
   }, [quoteList]);
 
-  const ENDPOINT = server_url;
-  socket = io(ENDPOINT);
-  socket.on("newCode", function (data) {
-      let receivedCode = JSON.parse(data);
-      if (!isCodeInList(receivedCode._id)){
-          let newCode = new Code(receivedCode.codeName);
-          newCode._id = receivedCode._id;
-          newCode.color = receivedCode.color;
-          newCode.userName = receivedCode.userName;
-          addReceivedCode(newCode);
-      }
-      //do nothing
-  });
-  socket.on("deleteCode", function(data){
-      let codes = getCodes();
-      for (let i = 0; i < codes.length; i++){
-          if (codes[i].getName() === data){
-              deleteCodeFromList(i);
+  useEffect(()=>{
+      socket.on("newCode", function (data) {
+          let receivedCode = JSON.parse(data);
+          console.log("IO OKCOKAOKD");
+          if (!isCodeInList(receivedCode._id)){
+              let newCode = new Code(receivedCode.codeName);
+              newCode._id = receivedCode._id;
+              newCode.color = receivedCode.color;
+              newCode.userName = receivedCode.userName;
+              addReceivedCode(newCode);
           }
-      }
-  });
+          //do nothing
+      });
+      socket.on("deleteCode", function(data){
+          let codes = getCodes();
+          for (let i = 0; i < codes.length; i++){
+              if (codes[i].getName() === data){
+                  deleteCodeFromList(i);
+              }
+          }
+      });
+  },[]);
+
+
+
+
   function isCodeInList(id){
       let codes = getCodes();
       let bool = false;

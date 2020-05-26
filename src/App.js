@@ -12,11 +12,13 @@ import {CSSTransition} from 'react-transition-group';
 import './App.css';
 import io from "socket.io-client";
 import axios from "axios";
+import SocketContext from "./Utility/SocketContext";
+import {SocketProvider} from "./Utility/SocketContext";
 
 const {ExtractQuotesFromData, extractCodesFromJson} = require('./Utility/Helpers');
 const {Code} = require('../src/data_model/Code');
 
-
+const socket = io(server_url);
 
 class App extends Component {
 
@@ -30,8 +32,7 @@ class App extends Component {
         codeObjects: [],
         selected: '',
         clickedQuote: '',
-        quoteObjects: [],
-        socket: io(server_url),
+        quoteObjects: []
     };
   }
 
@@ -150,7 +151,9 @@ class App extends Component {
   };
   chat = () => {
       return (
-      <Chat Name={this.state.name} Room={this.state.room} />
+          <SocketProvider value={socket}>
+            <Chat Name={this.state.name} Room={this.state.room} />
+          </SocketProvider>
       )
   };
 
@@ -168,22 +171,26 @@ class App extends Component {
               <Header name={this.state.name}/>
             </div>
             <div className="menu">
-              <CodeManager addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} quoteObjects={this.state.quoteObjects} addReceivedCode={this.addReceivedCode} userName={this.state.name} />
-              <CodeInspector user={this.state.clickedQuote} deleteQuoteFromList={this.deleteQuoteFromList}/>
+                <SocketProvider value={socket}>
+                    <CodeManager addCodeToList={this.addCodeToList} deleteCodeFromList={this.deleteCodeFromList} getCodes={this.getCodes} quoteObjects={this.state.quoteObjects} addReceivedCode={this.addReceivedCode} userName={this.state.name} />
+                    <CodeInspector user={this.state.clickedQuote} deleteQuoteFromList={this.deleteQuoteFromList}/>
+                </SocketProvider>
             </div>
             <div className="content">
-              <Editor
-               selected={
-                 !this.state.selected ?
-                  this.state.codeObjects[0] : this.state.selected
-               }
-               name={this.state.name}
-               codeObjects={this.state.codeObjects}
-               handler={this.updateStateHandler}
-               quoteHandler={this.updateSelectedQuoteHandler}
-               addQuoteToList={this.addQuoteToList}
-               addReceivedQuote={this.addReceivedQuote}
-               />
+                <SocketProvider value={socket}>
+                    <Editor
+                       selected={
+                         !this.state.selected ?
+                          this.state.codeObjects[0] : this.state.selected
+                       }
+                       name={this.state.name}
+                       codeObjects={this.state.codeObjects}
+                       handler={this.updateStateHandler}
+                       quoteHandler={this.updateSelectedQuoteHandler}
+                       addQuoteToList={this.addQuoteToList}
+                       addReceivedQuote={this.addReceivedQuote}
+                       />
+               </SocketProvider>
             </div>
             <div className="extra">
               <CSSTransition

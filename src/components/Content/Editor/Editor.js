@@ -1,16 +1,14 @@
-import React, {useState, useEffect, useRef, createElement} from 'react';
+import React, {useState, useEffect, useRef, createElement, useContext} from 'react';
 import ContentEditable from 'react-contenteditable';
-import io from "socket.io-client";
 import './Editor.css';
 import { server_url } from '../../../Utility/GlobalVariables';
 import Toolbar from '../Toolbar/Toolbar';
 import axios from "axios";
+import SocketContext from "../../../Utility/SocketContext";
 
 const {Quote} = require('../../../data_model/Quote');
 const {Code} = require('../../../data_model/Code');
 const {getDefaultText, getEarlyQuote, splitNodeAndInsertSpan, constructQuoteFromData} = require('../../../Utility/Helpers');
-let socket;
-socket = io(server_url);
 
 function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToList, addReceivedQuote}) {
   const [userName] = useState(name);
@@ -21,7 +19,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
   const [file, setFile] = useState(undefined);
   const [fileName, setFileName] = useState(undefined);
   const textRef = useRef(null);
-
+  const socket = useContext(SocketContext);
 
   function compare(a, b){
     const aStart = a.quoteOffset.start;

@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import './Toolbar.css';
 import axios from 'axios';
 import {server_url} from "../../../Utility/GlobalVariables";
-import io from "socket.io-client";
+
 const {constructQuoteFromData, highlight} = require('../../../Utility/Helpers');
 
 const {Quote} = require('../../../data_model/Quote');
-let socket;
-socket = io(server_url);
 
 function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange, addQuoteToList}) {
   const [userName] = useState(name);
