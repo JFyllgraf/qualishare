@@ -94,11 +94,13 @@ class App extends Component {
   };
   addQuoteToList = (quote) =>{
       let quotes = [...this.state.quoteObjects, quote];
+      console.log("My quotes before adding", quotes);
       this.setState({
           quoteObjects: quotes
           }
       );
       socket.emit("newQuote", JSON.stringify((this.state.quoteObjects[this.state.quoteObjects.length-1])));
+      console.log("after adding", this.state.quoteObjects);
   };
 
   addReceivedCode = (code) => {
@@ -117,11 +119,29 @@ class App extends Component {
   };
 
   deleteCodeFromList = (index) => {
+      let codeToDelete = this.state.codeObjects[index];
       let temp = [...this.state.codeObjects];
       temp.splice(index, 1);
       this.setState({
           codeObjects: temp
-      })
+      });
+
+      //also delete all quotes, belonging to code
+
+      let quotes = [...this.state.quoteObjects];
+      console.log("before delete", quotes);
+      for(let i = quotes.length-1; i >= 0; i--){
+          if(quotes[i].codeRefs === codeToDelete._id){
+              quotes.splice(i, 1);
+          }
+      }
+      console.log("After delete", quotes);
+
+
+      //update state, where some quotes have been removed
+      this.setState({
+          quoteObjects: quotes,
+      });
   };
 
   deleteQuoteFromList = (id) =>{

@@ -71,6 +71,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
     });
 
     socket.on('deleteQuote', function(data){
+      console.log("locally here????");
       deleteQuoteFromList(data);
       updateStyles();
     })
@@ -78,7 +79,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
 
   useEffect(() => {
     updateStyles();
-  }, [quoteObjects])
+  }, [quoteObjects]);
 
   useEffect(() => {
     setSelectedCode(selected);

@@ -95,9 +95,9 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, quoteObjects,
                   deleteCodeFromList(i);
                   onChangeEvent.target.value = '';//reset
                   setonChangeEvent(undefined);//reset
-                  socket.emit("deleteCode", codeToDelete);
+                  socket.emit("deleteCode", codeToDelete); //string of name of the code
                   axios.delete(server_url+"/deleteQuotes/by_Code_id", {data:{_id:codes[i]._id}}).then(res=>{
-                      socket.emit("newQuote", ""); //this is a hack, in order to updatestyle
+
                   }).catch(err => {
                       console.log(err);
                   });
