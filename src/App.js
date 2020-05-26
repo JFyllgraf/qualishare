@@ -189,6 +189,8 @@ class App extends Component {
                        quoteHandler={this.updateSelectedQuoteHandler}
                        addQuoteToList={this.addQuoteToList}
                        addReceivedQuote={this.addReceivedQuote}
+                       deleteQuoteFromList={this.deleteQuoteFromList}
+                       quoteObjects={this.state.quoteObjects}
                        />
                </SocketProvider>
             </div>

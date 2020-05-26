@@ -10,7 +10,7 @@ const {Quote} = require('../../../data_model/Quote');
 const {Code} = require('../../../data_model/Code');
 const {getDefaultText, getEarlyQuote, splitNodeAndInsertSpan, constructQuoteFromData} = require('../../../Utility/Helpers');
 
-function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToList, addReceivedQuote}) {
+function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToList, addReceivedQuote, deleteQuoteFromList, quoteObjects}) {
   const [userName] = useState(name);
   const initialText = getDefaultText();
   const [text, setText] = useState(initialText);
@@ -38,37 +38,47 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
     document.getElementById("textDiv").innerHTML = initialText;
     let retrievedCodes = null;
     axios.get(server_url + "/Codes").then(res => {
-          retrievedCodes = extractCodesFromJson(res.data);
-          return retrievedCodes;
-      }).then(retrievedCodes => {
-        for (let i = 0; i < quoteList.length; i++){
-          let code = findCorrectCodeFromQuote(retrievedCodes, quoteList[i]);
-          var range = document.createRange();
-          range.setStart(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.start);
-          range.setEnd(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.end);
+      retrievedCodes = extractCodesFromJson(res.data);
+      return retrievedCodes;
+    }).then(retrievedCodes => {
+      for (let i = 0; i < quoteList.length; i++){
+        let code = findCorrectCodeFromQuote(retrievedCodes, quoteList[i]);
+        var range = document.createRange();
+        range.setStart(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.start);
+        range.setEnd(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.end);
 
-          //create new span around the text
-          let span = document.createElement("span");
-          span.style.backgroundColor = code.color;
-          span.id = quoteList[i]._id;
-          span.innerText = quoteList[i].quoteText;
-          span.setAttribute('memo', quoteList[i].memo);
-          span.setAttribute('user', quoteList[i].userName);
-          span.setAttribute('onclick', "removeSPan(this)");
-          range.surroundContents(span);
-        }
-      }).catch(err => {
-          console.log(err);
-      })
-  }
-
-  function findCorrectCodeFromQuote(codeObjects, quote){
-    for(let i = 0; i<codeObjects.length;i++){
-      if(codeObjects[i]._id === quote.codeRefs){
-        return codeObjects[i];
+        //create new span around the text
+        let span = document.createElement("span");
+        span.style.backgroundColor = code.color;
+        span.id = quoteList[i]._id;
+        span.innerText = quoteList[i].quoteText;
+        span.setAttribute('memo', quoteList[i].memo);
+        span.setAttribute('user', quoteList[i].userName);
+        span.setAttribute('onclick', "removeSPan(this)");
+        range.surroundContents(span);
       }
-    }
+    }).catch(err => {
+      console.log(err);
+    })
   }
+
+  useEffect(() => {
+    socket.on('newQuote', function(data){
+      updateStyles();
+      let quote = constructQuoteFromData(JSON.parse(data));
+      //if quote already in list, don't add
+      addReceivedQuote(quote);
+    });
+
+    socket.on('deleteQuote', function(data){
+      deleteQuoteFromList(data);
+      updateStyles();
+    })
+  }, []);
+
+  useEffect(() => {
+    updateStyles();
+  }, [quoteObjects])
 
   useEffect(() => {
     setSelectedCode(selected);
@@ -80,27 +90,30 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
     document.getElementById('textDiv').focus(); // hack to prevent textDiv from rerendering
   }, []);
 
+  function findCorrectCodeFromQuote(codeObjects, quote){
+    for(let i = 0; i<codeObjects.length;i++){
+      if(codeObjects[i]._id === quote.codeRefs){
+        return codeObjects[i];
+      }
+    }
+  }
+
   function updateStyles(){
-    axios.get(server_url+"/Quotes").then(res=>{
-      let quoteList = ExtractQuotesFromData(res.data);
-      quoteList.sort(compare);
-      styleText(quoteList);
-    }).catch(err=>{
-      console.log(err);
-    });
+    quoteObjects.sort(compare);
+    styleText(quoteObjects);
   }
 
   function extractCodesFromJson(jsonArray){
-      let codes = [];
-      jsonArray.forEach(jsonCode => {
-          let code = new Code(jsonCode.codeName, jsonCode._id);
-          code.color = jsonCode.color;
-          code.link = jsonCode.link;
-          code.memo = jsonCode.memo;
-          code.userName = jsonCode.userName;
-          codes = [...codes, code];
-      });
-      return codes;
+    let codes = [];
+    jsonArray.forEach(jsonCode => {
+      let code = new Code(jsonCode.codeName, jsonCode._id);
+      code.color = jsonCode.color;
+      code.link = jsonCode.link;
+      code.memo = jsonCode.memo;
+      code.userName = jsonCode.userName;
+      codes = [...codes, code];
+    });
+    return codes;
   }
 
   function ExtractQuotesFromData(jsonArray) {
@@ -112,16 +125,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
     });
     return quotes;
   }
-
-  useEffect(() => {
-    socket.on('newQuote', function(data){
-      updateStyles();
-      let quote = constructQuoteFromData(JSON.parse(data));
-      //if quote already in list, don't add
-      addReceivedQuote(quote);
-    });
-  }, []);
-
 
   function handleChange(event) {
     setText(event.target.value);
@@ -164,55 +167,55 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
   };
   /*
   const handleOnChange = (e) =>{
-    e.preventDefault();
-    e.persist();
-    setonChangeEvent(e);
-    setMemo(e.target.value);
-  };
+  e.preventDefault();
+  e.persist();
+  setonChangeEvent(e);
+  setMemo(e.target.value);
+};
 
-   */
-  /*
-  const getMemo = () => {
-    if(onChangeEvent !==null) {
-      onChangeEvent.target.value = ""; //reset
-      setonChangeEvent(null);
-    }
-    return memo;
-  };
+*/
+/*
+const getMemo = () => {
+if(onChangeEvent !==null) {
+onChangeEvent.target.value = ""; //reset
+setonChangeEvent(null);
+}
+return memo;
+};
 
-   */
+*/
 
-  function info(e) {
-    e.preventDefault();
-    let root = document.getElementById("textDiv");
-    let quote = getEarlyQuote();
-    splitNodeAndInsertSpan(root, quote);
-  }
+function info(e) {
+  e.preventDefault();
+  let root = document.getElementById("textDiv");
+  let quote = getEarlyQuote();
+  splitNodeAndInsertSpan(root, quote);
+}
 
-  return (
-    <div className="editor-container">
-      <Toolbar
-        name={userName}
-        codes={codeList}
-        selected={selectedCode}
-        handler={handler}
-        quoteHandler={quoteHandler}
-        emmitChange={emmitChange}
-        uploadFile={uploadFile}
-        handleFileChange={handleFileChange}
-        ref={textRef}
-        addQuoteToList={addQuoteToList}
-      />
-      <ContentEditable
-        id="textDiv"
-        onDragOver={preventDragging}
-        onDrop={preventDragging}
-        onKeyDown={(event) => event.preventDefault()}
-        html={text}
-        onChange={handleChange}
-        className="editor-input">
-      </ContentEditable>
-    </div>
-  );
+return (
+  <div className="editor-container">
+  <Toolbar
+  name={userName}
+  codes={codeList}
+  selected={selectedCode}
+  handler={handler}
+  quoteHandler={quoteHandler}
+  emmitChange={emmitChange}
+  uploadFile={uploadFile}
+  handleFileChange={handleFileChange}
+  ref={textRef}
+  addQuoteToList={addQuoteToList}
+  />
+  <ContentEditable
+  id="textDiv"
+  onDragOver={preventDragging}
+  onDrop={preventDragging}
+  onKeyDown={(event) => event.preventDefault()}
+  html={text}
+  onChange={handleChange}
+  className="editor-input">
+  </ContentEditable>
+  </div>
+);
 }
 export default Editor;
