@@ -38,14 +38,11 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
     document.getElementById("textDiv").innerHTML = initialText;
     let retrievedCodes = null;
     axios.get(server_url + "/Codes").then(res => {
-          console.log(res.data);
           retrievedCodes = extractCodesFromJson(res.data);
           return retrievedCodes;
       }).then(retrievedCodes => {
-        console.log(retrievedCodes);
         for (let i = 0; i < quoteList.length; i++){
           let code = findCorrectCodeFromQuote(retrievedCodes, quoteList[i]);
-          console.log(quoteList[i]);
           var range = document.createRange();
           range.setStart(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.start);
           range.setEnd(document.getElementById("textDiv").firstChild, quoteList[i].quoteOffset.end);
@@ -86,7 +83,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
   function updateStyles(){
     axios.get(server_url+"/Quotes").then(res=>{
       let quoteList = ExtractQuotesFromData(res.data);
-      console.log(quoteList);
       quoteList.sort(compare);
       styleText(quoteList);
     }).catch(err=>{
@@ -104,7 +100,6 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
           code.userName = jsonCode.userName;
           codes = [...codes, code];
       });
-      console.log(codes);
       return codes;
   }
 
@@ -121,12 +116,11 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
   useEffect(() => {
     socket.on('newQuote', function(data){
       updateStyles();
-      console.log(" ON NEW QUOTE");
       let quote = constructQuoteFromData(JSON.parse(data));
       //if quote already in list, don't add
       addReceivedQuote(quote);
     });
-  }, [server_url]);
+  }, []);
 
 
   function handleChange(event) {

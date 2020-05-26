@@ -15,7 +15,6 @@ function Chat({Name, Room}) { //remember to destructure
   const socket = useContext(SocketContext);
 
   useEffect(() => {
-    console.log("Printing: ", name, room);
 
     socket.emit('join', { name, room }, (error) => {
       if(error) {

@@ -99,7 +99,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
       let selectedText = selection.toString();
       let startRange = selection.getRangeAt(0).startOffset;
       let endRange = selection.getRangeAt(0).endOffset;
-      console.log(selection);
 
       var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
       if(selectedText === null || selectedText === undefined || selectedText ==='') {
@@ -130,7 +129,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
           console.log(err);
         });
       }
-      console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
       setMemo("");
     }
   };
@@ -148,7 +146,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
         if(firstTime) {
           axios.delete(server_url+'/deleteQuote', {data: quotes[i]}).then(res =>{
             firstTime = false;
-            console.log("Deleted quote: ", res);
           }).catch(err =>{
             console.log(err);
           });
@@ -161,7 +158,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
 
   function handleMemoInput(event) {
     setMemo(event.target.value);
-    console.log(memo);
   }
 
   return (

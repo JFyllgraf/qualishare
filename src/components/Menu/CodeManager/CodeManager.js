@@ -21,14 +21,10 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, quoteObjects,
   const [show, setShow] = useState(false);
   const socket = useContext(SocketContext);
 
-  useEffect(() => {
-    console.log(quoteList);
-  }, [quoteList]);
 
   useEffect(()=>{
       socket.on("newCode", function (data) {
           let receivedCode = JSON.parse(data);
-          console.log("IO OKCOKAOKD");
           if (!isCodeInList(receivedCode._id)){
               let newCode = new Code(receivedCode.codeName);
               newCode._id = receivedCode._id;
@@ -102,7 +98,6 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, quoteObjects,
                   socket.emit("deleteCode", codeToDelete);
                   axios.delete(server_url+"/deleteQuotes/by_Code_id", {data:{_id:codes[i]._id}}).then(res=>{
                       socket.emit("newQuote", ""); //this is a hack, in order to updatestyle
-                      console.log("Success, deleted all quotes of code", res);
                   }).catch(err => {
                       console.log(err);
                   });
@@ -168,18 +163,15 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, quoteObjects,
     setActiveCodeId(event.target.id);
     setActiveCodeName(event.target.getAttribute('name'));
     setShow(true);
-    console.log(event.target.getAttribute('name'));
   }
 
   function updateQuoteList() {
     axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: activeCodeId}}).then(res=>{
-      console.log("my res: ", res.data);
       let quotes = ExtractQuotesFromData(res.data);
       setQuoteList(quotes);
     }).catch(err=>{
       console.log(err);
     });
-    console.log("Quotes: " + quoteList);
   }
 
   function ExtractQuotesFromData(jsonArray) {

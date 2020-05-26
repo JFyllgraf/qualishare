@@ -37,7 +37,6 @@ function CodeInspector({user, deleteQuoteFromList}) {
     document.getElementById('textDiv').focus();
     // remove quote from DB
       axios.delete(server_url+'/deleteQuote', {data: {_id:spanID}}).then(res =>{
-          console.log("Deleted quote: ", res);
           socket.emit("newQuote", "delete quote");
           deleteQuoteFromList(spanID);
       }).catch(err =>{
