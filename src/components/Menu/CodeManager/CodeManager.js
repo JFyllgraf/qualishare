@@ -91,9 +91,9 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, quoteObjects,
     let codeToDelete = onChangeEvent.target.value;
 
     for (let i = 0; i < codes.length; i++){
-      if (codes[i].getName() === codeToDelete){
+      if (codes[i].getName() === codeToDelete){ //codeToDelete is string name of code
         axios.delete(server_url+"/deleteCode", {data: codes[i]}).then(res=>{
-          deleteCodeFromList(i);
+          deleteCodeFromList(codes[i]);
           onChangeEvent.target.value = '';//reset
           setonChangeEvent(undefined);//reset
           socket.emit("deleteCode", codeToDelete); //string of name of the code
@@ -117,13 +117,13 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, quoteObjects,
       deleteCodeFromList(codeToDelete);
       socket.emit("deleteCode", codeToDelete.codeName); //string of name of the code
       axios.delete(server_url+"/deleteQuotes/by_Code_id", {data:{_id:codeToDelete._id}}).then(res=>{
-
       }).catch(err => {
         console.log(err);
       });
     }).catch(err=>{
       console.log(err);
     });
+    setShow(false);
   }
 
   function CheckValidInput(e){
@@ -178,7 +178,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, quoteObjects,
   }
 
   function openCodeModal(event){
-    setActiveCodeId(event.target.id);
+    setActiveCodeId(event.target.id); //async
     setActiveCodeName(event.target.getAttribute('name'));
     setShow(true);
   }

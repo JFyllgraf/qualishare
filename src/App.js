@@ -118,27 +118,16 @@ class App extends Component {
       console.log("Received Quote, socket.io:", this.state.quoteObjects);
   };
 
-  deleteCodeFromList = (index) => {
-      let codeToDelete = this.state.codeObjects[index];
+  deleteCodeFromList = (codeToDelete) => {
       let temp = [...this.state.codeObjects];
-      temp.splice(index, 1);
+      temp = temp.filter(code => code._id !== codeToDelete._id);
       this.setState({
           codeObjects: temp
       });
 
       //also delete all quotes, belonging to code
-
       let quotes = [...this.state.quoteObjects];
-      console.log("before delete", quotes);
-      for(let i = quotes.length-1; i >= 0; i--){
-          if(quotes[i].codeRefs === codeToDelete._id){
-              quotes.splice(i, 1);
-          }
-      }
-      console.log("After delete", quotes);
-
-
-      //update state, where some quotes have been removed
+      quotes = quotes.filter(quote => quote.codeRefs !== codeToDelete._id);
       this.setState({
           quoteObjects: quotes,
       });
