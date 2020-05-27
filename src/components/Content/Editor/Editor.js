@@ -63,18 +63,18 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
   }
 
   useEffect(() => {
+    socket.on('deleteQuote', function(data){
+      deleteQuoteFromList(data);
+      //updateStyles();
+    });
+
     socket.on('newQuote', function(data){
-      updateStyles();
+      //updateStyles();
       let quote = constructQuoteFromData(JSON.parse(data));
       //if quote already in list, don't add
       addReceivedQuote(quote);
     });
 
-    socket.on('deleteQuote', function(data){
-      console.log("locally here????");
-      deleteQuoteFromList(data);
-      updateStyles();
-    })
   }, []);
 
   useEffect(() => {
