@@ -1,18 +1,14 @@
-import React, { useState, useEffect} from 'react';
-import io from "socket.io-client";
-
+import React, { useState, useEffect, useContext} from 'react';
 import './CodeInspector.css';
 import axios from "axios";
 import {server_url} from "../../../Utility/GlobalVariables";
+import SocketContext from "../../../Utility/SocketContext";
 
-let socket;
-socket = io(server_url);
-
-function CodeInspector({user}) {
+function CodeInspector({user, deleteQuoteFromList}) {
   const [userName, setUserName] = useState('');
   const [spanID, setSpanID] = useState('');
   const [memo, setMemo] = useState('');
-
+  const socket = useContext(SocketContext);
 
   useEffect(() => {
     setUserName(user);
@@ -41,11 +37,11 @@ function CodeInspector({user}) {
     document.getElementById('textDiv').focus();
     // remove quote from DB
       axios.delete(server_url+'/deleteQuote', {data: {_id:spanID}}).then(res =>{
-          console.log("Deleted quote: ", res);
-          socket.emit("newQuote", "delete quote");
+          socket.emit("deleteQuote", spanID);
+          deleteQuoteFromList(spanID);
       }).catch(err =>{
           console.log(err);
-      })
+      });
     setUserName('');
    }
 

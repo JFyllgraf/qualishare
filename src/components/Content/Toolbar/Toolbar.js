@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import './Toolbar.css';
 import axios from 'axios';
 import {server_url} from "../../../Utility/GlobalVariables";
-import io from "socket.io-client";
+
 const {constructQuoteFromData, highlight} = require('../../../Utility/Helpers');
 
 const {Quote} = require('../../../data_model/Quote');
-let socket;
-socket = io(server_url);
 
-function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange}) {
+function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange, addQuoteToList}) {
   const [userName] = useState(name);
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
-  const [quoteList, setQuoteList] = useState([]);
+  //const [quoteList, setQuoteList] = useState([]);
   const [uploadedFile, setUploadedFile] = useState(undefined);
   const [memo, setMemo] = useState("");
 
@@ -23,13 +21,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
   useEffect(()=>{
     setSelectedCode(selected);
     setCodeList(codes);
-    //draw document: i.e get all quotes and highlight based on offsets
-    axios.get(server_url+"/Quotes").then(res=>{
-      let quotes = ExtractQuotesFromData(res.data);
-      setQuoteList(quotes);
-    }).catch(err=>{
-      console.log(err);
-    });
   },[selected]);
 
   function ExtractQuotesFromData(jsonArray) {
@@ -108,7 +99,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
       let selectedText = selection.toString();
       let startRange = selection.getRangeAt(0).startOffset;
       let endRange = selection.getRangeAt(0).endOffset;
-      console.log(selection);
 
       var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
       if(selectedText === null || selectedText === undefined || selectedText ==='') {
@@ -127,17 +117,16 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
           memo: memo
         };
         axios.post(server_url+"/newQuote", data).then(res => {
-          socket.emit("newQuote", JSON.stringify(res.data));
           let quote = constructQuoteFromData(res.data);
           selectedCode.addQuote(quote); //selected code is wrong code
-          setQuoteList([...quoteList, quote]);
+          //setQuoteList([...quoteList, quote]);
+          addQuoteToList(quote);
           // Add new span with: current codeColor, current username, new quote ID
           highlight(selectedCode.getColor(), userName, quote._id);
         }).catch(err => {
           console.log(err);
         });
       }
-      console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
       setMemo("");
     }
   };
@@ -155,7 +144,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
         if(firstTime) {
           axios.delete(server_url+'/deleteQuote', {data: quotes[i]}).then(res =>{
             firstTime = false;
-            console.log("Deleted quote: ", res);
           }).catch(err =>{
             console.log(err);
           });
@@ -168,7 +156,6 @@ function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, up
 
   function handleMemoInput(event) {
     setMemo(event.target.value);
-    console.log(memo);
   }
 
   return (

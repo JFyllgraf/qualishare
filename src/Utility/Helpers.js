@@ -1,4 +1,5 @@
 import {Quote} from "../data_model/Quote";
+const {Code} = require('../data_model/Code');
 
 //in general, we export functions with "export" at each function, and not with export default, because JEST cannot handle this
 //and because of some weird interaction with Babel and transipilation, we also do not use module.exports
@@ -113,8 +114,11 @@ export function createSpan(quote, color){
   return span;
 }
 export function constructQuoteFromData(data){
-  console.log(data);
-  let q = new Quote(data._id, data.quoteText, data.quoteOffset, data.codeRefs);
+  let q = new Quote();
+  q._id = data._id;
+  q.quoteText = data.quoteText;
+  q.quoteOffset = data.quoteOffset;
+  q.codeRefs = data.codeRefs;
   q.memo = data.memo;
   q.userName = data.userName;
   return q;
@@ -141,4 +145,24 @@ function selectAll(){
   range.surroundContents(span);
 
   window.getSelection().addRange(range);
+}
+export function ExtractQuotesFromData(jsonArray) {
+  let quotes = [];
+  jsonArray.map(jsonQuote => {
+    let quote = new Quote(jsonQuote._id, jsonQuote.quoteText, jsonQuote.quoteOffset, jsonQuote.codeRefs, jsonQuote.memo, jsonQuote.userName);
+    quotes = [...quotes, quote];
+  });
+  return quotes;
+}
+export function extractCodesFromJson(jsonArray){
+  let codes = [];
+  jsonArray.forEach(jsonCode => {
+    let code = new Code(jsonCode.codeName, jsonCode._id);
+    code.color = jsonCode.color;
+    code.link = jsonCode.link;
+    code.memo = jsonCode.memo;
+    code.userName = jsonCode.userName;
+    codes = [...codes, code];
+  });
+  return codes;
 }
