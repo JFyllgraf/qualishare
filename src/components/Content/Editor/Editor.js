@@ -57,6 +57,7 @@ function Editor({name, selected, codeObjects, handler, quoteHandler, addQuoteToL
         span.setAttribute('onclick', "removeSPan(this)");
         range.surroundContents(span);
       }
+    })
   }
 
   useEffect(() => {
