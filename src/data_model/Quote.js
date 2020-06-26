@@ -6,9 +6,9 @@ class Quote {
         this.quoteText = quoteText;
         this.quoteOffset = quoteOffset;
         this.codeRefs = codeRef;
-        this.summary = this.quoteText.match(/([\w]*\s|[\w]*)/gm).splice(0, summary_length).toString(); //index out of range is not a problem, will always return at most
-                                                                          // summary_length number of words
-        this.memo = memo;
+        //this.summary = this.quoteText.match(/([\w]*\s|[\w]*)/gm).splice(0, summary_length).toString(); //index out of range is not a problem, will always return at most
+        this.summary = null;                                                              // summary_length number of words
+        this.memo = null;
         this.userName = userName;
         this.getQuoteText = function () { return this.quoteText; };
         this.getQuoteOffset = function () { return this.quoteOffset; };
@@ -19,4 +19,7 @@ class Quote {
 
 //const quote1 = new Quote("This is a really random summary text of which we would like to have the five first words returned", 2, [5]);
 //console.log(quote1.getSummary().toString());
-export default Quote;
+module.exports = {
+    Quote: Quote,
+};
+//export default Quote;

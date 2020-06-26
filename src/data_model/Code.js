@@ -1,12 +1,10 @@
-//import * as Helpers from '../Utility/Helpers';
-
 class Code {
     constructor(name, id) {
         this.codeName = name; //'const' is private variable
-        this._id = id
+        this._id = id;
         this.memo = []; //'this' is publicly accessible variable
         this.link = undefined;
-        this.color = undefined
+        this.color = undefined;
         this.quoteRefs = [];
         this.userName = null;
         //getters
@@ -16,20 +14,22 @@ class Code {
         this.getQuotes = function () { return this.quoteRefs; };
 
         //setter
-        this.addQuote = function (quote) {
+        this.addQuote = function (id) {
             //also modfify database objects
                 //do here
-            this.quoteRefs = [...this.quoteRefs, quote];
+            this.quoteRefs = [...this.quoteRefs, id];
         };
-        this.removeQuote = function (quoteText) {
+        this.removeQuote = function (quote) {
             for (let i = 0; i < this.quoteRefs.length; i++){
-                if (this.quoteRefs[i].getQuoteText() === quoteText){
-                    this.quoteRefs.slice(i, 1); //remove element
+                if (this.quoteRefs[i] === quote._id){
+                    this.quoteRefs.splice(i, 1); //remove element
+
                     break;
                 }
             }
         }
     }
 }
-
-export default Code
+module.exports = {
+    Code: Code,
+};

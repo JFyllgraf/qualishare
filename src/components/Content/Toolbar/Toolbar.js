@@ -1,60 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import Mark from 'mark.js';
+import React, { useState, useEffect} from 'react';
 import './Toolbar.css';
-import { highlight } from '../../../Utility/Helpers';
-import Quote from "../../../data_model/Quote";
 import axios from 'axios';
 import {server_url} from "../../../Utility/GlobalVariables";
-import io from "socket.io-client";
-import Code from "../../../data_model/Code";
 
-/*
-//'Content-Type': 'application/json',
-const config = {
-  headers:{
-        "Access-Control-Allow-Origin": "*"}
-}
-//axios.defaults.headers.common = config;
-*/
+const {constructQuoteFromData, highlight} = require('../../../Utility/Helpers');
 
-let socket;
-socket = io(server_url);
+const {Quote} = require('../../../data_model/Quote');
 
-function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange}) {
+function Toolbar ({name, codes, selected, handler, quoteHandler, emmitChange, uploadFile, handleFileChange, addQuoteToList}) {
   const [userName] = useState(name);
   const [codeList, setCodeList] = useState(codes);
   const [selectedCode, setSelectedCode] = useState(selected);
-  const [quoteList, setQuoteList] = useState([]);
+  //const [quoteList, setQuoteList] = useState([]);
   const [uploadedFile, setUploadedFile] = useState(undefined);
   const [memo, setMemo] = useState("");
 
   useEffect(() => {
-    //handler(selectedCode); //this can be left out
     setCodeList(codes);
-    //setSelectedCode(selected); //this can be left out
   }, [codes]);
   useEffect(()=>{
     setSelectedCode(selected);
     setCodeList(codes);
-    //draw document: i.e get all quotes and highlight based on offsets
-    axios.get(server_url+"/Quotes").then(res=>{
-      let quotes = ExtractQuotesFromData(res.data);
-      setQuoteList(quotes);
-    }).catch(err=>{
-      console.log(err);
-    });
-
   },[selected]);
-
-/* parameterized get for quotes by id
-axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9a7"}}).then(res=>{
-      console.log("my res: ", res.data);
-      let quotes = ExtractQuotesFromData(res.data);
-      setQuoteList(quotes);
-    }).catch(err=>{
-      console.log(err);
-    });
- */
 
   function ExtractQuotesFromData(jsonArray) {
       let quotes = [];
@@ -125,16 +92,13 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     event.preventDefault();
     let selection = window.getSelection();
     let range = selection.getRangeAt(0);
-    if (range.startContainer.parentElement.nodeName == "SPAN" || range.endContainer.parentElement.nodeName == "SPAN"){
+    if (range.startContainer.parentElement.nodeName === "SPAN" || range.endContainer.parentElement.nodeName === "SPAN"){
       alert("Please don't overlap selections.");
     } else {
-
-      //console.log(selectedCode);
 
       let selectedText = selection.toString();
       let startRange = selection.getRangeAt(0).startOffset;
       let endRange = selection.getRangeAt(0).endOffset;
-      console.log(selection);
 
       var selOffsets = getSelectionCharacterOffsetWithin(document.getElementById("textDiv"));
       if(selectedText === null || selectedText === undefined || selectedText ==='') {
@@ -151,38 +115,21 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
           documentNum: 0, //default for now
           userName: userName,
           memo: memo
-        }
+        };
         axios.post(server_url+"/newQuote", data).then(res => {
-
-          socket.emit("newQuote", JSON.stringify(res.data));
           let quote = constructQuoteFromData(res.data);
           selectedCode.addQuote(quote); //selected code is wrong code
-          setQuoteList([...quoteList, quote]);
-
-          // Add new span with: current codecolor, current username, new quote ID
+          //setQuoteList([...quoteList, quote]);
+          addQuoteToList(quote);
+          // Add new span with: current codeColor, current username, new quote ID
           highlight(selectedCode.getColor(), userName, quote._id);
-
         }).catch(err => {
           console.log(err);
         });
       }
-
-      console.log("Selection offsets: " + selOffsets.start + ", " + selOffsets.end, selectedText.length);
       setMemo("");
-      //console.log(quote.getQuoteText(), quote.getQuoteOffset(), quote.getSummary());
-      //console.log(selectedCode.getName() + ": " + selectedCode.getColor());
     }
-
   };
-
-  function isQuoteInList(quote, list){
-    for(let i = 0; i < list.length;i++){
-      if(quote._id === list[i]._id){
-        return true;
-      }
-    }
-    return false;
-  }
 
   const removeQuote = (event) => {
     event.preventDefault();
@@ -197,10 +144,9 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         if(firstTime) {
           axios.delete(server_url+'/deleteQuote', {data: quotes[i]}).then(res =>{
             firstTime = false;
-            console.log("Deleted quote: ", res);
           }).catch(err =>{
             console.log(err);
-          })
+          });
           document.execCommand('removeFormat', false, null);
         }
         break;
@@ -208,15 +154,8 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
     }
   };
 
-  //for getting state information from button click
-  const info = e => {
-    e.preventDefault();
-    console.log(codeList);
-  }
-
   function handleMemoInput(event) {
     setMemo(event.target.value);
-    console.log(memo);
   }
 
 
@@ -235,27 +174,14 @@ axios.get(server_url+"/Quotes/by_Code_id", {params:{_id: "5ea6e3896cb7e64a8838f9
         </select>
         <input id="memo-input" type="text" value={memo} placeholder="optional memo..." onChange={handleMemoInput} />
         <a href="/#" className="toolbarButton" onKeyDown={(e) => e.keyCode===66 ? addQuote(e) : null} onClick={addQuote}>Apply</a>
-
       </div>
     </div>
   );
 }
-
+//let these stay for now (22.05.2020)
 // <a href="something" className="toolbarButton" onClick={removeQuote}>Remove</a>
 // <input type="file" onChange={handleFileChange} className="toolbarButton"/>
 // <a href="something" className="toolbarButton" onClick={uploadFile}> Submit file </a>
 // <a href="something" className="toolbarButton" onClick={info}> info </a>
-
-function constructQuoteFromData(data){
-  let q = new Quote();
-  q._id = data._id;
-  q.quoteText = data.quoteText;
-  q.quoteOffset = data.offset;
-  q.codeRefs = data.codeRefs;
-  q.memo = data.memo;
-  q.userName = data.userName;
-  //console.log("QQ: ",q);
-  return q;
-}
 
 export default Toolbar;

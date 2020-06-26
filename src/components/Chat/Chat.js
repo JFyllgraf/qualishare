@@ -1,27 +1,20 @@
 import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
-
 import './Chat.css';
-
 import InfoBar from './InfoBar/InfoBar';
 import Input from './Input/Input';
 import Messages from './Messages/Messages';
-import { server_url } from '../../Utility/GlobalVariables';
-
-let socket;
+import SocketContext from "../../Utility/SocketContext";
+import {useContext} from 'react';
 
 function Chat({Name, Room}) { //remember to destructure
   const [name] = useState(Name);
   const [room] = useState(Room);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const ENDPOINT = server_url;
   //const [users, setUsers] = useState('');
-
+  const socket = useContext(SocketContext);
 
   useEffect(() => {
-    console.log("Printing: ", name, room);
-    socket = io(ENDPOINT);
 
     socket.emit('join', { name, room }, (error) => {
       if(error) {
@@ -35,7 +28,7 @@ function Chat({Name, Room}) { //remember to destructure
     }
 
 
-  }, [ENDPOINT, name, room]); //'[var]' - if 'var' is changed, then useEffect() is called
+  }, [name, room]); //'[var]' - if 'var' is changed, then useEffect() is called
 
   useEffect(() => {
     socket.on('message', (message) => {
