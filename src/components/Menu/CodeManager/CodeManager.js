@@ -45,9 +45,7 @@ const CodeManager = ({addCodeToList, deleteCodeFromList, getCodes, quoteObjects,
     });
   },[]);
 
-
-
-
+  
   function isCodeInList(id){
     let codes = getCodes();
     let bool = false;
