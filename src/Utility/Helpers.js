@@ -1,4 +1,4 @@
-import {Quote} from "../data_model/Quote";
+const {Quote} = require("../data_model/Quote");
 const {Code} = require('../data_model/Code');
 
 //in general, we export functions with "export" at each function, and not with export default, because JEST cannot handle this
